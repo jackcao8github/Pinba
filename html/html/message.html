@@ -1,83 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html manifest="pinba.manifest">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="../js/downAndUpSlide.js"></script>
 <style>
 </style>
+
+<script type="text/javascript">
+	document.addEventListener(touchEvents.touchend, function(ev) {
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			break;
+		case 2:
+			console.log("向下");
+			//当前是在消息列表页面，需要加载新消息
+			var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
+			if (messageTabLi.length>0){
+				addNewMsg();
+			}
+			break;
+		case 3:
+			console.log("向左");
+			break;
+		case 4:
+			console.log("向右");
+			break;
+		default:
+		}
+	}, false);
+
+	/* 加载新消息 */
+	function addNewMsg() {
+		var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101">';
+		newhtml += '<img src="../images/login01.png">';
+		newhtml += '<h3>xx美食</h3>';
+		newhtml += '<p>免预约到店的哟</p>';
+		newhtml += '<p class="ui-li-aside">';
+		newhtml += '	<strong>9:19</strong>AM';
+		newhtml += '</p> </a></li>';
+
+		var newli = $('#messageListUL').prepend(newhtml);
+		newli.listview("refresh");
+	}
+</script>
 </head>
 <body>
-	<div data-role="page" id="pagetwo">
+	<div data-role="page" id="messagePage">
 		<div data-role="header" data-position="fixed" data-fullscreen="false">
 			<!-- <img class="logo" src="../images/ic_back_u.png" onclick="history.back()" /> -->
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
 
-			<h1>消息列表</h1>
+			<h1>我的消息</h1>
 		</div>
 		<div data-role="content">
-			<!-- <ul data-role="listview" data-inset="true" data-count-theme="b">
-				<li><a href="friendsMsg.html"><img class="ui-li-icon ui-corner-none"
-						alt="France" src="../images/login01.png">好友消息 <span
-						class="ui-li-count">12</span></a></li>
-				<li><a href="servNoticeMsg.html"><img class="ui-li-icon ui-corner-none"
-						alt="France" src="../images/login01.png">业务通知 <span
-						class="ui-li-count">0</span></a></li>
-				<li><a href="servRemindMsg.html"><img class="ui-li-icon ui-corner-none"
-						alt="France" src="../images/login01.png">业务提醒 <span
-						class="ui-li-count">4</span></a></li>
-				<li><a href="subscribeMsg.html"><img class="ui-li-icon ui-corner-none"
-						alt="France" src="../images/login01.png">订阅 <span
-						class="ui-li-count">328</span></a></li>
-				<li><a href="systemMsg.html"><img class="ui-li-icon ui-corner-none"
-						alt="France" src="../images/login01.png">系统公告 <span
-						class="ui-li-count">62</span></a></li>
-			</ul> -->
-					<ul data-role="listview">
-					<!-- 聊天信息 -->
-						<li data-icon="false"><a href="friendsMsg.html?friendId=101"> <img
-								src="../images/login01.png"><!-- 聊天对象头像 -->
-								<h3>xx美食</h3><!-- 聊天对象昵称 -->
-								<p>免预约到店的哟</p><!-- 最新聊天内容 -->
-								<p class="ui-li-aside"><strong>9:18</strong>AM</p><!-- 最新消息时间 -->
-								</a>
-						</li>
-						<!-- 业务通知 -->	
+			<div id="tabs" data-role="tabs">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#messageList"
+							class="ui-btn-active" id="messageTabLi">消息列表</a></li>
+						<li><a href="#friendList">好友列表</a></li>
+					</ul>
+				</div>
+
+				<div id="messageList">
+					<ul data-role="listview" data-inset="true" id="messageListUL">
+						<!-- 聊天信息 -->
+						<li data-icon="false"><a href="friendsMsg.html?friendId=101" data-ajax="false">
+								<img src="../images/login01.png"> <!-- 聊天对象头像 -->
+								<h3>xx美食</h3> <!-- 聊天对象昵称 -->
+								<p>免预约到店的哟</p> <!-- 最新聊天内容 -->
+								<p class="ui-li-aside">
+									<strong>9:18</strong>AM
+								</p> <!-- 最新消息时间 -->
+						</a></li>
+						<!-- 业务通知 -->
 						<li data-icon="false"><a href="servNoticeMsg.html"> <img
-								src="../images/login01.png"><!-- 业务通知图标 -->
-								<h3>积分到帐通知</h3><!-- 通知标题 -->
-								<p>1个签到积分到帐</p><!-- 通知内容 -->
-								<p class="ui-li-aside"><strong>9:18</strong>AM</p><!-- 通知时间 -->
+								src="../images/login01.png"> <!-- 业务通知图标 -->
+								<h3>积分到帐通知</h3> <!-- 通知标题 -->
+								<p>1个签到积分到帐</p> <!-- 通知内容 -->
+								<p class="ui-li-aside">
+									<strong>9:18</strong>AM
+								</p> <!-- 通知时间 -->
 						</a></li>
 						<!-- 业务提醒 -->
 						<li data-icon="false"><a href="servRemindMsg.html"> <img
-								src="../images/login01.png"><!-- 业务提醒 图标 -->
-								<h3>面试通知</h3><!-- 业务提醒 标题 -->
-								<p>到xx酒店参加面试</p><!-- 业务提醒 内容 -->
-								<p class="ui-li-aside"><strong>9:18</strong>AM</p><!-- 业务提醒 时间 -->
+								src="../images/login01.png"> <!-- 业务提醒 图标 -->
+								<h3>面试通知</h3> <!-- 业务提醒 标题 -->
+								<p>到xx酒店参加面试</p> <!-- 业务提醒 内容 -->
+								<p class="ui-li-aside">
+									<strong>9:18</strong>AM
+								</p> <!-- 业务提醒 时间 -->
 						</a></li>
 						<!-- 订阅 -->
 						<li data-icon="false"><a href="subscribeMsg.html"> <img
-								src="../images/login01.png"><!-- 订阅 图标 -->
-								<h3>优惠信息订阅</h3><!-- 订阅 标题 -->
-								<p>xx美食店：新推出满100优惠10块活动</p><!-- 订阅 内容 -->
-								<p class="ui-li-aside"><strong>9:18</strong>AM</p><!-- 订阅 时间 -->
+								src="../images/login01.png"> <!-- 订阅 图标 -->
+								<h3>优惠信息订阅</h3> <!-- 订阅 标题 -->
+								<p>xx美食店：新推出满100优惠10块活动</p> <!-- 订阅 内容 -->
+								<p class="ui-li-aside">
+									<strong>9:18</strong>AM
+								</p> <!-- 订阅 时间 -->
 						</a></li>
-						
+
 						<!-- 系统公告 -->
 						<li data-icon="false"><a href="systemMsg.html"> <img
-								src="../images/login01.png"><!-- 系统公告图标 -->
-								<h3>系统升级公告</h3><!-- 系统公告标题 -->
-								<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p><!-- 系统公告内容 -->
-								<p class="ui-li-aside"><strong>9:18</strong>AM</p><!-- 系统公告时间 -->
+								src="../images/login01.png"> <!-- 系统公告图标 -->
+								<h3>系统升级公告</h3> <!-- 系统公告标题 -->
+								<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p> <!-- 系统公告内容 -->
+								<p class="ui-li-aside">
+									<strong>9:18</strong>AM
+								</p> <!-- 系统公告时间 -->
 						</a></li>
 					</ul>
-			
+				</div>
+				<div id="friendList">
+					<ul data-role="listview" data-inset="true">
+						<li data-icon="false"><a href="#"
+							style="padding-top: 0px; padding-bottom: 0px;"> <img
+								src="../image/firstcover02.png">
+								<h2>Hilton</h2> <!-- 名字 -->
+								<p>life is beaultiful.</p> <!-- 签名 -->
+								<div style="float: left;">
+									<!-- 性别 -->
+									<img style="height: 0.8em; width: 0.8em;"
+										src="../image/main_index_home_pressed.png"><span
+										style="font-size: 0.8em">335</span> </img>
+								</div>
 
+								<div style="margin-left: 10px; float: left;">
+									<!-- 距离 -->
+									<img style="height: 0.8em; width: 0.8em;"
+										src="../image/my_favorite_user_icon_normal.png"><span
+										style="font-size: 0.8em">3350</span> </img>
+								</div>
+						</a></li>
+					</ul>
+				</div>
+			</div>
 		</div>
 
 	</div>
