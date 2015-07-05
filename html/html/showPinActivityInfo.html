@@ -3,16 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../js/swipe.js"></script>
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 </head>
 <body>
 	<div data-role="page">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<!-- <img class="logo" src="../images/ic_back_u.png" onclick="history.back()" /> -->
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
 
-		
+			<h1>活动详情</h1>
+		</div>
+
 		<div data-role="content">
-		<p><a href="#" onclick="history.back()" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Back to page "one"</a></p>
+			
 			<ul data-role="listview" data-inset="true" class=" round">
 				<li>
 					<h2>关于我们</h2>
@@ -23,6 +31,6 @@
 			</ul>
 		</div>
 	</div>
-	
+
 </body>
 </html>
