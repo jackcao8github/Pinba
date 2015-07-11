@@ -1,0 +1,25 @@
+CACHE MANIFEST
+#version=0.3
+./index.html
+./fabu.html
+./faxian.html
+./friendsMsg.html
+./home.html
+./message.html
+./pinle.html
+./servNoticeMsg.html
+./servRemindMsg.html
+./subscribeMsg.html
+./systemMsg.html
+./wode.html
+./css/jquery.mobile-1.4.5.css
+./js/jquery-1.11.3.js
+./js/jquery.mobile-1.4.5.js
+./css/photoswipe.css
+./js/jquery-1.7.1.min.js
+./js/jquery.event.drag-1.5.min.js
+./js/jquery.touchSlider.js
+./css/font-awesome.min.css
+./js/mydownandupslide.js
+NETWORK:
+*

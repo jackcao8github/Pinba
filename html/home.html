@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html manifest="pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="css/photoswipe.css" />
+<link rel="stylesheet" href="css/font-awesome.css" />
+<script src="js/jquery-1.7.1.min.js"></script>
+<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
+<script src="js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="js/jquery.event.drag-1.5.min.js"></script>
+<script type="text/javascript" src="js/jquery.touchSlider.js"></script>
+
+<script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				//图片滚动处理 ------------------------------start
+				$(".main_visual").hover(function() {
+
+				}, function() {
+
+				});
+
+				$dragBln = false;
+
+				$(".main_image").touchSlider(
+						{
+							flexible : true,
+							speed : 200,
+							btn_prev : $("#btn_prev"),
+							btn_next : $("#btn_next"),
+							paging : $(".flicking_con a"),
+							counter : function(e) {
+								$(".flicking_con a").removeClass("on").eq(
+										e.current - 1).addClass("on");
+							}
+						});
+
+				$(".main_image").bind("mousedown", function() {
+					$dragBln = false;
+				});
+
+				$(".main_image").bind("dragstart", function() {
+					$dragBln = true;
+				});
+
+				$(".main_image a").click(function() {
+					if ($dragBln) {
+						return false;
+					}
+				});
+
+				timer = setInterval(function() {
+					$("#btn_next").click();
+				}, 5000);
+
+				$(".main_visual").hover(function() {
+					clearInterval(timer);
+				}, function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+
+				$(".main_image").bind("touchstart", function() {
+					clearInterval(timer);
+				}).bind("touchend", function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+				//图片滚动处理 ------------------------------end
+
+				//初始化下拉刷新
+			});
+
+	
+
+	document.addEventListener(touchEvents.touchend, function(ev) {
+
+		var endX, endY;
+
+		endX = ev.changedTouches[0].pageX;
+
+		endY = ev.changedTouches[0].pageY;
+
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+
+		switch (direction) {
+
+		case 0:
+
+			console.log("没滑动");
+
+			break;
+
+		case 1:
+
+			console.log("向上");
+			addOfferLi();
+			break;
+
+		case 2:
+
+			console.log("向下");
+
+			break;
+
+		case 3:
+
+			console.log("向左");
+
+			break;
+
+		case 4:
+
+			console.log("向右");
+
+			break;
+
+		default:
+
+		}
+
+	}, false);
+	
+	function addOfferLi(){
+		$('#yourLike').html("猜你喜欢....");
+		 if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
+			 console.log("滚动条已经到达底部为" + $(document).scrollTop());
+             var newhtml = '<div class="+class+">';
+     		newhtml+= '<a href=""> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
+     		newhtml+= 'class="bigImg" alt="Ballade">';
+
+     		newhtml+= '<div class="title">+name+</div>';
+     		newhtml+='<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
+     		newhtml+='	</a>';
+     		newhtml+='	<div style="float: left;">';
+     		newhtml+='<img class="smallimg" src="image/tuan_review_good.png"><span';
+     		newhtml+='	style="font-size: 0.8em">335</span> </img>';
+     		newhtml+='</div>';
+
+     		newhtml+='<div style="margin-left: 10px; float: left;">';
+     		newhtml+='	<img class="smallimg"';
+     		newhtml+='		src="image/my_favorite_user_icon_normal.png"><span';
+     		newhtml+='		style="font-size: 0.8em">3350</span> </img>';
+     		newhtml+='</div>';
+     		newhtml+='</div>';
+     		
+     		for (var i=0;10>i;i++){
+     			var leftli = newhtml.replace('+class+','offerleftli').replace('+name+','糖醋鱼'+i).replace('+price+','30'+i);
+     			var rightli = newhtml.replace('+class+','offerrightli').replace('+name+','红烧排骨'+i).replace('+price+','40'+i);
+     			$('#yourLikeDiv').append(leftli);
+     			$('#yourLikeDiv').append(rightli);
+     		}
+         }
+	}
+</script>
+<style type="text/css">
+.offerleftli {
+margin:1px 0;
+	border: 1px solid #bebebe;
+	height: auto;
+	width:	49%;
+	float: left;
+	text-align: center;
+}
+.offerrightli {
+margin:1px 0;
+	border: 1px solid #bebebe;
+	height: auto;
+	width:	49%;
+	float: right;
+	text-align: center;
+}
+
+/* 列表中大图片 */
+.bigImg {
+	display: inline;
+	margin: 1px;
+	border: 1px solid #bebebe;
+	height:100%;
+	width:100%;
+	background-size: contain;
+}
+/* 列表中小图片 */
+.smallimg {
+	height: 0.8em;
+	width: 0.8em;
+	display: auto;
+	margin-left: 5px;
+	border: 0;
+}
+
+div.img a:hover img {
+	border: 1px solid #333333;
+}
+
+div.title {
+	text-align: left;
+	font-weight: normal;
+	width: 140px;
+	font-size: 12px;
+	margin: 0px 5px 0px 5px;
+}
+
+div.price {
+	text-align: left;
+	font-weight: bold;
+	width: 140px;
+	font-size: 12px;
+	margin: 5px 5px 0px 5px;
+	color: red
+}
+</style>
+
+</head>
+<body>
+	<div data-role="page" id="homePage" style="top:-20px;">
+		<div class="main_visual">
+			<div class="flicking_con">
+				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
+				<a href="#">5</a>
+			</div>
+			<div class="main_image">
+				<ul>
+					<li><img src="images/img_main_1.jpg"></li>
+					<li><img src="images/img_main_2.jpg"></li>
+					<li><img src="images/img_main_3.jpg"></li>
+					<li><img src="images/img_main_4.jpg"></li>
+					<li><img src="images/img_main_5.jpg"></li>
+				</ul>
+				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
+					href="javascript:;" id="btn_next" style="display: none;"></a>
+			</div>
+		</div>
+		<div class="ui-grid-b">
+			<div class="ui-block-a">
+				<a href="#link" data-role="button" data-icon="search"
+					data-iconpos="top">美食</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="#link" data-role="button" data-icon="search"
+					data-iconpos="top">工作</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="#link" data-role="button" data-icon="search"
+					data-iconpos="top">娱乐</a>
+			</div>
+			<!-- <div class="ui-block-d">
+				<a href="#link" data-role="button" data-icon="search"
+					data-iconpos="top">学习</a>
+			</div> -->
+
+		</div>
+
+		<p style="margin:0 5px" id="yourLike">猜你喜欢</p>
+
+		<div id="yourLikeDiv">
+			<div class="offerleftli">
+				<a href=""> <img src="image/funlife/funlife02.jpg"
+					class="bigImg" alt="Ballade">
+
+					<div class="title">酸菜鱼</div>
+					<div class="price"><i class="fa fa-rmb"></i>100</div>
+				</a>
+				<div style="margin-left: 5px; float: left;">
+					<img class="smallimg" src="image/tuan_review_good.png"><span
+						style="font-size: 0.8em">335</span> </img>
+				</div>
+
+				<div style="margin-left: 10px; float: left;">
+					<img class="smallimg"
+						src="image/my_favorite_user_icon_normal.png"><span
+						style="font-size: 0.8em;">3350</span> </img>
+				</div>
+			</div>
+
+
+			<div class="offerrightli">
+				<a href=""> <img src="image/funlife/funlife03.jpg"
+					class="bigImg" alt="Ballade">
+
+					<div class="title">糖醋鱼</div>
+					<div class="price"><i class="fa fa-rmb"></i>100</div>
+				</a>
+				<div style="float: left;">
+					<img class="smallimg" src="image/tuan_review_good.png"><span
+						style="font-size: 0.8em">335</span> </img>
+				</div>
+
+				<div style="margin-left: 10px; float: left;">
+					<img class="smallimg"
+						src="image/my_favorite_user_icon_normal.png"><span
+						style="font-size: 0.8em">3350</span> </img>
+				</div>
+			</div>
+			<div class="offerleftli">
+				<a href=""> <img src="image/funlife/funlife02.jpg"
+					class="bigImg" alt="Ballade">
+
+					<div class="title">酸菜鱼</div>
+					<div class="price"><i class="fa fa-rmb"></i>100</div>
+				</a>
+				<div style="float: left;">
+					<img class="smallimg" src="image/tuan_review_good.png"><span
+						style="font-size: 0.8em">335</span> </img>
+				</div>
+
+				<div style="margin-left: 10px; float: left;">
+					<img class="smallimg"
+						src="image/my_favorite_user_icon_normal.png"><span
+						style="font-size: 0.8em;">3350</span> </img>
+				</div>
+			</div>
+
+
+			<div class="offerrightli">
+				<a href=""> <img src="image/funlife/funlife03.jpg"
+					class="bigImg" alt="Ballade">
+
+					<div class="title">糖醋鱼</div>
+					<div class="price"><i class="fa fa-rmb"></i>100</div>
+				</a>
+				<div style="float: left;">
+					<img class="smallimg" src="image/tuan_review_good.png"><span
+						style="font-size: 0.8em">335</span> </img>
+				</div>
+
+				<div style="margin-left: 10px; float: left;">
+					<img class="smallimg"
+						src="image/my_favorite_user_icon_normal.png"><span
+						style="font-size: 0.8em">3350</span> </img>
+				</div>
+			</div>
+
+		</div>
+		<div id="bottom">
+		</div>
+		<!-- <ul data-role="listview">
+				<li data-icon="false" ><a href="#" style="padding-top:0px;padding-bottom:0px;"> <img src="images/firefox.png" >
+						<h2>Mozilla Firefox</h2>
+						<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
+						<div style="float:left;">
+							<img style="height:0.8em;width:0.8em;" src="image/tuan_review_good.png"><span style="font-size:0.8em">335</span> </img>
+						</div>
+						
+						<div style="margin-left:10px;float:left;">
+							<img style="height:0.8em;width:0.8em;" src="image/my_favorite_user_icon_normal.png"><span style="font-size:0.8em">3350</span> </img>
+						</div>
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/opera.png">
+						<h2>Opera</h2>
+						<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p> <span
+						class="ui-li-count">已售335</span>
+
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/aoyou.png">
+						<h2>傲游浏览器</h2>
+						<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p> <span class="ui-li-count">已售335</span>
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/netscape.png">
+						<h2>Netscape</h2>
+						<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p> <span
+						class="ui-li-count">已售335</span> 
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/liebao.png">
+						<h2>猎豹安全浏览器</h2>
+						<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p> <span
+						class="ui-li-count">已售335</span>
+
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/taobao.png">
+						<h2>淘宝浏览器</h2>
+						<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p> <span
+						class="ui-li-count">已售335</span> 
+
+				</a></li>
+				<li data-icon="false"><a href="#"> <img src="images/baidu.png">
+						<h2>百度浏览器</h2>
+						<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p> <span
+						class="ui-li-count">已售335</span> 
+
+				</a></li>
+			</ul> -->
+		<!--endpart1-->
+
+
+		<div data-role="popup" id="addFavorite" data-overlay-theme="b"
+			class="ui-content" style="max-width: 340px; padding-bottom: 2em;">
+			<h3>Purchase Album?</h3>
+			<p>Your download will begin immediately on your mobile device
+				when you purchase.</p>
+			<a href="#"
+				class="ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-shadow ui-btn-icon-left ui-icon-check"
+				data-rel="back">Buy: $10.99</a> <a href="#"
+				class="ui-btn ui-btn-inline ui-mini ui-corner-all ui-shadow"
+				data-rel="back">Cancel</a>
+		</div>
+
+
+		<!-- <div data-role="footer" data-position="fixed">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						class="ui-btn-active">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="phone">我的</a></li>
+				</ul>
+			</div>
+		</div> -->
+	</div>
+</body>
+</html>
