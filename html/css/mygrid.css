@@ -1,6 +1,6 @@
 html,body {
 	width: 100%;
-	min-height: 100%;
+	height: 100%;
 	background: #f0f0f0;
 }
 
@@ -30,21 +30,21 @@ html,body {
 }
 /* 头部登陆 */
 .login {
+	height: 200px;
+	widht: 100%;
 	background-image: url(../image/personal_bkg.jpg);
-	background-repeat: no-repeat;
-	background-size: contain;
+	background-repeat: no-repeat center;
+	text-align: center;
 }
 
 .loginbg { /*position: absolute;*/
 	width: 100%;
-	height:180px;
+	height: 100%;
 }
 
 .login .personal_logo {
-	position: absolute;
-	top: 60px;
+	margin-top: 10%;
 	width: 70px;
-	margin-left: 20px;
 }
 
 .person_arrow {
@@ -55,9 +55,6 @@ html,body {
 }
 
 .login .userinfo {
-	position: absolute;
-	top: 60px;
-	margin-left: 100px;
 }
 
 .login .userinfo .title {
@@ -78,7 +75,7 @@ html,body {
 /* 设置条目 */
 .item {
 	height: 50px;
-	width:100%;
+	width: 100%;
 	line-height: 50px;
 	padding-left: 5px;
 	background-color: #fff;
