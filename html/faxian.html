@@ -2,6 +2,8 @@
 <html manifest="pinba.appcache">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="css/mygrid.css" />
 <script src="js/jquery-1.11.3.js"></script>
@@ -19,13 +21,12 @@
 			onclick="openNewWindow('myorder')">
 			<img src="image/my_order_user_icon_normal.png" alt=""
 				class="item_ico"> <span>南京市雨花台区 西春路-宁双路</span> <img
-				src="image/main_index_search_normal.png" alt=""
-				class="item_arrow">
+				src="image/main_index_search_normal.png" alt="" class="item_arrow">
 		</div>
 	</div>
 	<div class="firstblock">
 		<div class="ui-grid-b">
-			<div class="ui-block-a">
+			<!-- <div class="ui-block-a">
 				<a href="#link" data-role="button" data-icon="search"
 					data-iconpos="top">商铺</a>
 			</div>
@@ -36,6 +37,30 @@
 			<div class="ui-block-c">
 				<a href="#link" data-role="button" data-icon="search"
 					data-iconpos="top">活动</a>
+			</div> -->
+			<div class="ui-block-a" style="text-align: center;">
+				<div class="ui-bar ui-bar-a"
+					style="height: 80px; border: 0; background-color: #fff;">
+					<img src="image/firstpage/food_u.png"
+						style="background-size: contain; height: 80%; background-color: #fff"></img>
+					<p style="margin: 0px">商铺</p>
+				</div>
+			</div>
+			<div class="ui-block-b" style="text-align: center;">
+				<div class="ui-bar ui-bar-a"
+					style="height: 80px; border: 0; background-color: #fff;">
+					<img src="image/firstpage/boy_o.png"
+						style="background-size: contain; height: 80%;"></img>
+					<p style="margin: 0px">群</p>
+				</div>
+			</div>
+			<div class="ui-block-c" style="text-align: center;">
+				<div class="ui-bar ui-bar-a"
+					style="height: 80px; border: 0; background-color: #fff;">
+					<img src="image/firstpage/entertainment_o.png"
+						style="background-size: contain; height: 80%;"></img>
+					<p style="margin: 0px">活动</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -44,13 +69,12 @@
 		<div class="item" tapmode="presshover" onclick="">
 			<img src="image/my_order_user_icon_normal.png" alt=""
 				class="item_ico"> <span>附近的商铺</span> <img
-				src="image/main_index_search_normal.png" alt=""
-				class="item_arrow">
+				src="image/main_index_search_normal.png" alt="" class="item_arrow">
 		</div>
 		<ul data-role="listview">
 			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px;"> <img
-					src="images/firefox.png">
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/firefox.png">
 					<h2>Mozilla Firefox</h2>
 					<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
 					<div style="float: left;">
@@ -65,8 +89,9 @@
 							style="font-size: 0.8em">3350</span> </img>
 					</div>
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/opera.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/opera.png">
 					<h2>Opera</h2>
 					<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p>
 					<div style="float: left;">
@@ -82,8 +107,9 @@
 					</div>
 
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/aoyou.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/aoyou.png">
 					<h2>傲游浏览器</h2>
 					<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p>
 					<div style="float: left;">
@@ -98,8 +124,9 @@
 							style="font-size: 0.8em">3350</span> </img>
 					</div>
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/netscape.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/netscape.png">
 					<h2>Netscape</h2>
 					<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p>
 					<div style="float: left;">
@@ -114,8 +141,9 @@
 							style="font-size: 0.8em">3350</span> </img>
 					</div>
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/liebao.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/liebao.png">
 					<h2>猎豹安全浏览器</h2>
 					<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p>
 					<div style="float: left;">
@@ -131,8 +159,9 @@
 					</div>
 
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/taobao.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/taobao.png">
 					<h2>淘宝浏览器</h2>
 					<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p>
 					<div style="float: left;">
@@ -147,8 +176,9 @@
 							style="font-size: 0.8em">3350</span> </img>
 					</div>
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/baidu.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/baidu.png">
 					<h2>百度浏览器</h2>
 					<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p>
 					<div style="float: left;">
@@ -172,13 +202,12 @@
 		<div class="item" tapmode="presshover" onclick="">
 			<img src="image/my_order_user_icon_normal.png" alt=""
 				class="item_ico"> <span>附近的群</span> <img
-				src="image/main_index_search_normal.png" alt=""
-				class="item_arrow">
+				src="image/main_index_search_normal.png" alt="" class="item_arrow">
 		</div>
 		<ul data-role="listview">
 			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px;"> <img
-					src="images/firefox.png">
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/firefox.png">
 					<h2>创建人：李4</h2>
 					<p>主题：你不吃他就吃</p>
 					<div style="float: left;">
@@ -201,13 +230,12 @@
 		<div class="item" tapmode="presshover" onclick="">
 			<img src="image/my_order_user_icon_normal.png" alt=""
 				class="item_ico"> <span>附近的人</span> <img
-				src="image/main_index_search_normal.png" alt=""
-				class="item_arrow">
+				src="image/main_index_search_normal.png" alt="" class="item_arrow">
 		</div>
 		<ul data-role="listview">
 			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px;"> <img
-					src="images/firefox.png">
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/firefox.png">
 					<h2>张三</h2>
 					<p>张三是个公务员</p>
 					<div style="float: left;">
@@ -224,8 +252,9 @@
 							style="font-size: 0.8em">3350米</span> </img>
 					</div>
 			</a></li>
-			<li data-icon="false"><a href="#"> <img
-					src="images/opera.png">
+			<li data-icon="false"><a href="#"
+				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+					<img src="images/opera.png">
 					<h2>李4</h2>
 					<p>李4是个白领</p>
 
@@ -241,7 +270,8 @@
 						<img style="height: 0.8em; width: 0.8em;"
 							src="image/my_favorite_user_icon_normal.png"><span
 							style="font-size: 0.8em">3350米</span> </img>
-					</div></a></li>
+					</div>
+			</a></li>
 
 		</ul>
 	</div>

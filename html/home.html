@@ -73,11 +73,7 @@
 					}, 5000);
 				});
 				//图片滚动处理 ------------------------------end
-
-				//初始化下拉刷新
 			});
-
-	
 
 	document.addEventListener(touchEvents.touchend, function(ev) {
 
@@ -92,87 +88,78 @@
 		switch (direction) {
 
 		case 0:
-
 			console.log("没滑动");
-
 			break;
-
 		case 1:
-
 			console.log("向上");
 			addOfferLi();
 			break;
 
 		case 2:
-
 			console.log("向下");
-
 			break;
-
 		case 3:
-
 			console.log("向左");
-
 			break;
-
 		case 4:
-
 			console.log("向右");
-
 			break;
-
 		default:
-
 		}
 
 	}, false);
-	
-	function addOfferLi(){
+
+	function addOfferLi() {
 		$('#yourLike').html("猜你喜欢....");
-		 if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
-			 console.log("滚动条已经到达底部为" + $(document).scrollTop());
-             var newhtml = '<div class="+class+">';
-     		newhtml+= '<a href=""> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
+		if ($(document).scrollTop() >= $(document).height()
+				- $(window).height()) {
+			console.log("滚动条已经到达底部为" + $(document).scrollTop());
+			var newhtml = '<div class="+class+">';
+			newhtml += '<a href="foodDetail.html?offerId=+offerid+" data-ajax="false"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
      		newhtml+= 'class="bigImg" alt="Ballade">';
 
-     		newhtml+= '<div class="title">+name+</div>';
-     		newhtml+='<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
-     		newhtml+='	</a>';
-     		newhtml+='	<div style="float: left;">';
-     		newhtml+='<img class="smallimg" src="image/tuan_review_good.png"><span';
+			newhtml += '<div class="title">+name+</div>';
+			newhtml += '<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
+			newhtml += '	</a>';
+			newhtml += '	<div style="float: left;">';
+			newhtml += '<img class="smallimg" src="image/tuan_review_good.png"><span';
      		newhtml+='	style="font-size: 0.8em">335</span> </img>';
-     		newhtml+='</div>';
+			newhtml += '</div>';
 
-     		newhtml+='<div style="margin-left: 10px; float: left;">';
-     		newhtml+='	<img class="smallimg"';
+			newhtml += '<div style="margin-left: 10px; float: left;">';
+			newhtml += '	<img class="smallimg"';
      		newhtml+='		src="image/my_favorite_user_icon_normal.png"><span';
      		newhtml+='		style="font-size: 0.8em">3350</span> </img>';
-     		newhtml+='</div>';
-     		newhtml+='</div>';
-     		
-     		for (var i=0;10>i;i++){
-     			var leftli = newhtml.replace('+class+','offerleftli').replace('+name+','糖醋鱼'+i).replace('+price+','30'+i);
-     			var rightli = newhtml.replace('+class+','offerrightli').replace('+name+','红烧排骨'+i).replace('+price+','40'+i);
-     			$('#yourLikeDiv').append(leftli);
-     			$('#yourLikeDiv').append(rightli);
-     		}
-         }
+			newhtml += '</div>';
+			newhtml += '</div>';
+
+			for ( var i = 0; 10 > i; i++) {
+				var leftli = newhtml.replace('+class+', 'offerleftli').replace(
+						'+name+', '糖醋鱼' + i).replace('+price+', '30' + i);
+				var rightli = newhtml.replace('+class+', 'offerrightli')
+						.replace('+name+', '红烧排骨' + i).replace('+price+',
+								'40' + i).replace('+offerid+',i);
+				$('#yourLikeDiv').append(leftli);
+				$('#yourLikeDiv').append(rightli);
+			}
+		}
 	}
 </script>
 <style type="text/css">
 .offerleftli {
-margin:1px 0;
+	margin: 1px 0;
 	border: 1px solid #bebebe;
 	height: auto;
-	width:	49%;
+	width: 49%;
 	float: left;
 	text-align: center;
 }
+
 .offerrightli {
-margin:1px 0;
+	margin: 1px 0;
 	border: 1px solid #bebebe;
 	height: auto;
-	width:	49%;
+	width: 49%;
 	float: right;
 	text-align: center;
 }
@@ -182,8 +169,8 @@ margin:1px 0;
 	display: inline;
 	margin: 1px;
 	border: 1px solid #bebebe;
-	height:100%;
-	width:100%;
+	height: 100%;
+	width: 100%;
 	background-size: contain;
 }
 /* 列表中小图片 */
@@ -215,11 +202,16 @@ div.price {
 	margin: 5px 5px 0px 5px;
 	color: red
 }
+
+.h10 {
+	height: 10px;
+	background: #f0f0f0;
+}
 </style>
 
 </head>
 <body>
-	<div data-role="page" id="homePage" style="top:-20px;">
+	<div data-role="page" id="homePage" style="top: -20px;">
 		<div class="main_visual">
 			<div class="flicking_con">
 				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
@@ -237,35 +229,43 @@ div.price {
 					href="javascript:;" id="btn_next" style="display: none;"></a>
 			</div>
 		</div>
-		<div class="ui-grid-b">
-			<div class="ui-block-a">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">美食</a>
+		<div class="h10"></div>
+		<div class="ui-grid-b" style="">
+			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
+				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="foodMain.html" data-ajax="false">
+					<img src="image/firstpage/food_u.png"
+						style="background-size: contain; height: 80%;background-color:#fff"></img>
+					<p style="margin: 0px">美食</p>
+				</a>
 			</div>
-			<div class="ui-block-b">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">工作</a>
+			<div class="ui-block-b" style="text-align: center;" id="workDiv">
+				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="workMain.html" data-ajax="false">
+					<img src="image/firstpage/boy_o.png"
+						style="background-size: contain; height: 80%;"></img>
+					<p style="margin: 0px">工作</p>
+				</a>
 			</div>
-			<div class="ui-block-c">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">娱乐</a>
+			<div class="ui-block-c" style="text-align: center;" id="entertainmentDiv">
+				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="entertainmentMain.html" data-ajax="false">
+					<img src="image/firstpage/entertainment_o.png"
+						style="background-size: contain; height: 80%;"></img>
+					<p style="margin: 0px">娱乐</p>
+				</a>
 			</div>
-			<!-- <div class="ui-block-d">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">学习</a>
-			</div> -->
 
 		</div>
-
-		<p style="margin:0 5px" id="yourLike">猜你喜欢</p>
+		<div class="h10"></div>
+		<p style="margin: 0 5px;text-align:center;" id="yourLike">猜你喜欢</p>
 
 		<div id="yourLikeDiv">
 			<div class="offerleftli">
-				<a href=""> <img src="image/funlife/funlife02.jpg"
+				<a href="foodDetail.html?offerId=1"  data-ajax="false"> <img src="image/funlife/funlife02.jpg"
 					class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
-					<div class="price"><i class="fa fa-rmb"></i>100</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
 				</a>
 				<div style="margin-left: 5px; float: left;">
 					<img class="smallimg" src="image/tuan_review_good.png"><span
@@ -273,19 +273,20 @@ div.price {
 				</div>
 
 				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg"
-						src="image/my_favorite_user_icon_normal.png"><span
+					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
 						style="font-size: 0.8em;">3350</span> </img>
 				</div>
 			</div>
 
 
 			<div class="offerrightli">
-				<a href=""> <img src="image/funlife/funlife03.jpg"
+				<a href="foodDetail.html?offerId=2" data-ajax="false"> <img src="image/funlife/funlife03.jpg"
 					class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
-					<div class="price"><i class="fa fa-rmb"></i>100</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
 				</a>
 				<div style="float: left;">
 					<img class="smallimg" src="image/tuan_review_good.png"><span
@@ -293,17 +294,18 @@ div.price {
 				</div>
 
 				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg"
-						src="image/my_favorite_user_icon_normal.png"><span
+					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
 						style="font-size: 0.8em">3350</span> </img>
 				</div>
 			</div>
 			<div class="offerleftli">
-				<a href=""> <img src="image/funlife/funlife02.jpg"
+				<a href="foodDetail.html?offerId=3" data-ajax="false"> <img src="image/funlife/funlife02.jpg"
 					class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
-					<div class="price"><i class="fa fa-rmb"></i>100</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
 				</a>
 				<div style="float: left;">
 					<img class="smallimg" src="image/tuan_review_good.png"><span
@@ -311,19 +313,20 @@ div.price {
 				</div>
 
 				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg"
-						src="image/my_favorite_user_icon_normal.png"><span
+					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
 						style="font-size: 0.8em;">3350</span> </img>
 				</div>
 			</div>
 
 
 			<div class="offerrightli">
-				<a href=""> <img src="image/funlife/funlife03.jpg"
+				<a href="foodDetail.html?offerId=4" data-ajax="false"> <img src="image/funlife/funlife03.jpg"
 					class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
-					<div class="price"><i class="fa fa-rmb"></i>100</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
 				</a>
 				<div style="float: left;">
 					<img class="smallimg" src="image/tuan_review_good.png"><span
@@ -331,15 +334,13 @@ div.price {
 				</div>
 
 				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg"
-						src="image/my_favorite_user_icon_normal.png"><span
+					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
 						style="font-size: 0.8em">3350</span> </img>
 				</div>
 			</div>
 
 		</div>
-		<div id="bottom">
-		</div>
+		<div id="bottom"></div>
 		<!-- <ul data-role="listview">
 				<li data-icon="false" ><a href="#" style="padding-top:0px;padding-bottom:0px;"> <img src="images/firefox.png" >
 						<h2>Mozilla Firefox</h2>

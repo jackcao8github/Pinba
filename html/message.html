@@ -59,43 +59,44 @@
 	}, false);
 	/* 加载新消息 */
 	function loadNewMsg() {
-		$.ajax({
-	        type: "POST",
-	        contentType: "application/json",
-	        url: "",
-	        beforeSend: function () {         
-	        	//显示加载中 
-	        	/* $.mobile.loading( "show", {
-	        		            text: '加载...',
-	        		            textVisible: true,
-	        		            theme: 'a',
-	        		            textonly: true,
-	        		            html: ''
-	        		    }); */
-	        		$("#loading").css('display', 'block');
-	        },
-	        complete:function(){
-	        	//隐藏加载中
-	        	//$.mobile.loading( "hide");
-	        	
-	    		$("#loading").fadeToggle("slow");
-	        },
-	        success: function (msg) {
-	        	//从后台返回数据
-	        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" data-ajax="false">';
-	    		newhtml += '<img src="images/login01.png">';
-	    		newhtml += '<h3>xx美食</h3>';
-	    		newhtml += '<p>免预约到店的哟</p>';
-	    		newhtml += '<p class="ui-li-aside">';
-	    		newhtml += '	<strong>9:19</strong>AM';
-	    		newhtml += '</p> </a></li>';
+		//当是滚动条已在最上时，去加载新信息
+		if ($(document).scrollTop() ==0){
+			$.ajax({
+		        type: "POST",
+		        contentType: "application/json",
+		        url: "",
+		        beforeSend: function () {         
+		        	//显示加载中 
+		        	$.mobile.loading( "show", {
+		        		            text: '加载...',
+		        		            textVisible: true,
+		        		            theme: 'a',
+		        		            textonly: true,
+		        		            html: ''
+		        		    }); 
+		        },
+		        complete:function(){
+		        	//隐藏加载中
+		        	$.mobile.loading( "hide");
+		        },
+		        success: function (msg) {
+		        	//从后台返回数据
+		        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" data-ajax="false">';
+		    		newhtml += '<img src="images/login01.png">';
+		    		newhtml += '<h3>xx美食</h3>';
+		    		newhtml += '<p>免预约到店的哟</p>';
+		    		newhtml += '<p class="ui-li-aside">';
+		    		newhtml += '	<strong>9:19</strong>AM';
+		    		newhtml += '</p> </a></li>';
 
-	    		for ( var i = 0; 200 > i; i++) {
-	    			var newli = $('#messageListUL').prepend(newhtml);
-	    			newli.listview("refresh");
-	    		}
-	        }
-	    });
+		    		for ( var i = 0; 10 > i; i++) {
+		    			var newli = $('#messageListUL').prepend(newhtml);
+		    		}
+		    		$('#messageListUL').listview("refresh");
+		        }
+		    });
+		}
+		
 	}
 </script>
 </head>
@@ -118,7 +119,6 @@
 			</div>
 
 			<div id="messageList">
-				<p style="display: none; text-align: center;" id="loading">加载中。。。</p>
 				<ul data-role="listview" id="messageListUL">
 					<!-- 聊天信息 -->
 					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
