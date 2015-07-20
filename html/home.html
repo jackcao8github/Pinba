@@ -15,78 +15,96 @@
 
 <script type="text/javascript" src="js/mydownandupslide.js"></script>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				//图片滚动处理 ------------------------------start
-				$(".main_visual").hover(function() {
+	$(document)
+			.ready(
+					function() {
+						//图片滚动处理 ------------------------------start
+						$(".main_visual").hover(function() {
 
-				}, function() {
+						}, function() {
 
-				});
+						});
 
-				$dragBln = false;
+						$dragBln = false;
 
-				$(".main_image").touchSlider(
-						{
-							flexible : true,
-							speed : 200,
-							btn_prev : $("#btn_prev"),
-							btn_next : $("#btn_next"),
-							paging : $(".flicking_con a"),
-							counter : function(e) {
-								$(".flicking_con a").removeClass("on").eq(
-										e.current - 1).addClass("on");
+						$(".main_image").touchSlider(
+								{
+									flexible : true,
+									speed : 200,
+									btn_prev : $("#btn_prev"),
+									btn_next : $("#btn_next"),
+									paging : $(".flicking_con a"),
+									counter : function(e) {
+										$(".flicking_con a").removeClass("on")
+												.eq(e.current - 1).addClass(
+														"on");
+									}
+								});
+
+						$(".main_image").bind("mousedown", function() {
+							$dragBln = false;
+						});
+
+						$(".main_image").bind("dragstart", function() {
+							$dragBln = true;
+						});
+
+						$(".main_image a").click(function() {
+							if ($dragBln) {
+								return false;
 							}
 						});
 
-				$(".main_image").bind("mousedown", function() {
-					$dragBln = false;
-				});
+						timer = setInterval(function() {
+							$("#btn_next").click();
+						}, 5000);
 
-				$(".main_image").bind("dragstart", function() {
-					$dragBln = true;
-				});
+						$(".main_visual").hover(function() {
+							clearInterval(timer);
+						}, function() {
+							timer = setInterval(function() {
+								$("#btn_next").click();
+							}, 5000);
+						});
 
-				$(".main_image a").click(function() {
-					if ($dragBln) {
-						return false;
-					}
-				});
+						$(".main_image").bind("touchstart", function() {
+							clearInterval(timer);
+						}).bind("touchend", function() {
+							timer = setInterval(function() {
+								$("#btn_next").click();
+							}, 5000);
+						});
+						//图片滚动处理 ------------------------------end
+						if (navigator.geolocation) {
+							// getCurrentPosition支持三个参数
+							// getSuccess是执行成功的回调函数
+							// getError是失败的回调函数
+							// getOptions是一个对象，用于设置getCurrentPosition的参数
+							// 后两个不是必要参数
+							var getOptions = {
+								//是否使用高精度设备，如GPS。默认是true
+								enableHighAccuracy : true,
+								//超时时间，单位毫秒，默认为0
+								timeout : 5000,
+								//使用设置时间内的缓存数据，单位毫秒
+								//默认为0，即始终请求新数据
+								//如设为Infinity，则始终使用缓存数据
+								maximumAge : 0
+							};
+							navigator.geolocation.getCurrentPosition(
+									showPosition, showErr, getOptions);
+						} else {
+							alert('Your browser does not support navigator.geolocation!')
+						}
+					});
 
-				timer = setInterval(function() {
-					$("#btn_next").click();
-				}, 5000);
-
-				$(".main_visual").hover(function() {
-					clearInterval(timer);
-				}, function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-
-				$(".main_image").bind("touchstart", function() {
-					clearInterval(timer);
-				}).bind("touchend", function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-				//图片滚动处理 ------------------------------end
-			});
-
-	document.addEventListener(touchEvents.touchend, function(ev) {
-
+	function myTouchEnd(ev){
 		var endX, endY;
-
 		endX = ev.changedTouches[0].pageX;
-
 		endY = ev.changedTouches[0].pageY;
-
 		var direction = GetSlideDirection(startX, startY, endX, endY);
-
+		console.log("touchend,endX="+endX+"endY="+endY);
 		switch (direction) {
-
 		case 0:
 			console.log("没滑动");
 			break;
@@ -94,7 +112,6 @@
 			console.log("向上");
 			addOfferLi();
 			break;
-
 		case 2:
 			console.log("向下");
 			break;
@@ -106,7 +123,9 @@
 			break;
 		default:
 		}
-
+	}
+	document.addEventListener(touchEvents.touchend, function(ev) {
+		myTouchEnd(ev);
 	}, false);
 
 	function addOfferLi() {
@@ -138,13 +157,51 @@
 						'+name+', '糖醋鱼' + i).replace('+price+', '30' + i);
 				var rightli = newhtml.replace('+class+', 'offerrightli')
 						.replace('+name+', '红烧排骨' + i).replace('+price+',
-								'40' + i).replace('+offerid+',i);
+								'40' + i).replace('+offerid+', i);
 				$('#yourLikeDiv').append(leftli);
 				$('#yourLikeDiv').append(rightli);
 			}
 		}
 	}
+
+	function showPosition(position) {
+		// ak = appkey 访问次数流量有限制
+		$
+				.getJSON(
+						'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
+								+ position.coords.latitude
+								+ ','
+								+ position.coords.longitude
+								+ '&output=json&pois=1', function(res) {
+							//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
+							$("#location").html(
+									res.result.addressComponent.city);
+						});
+	}
+	function show(msg) {
+		alert(msg)
+	}
+	function showErr(error) {
+		var result;
+		switch (error.code) {
+		case error.PERMISSION_DENIED:
+			result = "User denied the request for Geolocation."
+			break;
+		case error.POSITION_UNAVAILABLE:
+			result = "Location information is unavailable."
+			break;
+		case error.TIMEOUT:
+			result = "The request to get user location timed out."
+			break;
+		case error.UNKNOWN_ERROR:
+			result = "An unknown error occurred."
+			break;
+		}
+		//alert(result);
+	}
 </script>
+
+</head>
 <style type="text/css">
 .offerleftli {
 	margin: 1px 0;
@@ -207,11 +264,25 @@ div.price {
 	height: 10px;
 	background: #f0f0f0;
 }
+#searchBox {
+	padding-top: 0px;
+	font-size: 0.8em
+}
 </style>
 
 </head>
 <body>
 	<div data-role="page" id="homePage" style="top: -20px;">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false" id="homeHeader">
+			<a href="#" data-role="button" id="location">城市</a>
+			<!-- <h1>欢迎使用xx</h1> -->
+			<h3 id="searchBox">
+				<input id="searchCond" type="search" placeholder="商品名称..">
+			</h3>
+			<a href="message.html" data-role="button" data-icon="mail" target="_top"
+				data-ajax="false" id="messageCnt">10</a>
+		</div>
 		<div class="main_visual">
 			<div class="flicking_con">
 				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
@@ -230,37 +301,44 @@ div.price {
 			</div>
 		</div>
 		<div class="h10"></div>
-		<div class="ui-grid-b" style="">
+		<div class="ui-grid-b">
 			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="foodMain.html" data-ajax="false">
-					<img src="image/firstpage/food_u.png"
-						style="background-size: contain; height: 80%;background-color:#fff"></img>
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;"
+					href="foodMain.html" data-ajax="false"> <img
+					src="image/firstpage/food_u.png"
+					style="background-size: contain; height: 80%; background-color: #fff"></img>
 					<p style="margin: 0px">美食</p>
 				</a>
 			</div>
 			<div class="ui-block-b" style="text-align: center;" id="workDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="workMain.html" data-ajax="false">
-					<img src="image/firstpage/boy_o.png"
-						style="background-size: contain; height: 80%;"></img>
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;"
+					href="workMain.html" data-ajax="false"> <img
+					src="image/firstpage/boy_o.png"
+					style="background-size: contain; height: 80%;"></img>
 					<p style="margin: 0px">工作</p>
 				</a>
 			</div>
-			<div class="ui-block-c" style="text-align: center;" id="entertainmentDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="entertainmentMain.html" data-ajax="false">
-					<img src="image/firstpage/entertainment_o.png"
-						style="background-size: contain; height: 80%;"></img>
+			<div class="ui-block-c" style="text-align: center;"
+				id="entertainmentDiv">
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;"
+					href="entertainmentMain.html" data-ajax="false"> <img
+					src="image/firstpage/entertainment_o.png"
+					style="background-size: contain; height: 80%;"></img>
 					<p style="margin: 0px">娱乐</p>
 				</a>
 			</div>
 
 		</div>
 		<div class="h10"></div>
-		<p style="margin: 0 5px;text-align:center;" id="yourLike">猜你喜欢</p>
+		<p style="margin: 0 5px; text-align: center;" id="yourLike">猜你喜欢</p>
 
 		<div id="yourLikeDiv">
 			<div class="offerleftli">
-				<a href="foodDetail.html?offerId=1"  data-ajax="false"> <img src="image/funlife/funlife02.jpg"
-					class="bigImg" alt="Ballade">
+				<a href="foodDetail.html?offerId=1" data-ajax="false" target="_top"> <img
+					src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
 					<div class="price">
@@ -280,8 +358,8 @@ div.price {
 
 
 			<div class="offerrightli">
-				<a href="foodDetail.html?offerId=2" data-ajax="false"> <img src="image/funlife/funlife03.jpg"
-					class="bigImg" alt="Ballade">
+				<a href="foodDetail.html?offerId=2" data-ajax="false"> <img
+					src="image/funlife/funlife03.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
 					<div class="price">
@@ -299,8 +377,8 @@ div.price {
 				</div>
 			</div>
 			<div class="offerleftli">
-				<a href="foodDetail.html?offerId=3" data-ajax="false"> <img src="image/funlife/funlife02.jpg"
-					class="bigImg" alt="Ballade">
+				<a href="foodDetail.html?offerId=3" data-ajax="false"> <img
+					src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
 					<div class="price">
@@ -320,8 +398,8 @@ div.price {
 
 
 			<div class="offerrightli">
-				<a href="foodDetail.html?offerId=4" data-ajax="false"> <img src="image/funlife/funlife03.jpg"
-					class="bigImg" alt="Ballade">
+				<a href="foodDetail.html?offerId=4" data-ajax="false"> <img
+					src="image/funlife/funlife03.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
 					<div class="price">
@@ -341,53 +419,6 @@ div.price {
 
 		</div>
 		<div id="bottom"></div>
-		<!-- <ul data-role="listview">
-				<li data-icon="false" ><a href="#" style="padding-top:0px;padding-bottom:0px;"> <img src="images/firefox.png" >
-						<h2>Mozilla Firefox</h2>
-						<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
-						<div style="float:left;">
-							<img style="height:0.8em;width:0.8em;" src="image/tuan_review_good.png"><span style="font-size:0.8em">335</span> </img>
-						</div>
-						
-						<div style="margin-left:10px;float:left;">
-							<img style="height:0.8em;width:0.8em;" src="image/my_favorite_user_icon_normal.png"><span style="font-size:0.8em">3350</span> </img>
-						</div>
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/opera.png">
-						<h2>Opera</h2>
-						<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p> <span
-						class="ui-li-count">已售335</span>
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/aoyou.png">
-						<h2>傲游浏览器</h2>
-						<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p> <span class="ui-li-count">已售335</span>
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/netscape.png">
-						<h2>Netscape</h2>
-						<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p> <span
-						class="ui-li-count">已售335</span> 
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/liebao.png">
-						<h2>猎豹安全浏览器</h2>
-						<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p> <span
-						class="ui-li-count">已售335</span>
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/taobao.png">
-						<h2>淘宝浏览器</h2>
-						<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p> <span
-						class="ui-li-count">已售335</span> 
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/baidu.png">
-						<h2>百度浏览器</h2>
-						<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p> <span
-						class="ui-li-count">已售335</span> 
-
-				</a></li>
-			</ul> -->
-		<!--endpart1-->
 
 
 		<div data-role="popup" id="addFavorite" data-overlay-theme="b"
@@ -403,18 +434,18 @@ div.price {
 		</div>
 
 
-		<!-- <div data-role="footer" data-position="fixed">
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
 				<ul>
-					<li><a id="homeBtn" href="home.html" data-icon="home"
+					<li><a id="homeBtn" href="home.html" data-icon="home"  data-ajax="false"
 						class="ui-btn-active">首页</a></li>
-					<li><a id="pinleBtn" href="pinle.html" data-icon="bars">拼乐</a></li>
-					<li><a id="fabuBtn" href="fabu.html" data-icon="grid">发布</a></li>
-					<li><a id="faxianBtn" href="faxian.html" data-icon="eye">发现</a></li>
-					<li><a id="wodeBtn" href="wode.html" data-icon="phone">我的</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"  data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"  data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"  data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="phone"  data-ajax="false">我的</a></li>
 				</ul>
 			</div>
-		</div> -->
+		</div>
 	</div>
 </body>
 </html>

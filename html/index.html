@@ -28,7 +28,7 @@
 		var ifr = document.getElementById('indexFrame');
 		var iDoc = ifr.contentDocument || ifr.document
 		var height = calcPageHeight(iDoc)
-		ifr.style.height = height + 'px';
+		ifr.style.height = height-$('#indexFooterDiv').height() + 'px';
 		console.log(height);
 	}
 	// 计算页面的实际高度，iframe自适应会用到
@@ -42,7 +42,7 @@
 		return height
 	}
 
-	function showPosition(position) {
+	/* function showPosition(position) {
 		// ak = appkey 访问次数流量有限制
 		$
 				.getJSON(
@@ -76,9 +76,9 @@
 			break;
 		}
 		//alert(result);
-	}
+	} */
 
-	$(document)
+	/* $(document)
 			.ready(
 					function() {
 						if (navigator.geolocation) {
@@ -102,7 +102,7 @@
 						} else {
 							alert('Your browser does not support navigator.geolocation!')
 						}
-					});
+					}); */
 </script>
 
 </head>
@@ -112,20 +112,20 @@
 <body>
 	<div data-role="page" id="indexPage" data-dom-cache="true">
 	<!-- data-fullscreen=false用于控制header不自动隐藏，data-position="fixed"用于控制header固定在容器最上位置 -->
-		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"
+		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"
 			id="indexHeader" data-theme="a">
 			<a href="#" data-role="button" id="location">城市</a>
-			<!-- <h1>欢迎使用xx</h1> -->
+			<h1>欢迎使用xx</h1>
 			<h3 id="searchBox">
 				<input id="searchCond" type="search" placeholder="商品名称..">
 			</h3>
 			<a href="message.html" data-role="button" data-icon="mail"
 				data-ajax="false" id="messageCnt">10</a>
-		</div>
+		</div> -->
 		<iframe id="indexFrame" name="indexFrame" src="home.html"
 				style="width: 100%; heigth: 100%;" scrolling="auto" frameborder="0"
 				onload="resizeIFrameHeight()"></iframe>
-		<div data-role="footer" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
+		<div id="indexFooterDiv" data-role="footer" data-position="fixed" data-fullscreen="false" data-tap-toggle="false" data-theme="e">
 			<div data-role="navbar" data-grid="d">
 				<ul>
 					<li><a id="homeBtn" onclick="switchIFrame('home')"

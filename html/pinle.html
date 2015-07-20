@@ -95,7 +95,7 @@
 </script>
 </head>
 <body>
-	<div data-role="page" id="pinlePage" >
+	<div data-role="page" id="pinlePage">
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
 			id="indexHeader" data-theme="a">
 			<form>
@@ -118,7 +118,7 @@
 			</form>
 		</div>
 
-		<div data-role="content" style="min-height: 800px;">
+		<div data-role="none" style="min-height: 800px;">
 			<ul data-role="listview" id="activityList"
 				style="min-height: inherit; height: auto;">
 				<li data-icon="false"><a href="showPinActivityInfo.html"
@@ -166,6 +166,22 @@
 				</a></li>
 
 			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						data-ajax="false">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
+						class="ui-btn-active" data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
+						data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
+						data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="phone"
+						data-ajax="false">我的</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </body>

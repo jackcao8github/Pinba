@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="css/font-awesome.css" />
 <link rel="stylesheet" href="css/mygrid.css" />
 <script src="js/jquery-1.7.1.min.js"></script>
-<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script src="js/jquery.mobile-1.4.5.js"></script>
+<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script type="text/javascript" src="js/jquery.event.drag-1.5.min.js"></script>
 <script type="text/javascript" src="js/jquery.touchSlider.js"></script>
 
@@ -73,8 +73,32 @@
 					}, 5000);
 				});
 				//图片滚动处理 ------------------------------end
+
+				//为关注按钮增加响应事件
+				$('#favBtn').bind('click', function() {
+					var css = $(this).find('i').attr('class');
+					if (css.indexOf('fa-star-o') > 0) {
+						$(this).find('i').attr('class', 'fa fa-star fa-2x');
+					} else {
+						$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
+					}
+				});
+				//为分享按钮增加响应事件
+				$('#shareBtn').bind('click', function() {
+
+				});
+				//为购买按钮增加响应事件
+				$('#buyBtn').bind('click', function() {
+
+				});
+				//为加入购物车按钮增加响应事件
+				$('#shopcartBtn').bind('click', function() {
+
+				});
 			});
 </script>
+
+
 <style type="text/css">
 .offerleftli {
 	margin: 1px 0;
@@ -137,12 +161,26 @@ div.title {
 	height: 10px;
 	background: #f0f0f0;
 }
+
+.title-bg {
+	position: absolute;
+	background: #000;
+	filter: alpha(opacity =     50);
+	opacity: 0.5;
+	height: 44px;
+	left: 0px;
+	bottom: 0;
+	color:white;
+	text-align: center;
+	line-height:44px;
+	width:100%;
+}
 </style>
 
 </head>
 <body>
 	<div data-role="page" id="homePage" style="top: -20px;">
-		<div data-role="header" data-position="fixed" data-fullscreen="false">
+		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
@@ -156,42 +194,61 @@ div.title {
 			</div>
 			<div class="main_image">
 				<ul>
-					<li><img src="images/img_main_1.jpg"></li>
-					<li><img src="images/img_main_2.jpg"></li>
-					<li><img src="images/img_main_3.jpg"></li>
-					<li><img src="images/img_main_4.jpg"></li>
-					<li><img src="images/img_main_5.jpg"></li>
+					<li style="float: left"><img src="images/img_main_1.jpg">
+					</li>
+					<li style="float: left"><img src="images/img_main_2.jpg">
+					</li>
+					<li style="float: left"><img src="images/img_main_3.jpg">
+					</li>
+					<li style="float: left"><img src="images/img_main_4.jpg">
+					</li>
+					<li style="float: left"><img src="images/img_main_5.jpg">
+					</li>
 				</ul>
 				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
 					href="javascript:;" id="btn_next" style="display: none;"></a>
+
+				<div class="title-bg">
+						酸菜鱼
+				</div>
+
 			</div>
+
 		</div>
 
 		<div class="firstblock">
-			<div class="title">酸菜鱼</div>
-			<div>
-				<div class="price">
-					<i class="fa fa-rmb"></i>100
+			<div class="h1"></div>
+			<div class="item" tapmode="presshover" onclick="">
+				<div class="price"
+					style="float: left; width: auto; font-size: 1.5em;">
+					<i class="fa fa-rmb">100</i>
 				</div>
-				<del class="price">
-					<i class="fa fa-rmb"></i>120
-				</del>
-				<div class="price">
-					<i class="fa fa-shopping-cart"></i>已售61
+				<div class="price" style="float: left; width: auto;text-decoration:line-through;">
+					120
 				</div>
-			</div>
-			<div class="price">
-				<i class="fa fa-exchange"></i>返等额积分
-			</div>
+				
+				<div class="price" style="float: right; width: auto;">
+					<i class="fa fa-shopping-cart">已售61</i>
+				</div>
 
-			<div>
-				<div class="price">
+			</div>
+			<div style="clear: both;"></div>
+			<div class="h1"></div>
+			<div class="item" tapmode="presshover" onclick="">
+				<div style="float: left; margin-left: 5px;color:blue;">
+					<i class="fa fa-exchange"></i>返等额积分
+				</div>
+				<img src="image/arrow.png" alt="" class="item_arrow">
+			</div>
+			<div class="h1"></div>
+			<div class="item" tapmode="presshover">
+				<div style="float: left; width: 20%;color:blue;padding-left:5px;">
 					<i class="fa fa-tag"></i>随时退
 				</div>
-				<div class="price">
+				<div style="float: left; width: 20%;color:blue;">
 					<i class="fa fa-tag"></i>过期退
 				</div>
-				<div class="price">
+				<div style="float: left; width: 20%;color:blue;">
 					<i class="fa fa-tag"></i>免预约
 				</div>
 			</div>
@@ -237,18 +294,16 @@ div.title {
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false">
-			<div data-role="navbar" data-grid="d">
-				<ul>
-					<li><a id="homeBtn" onclick="switchIFrame('home')"
-						data-icon="home" class="ui-btn-active">在线联系</a></li>
-					<li><a id="pinleBtn" onclick="switchIFrame('pinle')"
-						data-icon="bars">关注</a></li>
-					<li><a id="fabuBtn" onclick="switchIFrame('fabu')"
-						data-icon="grid">分享</a></li>
-					<li><a id="faxianBtn" onclick="switchIFrame('faxian')"
-						data-icon="eye">购买</a></li>
-					<li><a id="wodeBtn" onclick="switchIFrame('wode')"
-						data-icon="phone">加购物车</a></li>
+			<div data-role="navbar" data-grid="c">
+				<ul style="text-align: center;">
+					<li id="favBtn"><i class="fa fa-star-o fa-2x"></i></li>
+					<!-- 关注 -->
+					<li id="shareBtn"><i class="fa fa-share-alt fa-2x"></i></li>
+					<!-- 分享 -->
+					<li id="buyBtn"><i class="fa fa-shopping-cart fa-2x"></i></li>
+					<!-- 购买 -->
+					<li id="shopcartBtn"><i class="fa fa-cart-plus fa-2x"></i></li>
+					<!-- 加入购物车 -->
 				</ul>
 			</div>
 		</div>

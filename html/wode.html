@@ -2,6 +2,8 @@
 <html manifest="pinba.appcache">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="css/mygrid.css" />
 
@@ -9,7 +11,7 @@
 <script src="js/jquery.mobile-1.4.5.js"></script>
 
 <script type="text/javascript">
-	$(document).bind("pagecreate", function() {
+	/* $(document).bind("pagecreate", function() {
 		var userId = localStorage.userId;
 		if (userId == null) {//未登陆过
 
@@ -20,13 +22,14 @@
 			//调用后台服务取得余额、积分、等级、是否认证,存入sessonStorage里
 
 		}
-	});
+	}); */
 
 	//清理缓存下来的html,css,js
 	function clearCache() {
-		if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+		//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
 			window.applicationCache.update();
-		}
+			alert('sucess');
+		//}
 	}
 
 	function viewUserInfo() {
@@ -46,125 +49,139 @@
 </style>
 </head>
 <body>
-	<!-- 	<div data-role="page" id="wode">
-		<div data-role="content"> -->
-	<div class="login">
-		<img src="image/profile_default.png" alt="" class="personal_logo"
-			onclick="viewUserInfo()">
-		<div class="userinfo">
-			<div class="title">用户A</div>
-			<div class="subtitle">未认证</div>
-			<div class="subtitle">余额</div>
-			<div class="subtitle">积分</div>
-			<div class="subtitle">等级</div>
-		</div>
+	<div data-role="page" id="wode">
+		<div data-role="none">
+			<div class="login">
+				<img src="image/profile_default.png" alt="" class="personal_logo"
+					onclick="viewUserInfo()">
+				<div class="userinfo">
+					<div class="title">用户A</div>
+					<div class="subtitle">未认证</div>
+					<div class="subtitle">余额</div>
+					<div class="subtitle">积分</div>
+					<div class="subtitle">等级</div>
+				</div>
 
+			</div>
+
+			<!-- 第一块 -->
+			<div class="firstblock">
+				<div class="item" tapmode="presshover"
+					onclick="">
+					<img src="image/my_order_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的主页</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_wallet_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的工作</span> <img
+						src="image/arrow.png" alt="" class="item_arrow"> <span
+						class="fr hint">简历/投递记录/工作记录</span>
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover"
+					onclick="">
+					<img src="image/my_order_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的订单</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_wallet_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的钱包</span> <img
+						src="image/arrow.png" alt="" class="item_arrow"> <span
+						class="fr hint">余额/保证金/红包/优惠券/积分</span>
+				</div>
+			</div>
+
+
+			<!-- 第二块 -->
+			<div class="h10"></div>
+			<div class="secondblock">
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_favorite_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的发布</span> <img
+						src="image/arrow.png" alt="" class="item_arrow"> <span
+						class="fr hint">工作/商品/活动</span>
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_review_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的关注</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_review_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的订阅</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_review_user_icon_normal.png" alt=""
+						class="item_ico"> <span>我的推广</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_wallet_user_icon_normal.png" alt=""
+						class="item_ico"> <span>核销商品码</span> <img
+						src="image/arrow.png" alt="" class="item_arrow"> <span
+						class="fr hint">商品码/优惠券码/活动码</span>
+				</div>
+			</div>
+
+			<!-- 第三块 -->
+			<div class="h10"></div>
+			<div class="thirdblock">
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_history_user_icon_normal.png" alt=""
+						class="item_ico"> <span>最近浏览</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_order_user_icon_normal.png" alt=""
+						class="item_ico"> <span>服务中心</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_order_user_icon_normal.png" alt=""
+						class="item_ico"> <span>成为商家</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover" onclick="">
+					<img src="image/my_order_user_icon_normal.png" alt=""
+						class="item_ico"> <span>成为会员</span> <img
+						src="image/arrow.png" alt="" class="item_arrow">
+				</div>
+				<div class="h1"></div>
+				<div class="item" tapmode="presshover">
+				<a href="#" onclick="clearCache()">
+					<img src="image/my_setting_user_icon_normal.png" alt="" 
+						class="item_ico"> <span>清除缓存</span> <img
+						src="image/arrow.png" alt="" class="item_arrow"></a>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home" data-ajax="false">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars" data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid" data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye" data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="phone"  data-ajax="false"
+						class="ui-btn-active">我的</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
-
-	<!-- 第一块 -->
-	<div class="firstblock">
-		<div class="item" tapmode="presshover"
-			onclick="openNewWindow('myorder')">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的主页</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_wallet_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的工作</span> <img
-				src="image/arrow.png" alt="" class="item_arrow"> <span
-				class="fr hint">简历/投递记录/工作记录</span>
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover"
-			onclick="openNewWindow('myorder')">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的订单</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_wallet_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的钱包</span> <img
-				src="image/arrow.png" alt="" class="item_arrow"> <span
-				class="fr hint">余额/保证金/红包/优惠券/积分</span>
-		</div>
-	</div>
-
-
-	<!-- 第二块 -->
-	<div class="h10"></div>
-	<div class="secondblock">
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_favorite_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的发布</span> <img
-				src="image/arrow.png" alt="" class="item_arrow"> <span
-				class="fr hint">工作/商品/活动</span>
-		</div>
-
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_review_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的关注</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_review_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的订阅</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_review_user_icon_normal.png" alt=""
-				class="item_ico"> <span>我的推广</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_wallet_user_icon_normal.png" alt=""
-				class="item_ico"> <span>核销商品码</span> <img
-				src="image/arrow.png" alt="" class="item_arrow"> <span
-				class="fr hint">商品码/优惠券码/活动码</span>
-		</div>
-	</div>
-
-	<!-- 第三块 -->
-	<div class="h10"></div>
-	<div class="thirdblock">
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_history_user_icon_normal.png" alt=""
-				class="item_ico"> <span>最近浏览</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>服务中心</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>成为商家</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="openLogin()">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>成为会员</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-		<div class="h1"></div>
-		<div class="item" tapmode="presshover" onclick="clearCache()">
-			<img src="image/my_setting_user_icon_normal.png" alt=""
-				class="item_ico"> <span>清除缓存</span> <img
-				src="image/arrow.png" alt="" class="item_arrow">
-		</div>
-	</div>
-	<!-- </div> -->
 </body>
 </html>
