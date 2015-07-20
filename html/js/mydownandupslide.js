@@ -48,6 +48,16 @@ var touchEvents = {
 var startX, startY;
 
 document.addEventListener(touchEvents.touchstart, function(ev) {
+	console.log("touchstart");
 	startX = ev.touches[0].pageX;
 	startY = ev.touches[0].pageY;
+	
+	console.log("touchstart,startX="+startX+"startY="+startY);
+}, false);
+
+var timerId;
+document.addEventListener(touchEvents.touchmove, function(ev) {
+	window.clearInterval(timerId);
+	
+	timerId = window.setTimeout(myTouchEnd, 200);  
 }, false);
