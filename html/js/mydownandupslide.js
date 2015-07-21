@@ -33,7 +33,7 @@ var touchEvents = {
 	touchstart : "touchstart",
 	touchmove : "touchmove",
 	touchend : "touchend",
-
+	toucancel : "touchcancel",
 	/**
 	 * @desc:判断是否pc设备，若是pc，需要更改touch事件为鼠标事件，否则默认触摸事件
 	 */
@@ -54,10 +54,12 @@ document.addEventListener(touchEvents.touchstart, function(ev) {
 	
 	console.log("touchstart,startX="+startX+"startY="+startY);
 }, false);
+/*document.addEventListener(touchEvents.touchmove, function (e) { e.preventDefault(); }, false);
+*/
+document.addEventListener(touchEvents.touchend, function(ev) {
+	myTouchEnd(ev);
+}, false);
 
-var timerId;
-document.addEventListener(touchEvents.touchmove, function(ev) {
-	window.clearInterval(timerId);
-	
-	timerId = window.setTimeout(myTouchEnd, 200);  
+document.addEventListener(touchEvents.toucancel, function(ev) {
+	myTouchEnd(ev);
 }, false);
