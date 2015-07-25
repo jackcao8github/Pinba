@@ -23,7 +23,23 @@
 
 		}
 	}); */
-
+	
+	function GetRandomNum(Min,Max)
+	{   
+	var Range = Max - Min;   
+	var Rand = Math.random();   
+	return(Min + Math.round(Rand * Range));   
+	}   
+	
+	$(document).ready(function(){
+		var myDate = new Date();
+		var num = GetRandomNum(1,100);
+		$('#userName').html('user' +num );
+		$('#authSate').html("认证："+GetRandomNum(1,2) );
+		$('#balanceValue').html('余额：' +num );
+		$('#pointsValue').html('积分：' +num );
+		$('#level').html('级别：'+GetRandomNum(1,2));
+	});
 	//清理缓存下来的html,css,js
 	function clearCache() {
 		//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
@@ -55,11 +71,11 @@
 				<img src="image/profile_default.png" alt="" class="personal_logo"
 					onclick="viewUserInfo()">
 				<div class="userinfo">
-					<div class="title">用户A</div>
-					<div class="subtitle">未认证</div>
-					<div class="subtitle">余额</div>
-					<div class="subtitle">积分</div>
-					<div class="subtitle">等级</div>
+					<div class="title" id="userName">用户A</div>
+					<div class="subtitle" id="authSate">未认证</div>
+					<div class="subtitle" id="balanceValue">余额</div>
+					<div class="subtitle" id="pointsValue">积分</div>
+					<div class="subtitle" id="level">等级</div>
 				</div>
 
 			</div>

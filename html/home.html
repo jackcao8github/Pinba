@@ -14,68 +14,117 @@
 <script type="text/javascript" src="js/jquery.touchSlider.js"></script>
 
 <script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=71709218d45a706b9c7e3abc2f037b23"></script>
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
-						//图片滚动处理 ------------------------------start
-						$(".main_visual").hover(function() {
+	$(document).ready(
+			function() {
+				//图片滚动处理 ------------------------------start
+				$(".main_visual").hover(function() {
 
-						}, function() {
+				}, function() {
 
-						});
+				});
 
-						$dragBln = false;
+				$dragBln = false;
 
-						$(".main_image").touchSlider(
-								{
-									flexible : true,
-									speed : 200,
-									btn_prev : $("#btn_prev"),
-									btn_next : $("#btn_next"),
-									paging : $(".flicking_con a"),
-									counter : function(e) {
-										$(".flicking_con a").removeClass("on")
-												.eq(e.current - 1).addClass(
-														"on");
-									}
-								});
-
-						$(".main_image").bind("mousedown", function() {
-							$dragBln = false;
-						});
-
-						$(".main_image").bind("dragstart", function() {
-							$dragBln = true;
-						});
-
-						$(".main_image a").click(function() {
-							if ($dragBln) {
-								return false;
+				$(".main_image").touchSlider(
+						{
+							flexible : true,
+							speed : 200,
+							btn_prev : $("#btn_prev"),
+							btn_next : $("#btn_next"),
+							paging : $(".flicking_con a"),
+							counter : function(e) {
+								$(".flicking_con a").removeClass("on").eq(
+										e.current - 1).addClass("on");
 							}
 						});
 
-						timer = setInterval(function() {
-							$("#btn_next").click();
-						}, 5000);
+				$(".main_image").bind("mousedown", function() {
+					$dragBln = false;
+				});
 
-						$(".main_visual").hover(function() {
-							clearInterval(timer);
-						}, function() {
-							timer = setInterval(function() {
-								$("#btn_next").click();
-							}, 5000);
-						});
+				$(".main_image").bind("dragstart", function() {
+					$dragBln = true;
+				});
 
-						$(".main_image").bind("touchstart", function() {
-							clearInterval(timer);
-						}).bind("touchend", function() {
-							timer = setInterval(function() {
-								$("#btn_next").click();
-							}, 5000);
+				$(".main_image a").click(function() {
+					if ($dragBln) {
+						return false;
+					}
+				});
+
+				timer = setInterval(function() {
+					$("#btn_next").click();
+				}, 5000);
+
+				$(".main_visual").hover(function() {
+					clearInterval(timer);
+				}, function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+
+				$(".main_image").bind("touchstart", function() {
+					clearInterval(timer);
+				}).bind("touchend", function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+				//图片滚动处理 ------------------------------end
+
+				//使用baidu api实现定位功能
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r) {
+					if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+						/* var mk = new BMap.Marker(r.point);
+						map.addOverlay(mk);
+						map.panTo(r.point); */
+						//alert('您的位置：'+r.point.lng+','+r.point.lat);
+						showPosition(r.point.lat, r.point.lng);
+					} else {
+						alert('failed' + this.getStatus());
+					}
+				}, {
+					enableHighAccuracy : true
+				})
+				//关于状态码
+				//BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
+				//BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
+				//BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
+				//BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
+				//BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
+				//BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
+				//BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
+				//BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
+				//BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
+			});
+
+	function showPosition(latitude, longitude) {
+		//将经纬度缓存下来
+		localStorage.latitude = latitude;
+		localStorage.longitude = longitude;
+		// ak = appkey 访问次数流量有限制
+		$
+				.getJSON(
+						'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
+								+ latitude
+								+ ','
+								+ longitude
+								+ '&output=json&pois=1',
+						function(res) {
+							//将位置缓存下来
+							localStorage.addressComponent = res.result.addressComponent;
+							//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
+							$("#location").html(
+									res.result.addressComponent.city);
 						});
-						//图片滚动处理 ------------------------------end
-						if (navigator.geolocation) {
+	}
+	/* html5自身的定位在webview中不起作用
+	 if (navigator.geolocation) {
 							// getCurrentPosition支持三个参数
 							// getSuccess是执行成功的回调函数
 							// getError是失败的回调函数
@@ -83,9 +132,9 @@
 							// 后两个不是必要参数
 							var getOptions = {
 								//是否使用高精度设备，如GPS。默认是true
-								enableHighAccuracy : true,
+								enableHighAccuracy : false,
 								//超时时间，单位毫秒，默认为0
-								timeout : 5000,
+								timeout : 60000,
 								//使用设置时间内的缓存数据，单位毫秒
 								//默认为0，即始终请求新数据
 								//如设为Infinity，则始终使用缓存数据
@@ -95,15 +144,35 @@
 									showPosition, showErr, getOptions);
 						} else {
 							alert('Your browser does not support navigator.geolocation!')
-						}
-					});
-
-	function myTouchEnd(ev){
+						} 
+	
+	function show(msg) {
+		alert(msg)
+	}
+	function showErr(error) {
+		var result;
+		switch (error.code) {
+		case error.PERMISSION_DENIED:
+			result = "User denied the request for Geolocation."
+			break;
+		case error.POSITION_UNAVAILABLE:
+			result = "Location information is unavailable."
+			break;
+		case error.TIMEOUT:
+			result = "The request to get user location timed out."
+			break;
+		case error.UNKNOWN_ERROR:
+			result = "An unknown error occurred."
+			break;
+		}
+		alert(result);
+	} */
+	function myTouchEnd(ev) {
 		var endX, endY;
 		endX = ev.changedTouches[0].pageX;
 		endY = ev.changedTouches[0].pageY;
 		var direction = GetSlideDirection(startX, startY, endX, endY);
-		console.log("touchend,endX="+endX+"endY="+endY);
+		console.log("touchend,endX=" + endX + "endY=" + endY);
 		switch (direction) {
 		case 0:
 			console.log("没滑动");
@@ -124,12 +193,13 @@
 		default:
 		}
 	}
-	
 
 	function addOfferLi() {
 		$('#yourLike').html("猜你喜欢....");
-		if ($(document).scrollTop() >= $(document).height()
-				- $(window).height()) {
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop / (docHeight - winHeight) >= 0.9) {//滚动到底部10%时
 			console.log("滚动条已经到达底部为" + $(document).scrollTop());
 			var newhtml = '<div class="+class+">';
 			newhtml += '<a href="foodDetail.html?offerId=+offerid+" data-ajax="false"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
@@ -160,42 +230,6 @@
 				$('#yourLikeDiv').append(rightli);
 			}
 		}
-	}
-
-	function showPosition(position) {
-		// ak = appkey 访问次数流量有限制
-		$
-				.getJSON(
-						'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
-								+ position.coords.latitude
-								+ ','
-								+ position.coords.longitude
-								+ '&output=json&pois=1', function(res) {
-							//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
-							$("#location").html(
-									res.result.addressComponent.city);
-						});
-	}
-	function show(msg) {
-		alert(msg)
-	}
-	function showErr(error) {
-		var result;
-		switch (error.code) {
-		case error.PERMISSION_DENIED:
-			result = "User denied the request for Geolocation."
-			break;
-		case error.POSITION_UNAVAILABLE:
-			result = "Location information is unavailable."
-			break;
-		case error.TIMEOUT:
-			result = "The request to get user location timed out."
-			break;
-		case error.UNKNOWN_ERROR:
-			result = "An unknown error occurred."
-			break;
-		}
-		//alert(result);
 	}
 </script>
 
@@ -262,6 +296,7 @@ div.price {
 	height: 10px;
 	background: #f0f0f0;
 }
+
 #searchBox {
 	padding-top: 0px;
 	font-size: 0.8em
@@ -272,14 +307,36 @@ div.price {
 <body>
 	<div data-role="page" id="homePage" style="top: -20px;">
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="homeHeader">
-			<a href="#" data-role="button" id="location">城市</a>
-			<!-- <h1>欢迎使用xx</h1> -->
-			<h3 id="searchBox">
-				<input id="searchCond" type="search" placeholder="商品名称..">
-			</h3>
-			<a href="message.html" data-role="button" data-icon="mail" target="_top"
-				data-ajax="false" id="messageCnt">10</a>
+			data-tap-toggle="false" id="homeHeader" style="background-color:white;">
+			<div
+				style="float: left; margin: 0; width: 20%; overflow: hidden; text-align: center; line-height: 49px;">
+				<a href="#" data-role="none" ><i class="fa fa-street-view"></i><span id="location">城市</span></a>
+			</div>
+			<div
+				style="float: left; width: 60%; overflow: hidden; line-height: 49px; ">
+				<div
+					style="display: block; float: left; width: 25%;">
+					<select name="classid" id="choose" data-role="none">
+						<option value="0">工作</option>
+						<option value="1">美食</option>
+						<option value="4">娱乐</option>
+					</select>
+				</div>
+				<div
+					style="display: block; float: left; margin: 0; width: 65%;">
+					<input type="search" name="keyboard" placeholder="商品名称.." data-role="none" style="width:100%;"/>
+				</div>
+				<div
+					style="display: block; float: right; margin: 0; width: 10%;">
+					<a><i class="fa fa-search fa-lg"></i></a>
+				</div>
+			</div>
+			<div
+				style="float: right; width: 20%; overflow: hidden; text-align: center; line-height: 49px;">
+				<a href="message.html" data-role="none" data-icon="mail"
+					 target="_top"
+					data-ajax="false" id="messageCnt"><i class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
+			</div>
 		</div>
 		<div class="main_visual">
 			<div class="flicking_con">
@@ -335,8 +392,8 @@ div.price {
 
 		<div id="yourLikeDiv">
 			<div class="offerleftli">
-				<a href="foodDetail.html?offerId=1" data-ajax="false" target="_top"> <img
-					src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
+				<a href="foodDetail.html?offerId=1" data-ajax="false" target="_top">
+					<img src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
 					<div class="price">
@@ -435,12 +492,16 @@ div.price {
 		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
 				<ul>
-					<li><a id="homeBtn" href="home.html" data-icon="home"  data-ajax="false"
-						class="ui-btn-active">首页</a></li>
-					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"  data-ajax="false">拼乐</a></li>
-					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"  data-ajax="false">发布</a></li>
-					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"  data-ajax="false">发现</a></li>
-					<li><a id="wodeBtn" href="wode.html" data-icon="phone"  data-ajax="false">我的</a></li>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						data-ajax="false" class="ui-btn-active">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
+						data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
+						data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
+						data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="phone"
+						data-ajax="false">我的</a></li>
 				</ul>
 			</div>
 		</div>
