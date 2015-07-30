@@ -107,21 +107,27 @@
 		//将经纬度缓存下来
 		localStorage.latitude = latitude;
 		localStorage.longitude = longitude;
-		// ak = appkey 访问次数流量有限制
-		$
-				.getJSON(
-						'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
-								+ latitude
-								+ ','
-								+ longitude
-								+ '&output=json&pois=1',
-						function(res) {
-							//将位置缓存下来
-							localStorage.addressComponent = res.result.addressComponent;
-							//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
-							$("#location").html(
-									res.result.addressComponent.city);
-						});
+		
+		if (localStorage.city==undefined){
+			// ak = appkey 访问次数流量有限制
+			$
+					.getJSON(
+							'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
+									+ latitude
+									+ ','
+									+ longitude
+									+ '&output=json&pois=1',
+							function(res) {
+									//将位置缓存下来
+									localStorage.city = res.result.addressComponent.city;
+									//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
+									$("#location").html(
+											res.result.addressComponent.city);
+							});
+		}else{
+			$("#location").html(localStorage.city);
+		}
+		
 	}
 	/* html5自身的定位在webview中不起作用
 	 if (navigator.geolocation) {
@@ -307,35 +313,30 @@ div.price {
 <body>
 	<div data-role="page" id="homePage" style="top: -20px;">
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="homeHeader" style="background-color:white;">
+			data-tap-toggle="false" id="homeHeader"
+			style="background-color: white; line-height: 49px;">
 			<div
-				style="float: left; margin: 0; width: 20%; overflow: hidden; text-align: center; line-height: 49px;">
-				<a href="#" data-role="none" ><i class="fa fa-street-view"></i><span id="location">城市</span></a>
+				style="float: left; width: 25%; overflow: hidden; text-align: center;">
+				<a href="changeCity.html" data-role="none" data-ajax="false"><i
+					class="fa fa-street-view"></i><span id="location">城市</span></a>
 			</div>
-			<div
-				style="float: left; width: 60%; overflow: hidden; line-height: 49px; ">
-				<div
+			<!-- <div
 					style="display: block; float: left; width: 25%;">
 					<select name="classid" id="choose" data-role="none">
 						<option value="0">工作</option>
 						<option value="1">美食</option>
 						<option value="4">娱乐</option>
 					</select>
-				</div>
-				<div
-					style="display: block; float: left; margin: 0; width: 65%;">
-					<input type="search" name="keyboard" placeholder="商品名称.." data-role="none" style="width:100%;"/>
-				</div>
-				<div
-					style="display: block; float: right; margin: 0; width: 10%;">
-					<a><i class="fa fa-search fa-lg"></i></a>
-				</div>
+				</div> -->
+			<div style="float: left; width: 60%;">
+				<input type="search" name="keyboard" placeholder="商品名称.."
+					style="width: 100%;" />
 			</div>
 			<div
-				style="float: right; width: 20%; overflow: hidden; text-align: center; line-height: 49px;">
-				<a href="message.html" data-role="none" data-icon="mail"
-					 target="_top"
-					data-ajax="false" id="messageCnt"><i class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
+				style="float: right; width: 15%; overflow: hidden; text-align: center;">
+				<a href="message.html" data-role="none"
+					target="_top" data-ajax="false" id="messageCnt"><i
+					class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
 			</div>
 		</div>
 		<div class="main_visual">
@@ -487,7 +488,7 @@ div.price {
 				class="ui-btn ui-btn-inline ui-mini ui-corner-all ui-shadow"
 				data-rel="back">Cancel</a>
 		</div>
-
+		
 
 		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
