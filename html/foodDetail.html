@@ -13,6 +13,7 @@
 <!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script type="text/javascript" src="js/jquery.event.drag-1.5.min.js"></script>
 <script type="text/javascript" src="js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="myjs/changepage.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(
@@ -183,7 +184,7 @@ div.title {
 		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
 
 			<h1>美食详情</h1>
 		</div>
