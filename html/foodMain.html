@@ -5,275 +5,234 @@
 <meta name="viewport" content="width=device-width" />
 
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="css/mygrid.css" />
+<link rel="stylesheet" href="css/font-awesome.css" />
 <script src="js/jquery-1.11.3.js"></script>
 <script src="js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript" src="myjs/changepage.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 	});
+	$(document).bind('swiperight', function() {
+		closeSubPage();
+		return false;
+	})
+	function myTouchEnd(ev){
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			addOfferLi();
+			break;
+		case 2:
+			console.log("向下");
+			break;
+		case 3:
+			console.log("向左");
+			break;
+		case 4:
+			console.log("向右");
+			break;
+		default:
+		}
+
+	}
+
+	function addOfferLi() {
+		if ($(document).scrollTop() >= $(document).height()
+				- $(window).height()) {
+			console.log("滚动条已经到达底部为" + $(document).scrollTop());
+		$.ajax({
+	        type: "POST",
+	        contentType: "application/json",
+	        url: "",
+	        beforeSend: function () {         
+	        	//显示加载中 
+	        	$.mobile.loading( "show", {
+	        		            text: '加载...',
+	        		            textVisible: true,
+	        		            theme: 'a',
+	        		            textonly: true,
+	        		            html: ''
+	        		    }); 
+	        },
+	        complete:function(){
+	        	//隐藏加载中
+	        	$.mobile.loading( "hide");
+	        },
+	        success: function (msg) {
+	        	//从后台返回数据
+	        	var newhtml = '<li data-icon="false"><a href="showPinActivityInfo.html" data-transition="slidedown" style="padding-top: 0px; padding-bottom: 0px; background-color: white"> ';
+				newhtml += '<img src="images/pro/restau01_mini.jpg" /><!-- 发起人上传的图片 -->';
+				newhtml += ' <h2>发起人:+creater+</h2>';
+				newhtml += '<p class="classement four">活动内容:+content+</p>';
+				newhtml += ' <div style="float: left;">';
+				newhtml += ' <img style="height: 0.8em; width: 0.8em;" src="image/main_index_my_pressed.png">';
+				newhtml += ' <span style="color:#f63">+personNum+</span> </img></div>';
+				newhtml += ' <div style="margin-left: 10px; float: right;">';
+				newhtml += ' <img style="height: 0.8em; width: 0.8em;" src="image/location_icon.png"><spanstyle="color:#f63">+distance+米</span>';
+				newhtml += ' </img></div></a></li>';
+
+				for ( var i = 0; 10 > i; i++) {
+					var realhtml = newhtml.replace('+creater+', 'creater' + i)
+							.replace('+content+', '活动内容' + i).replace(
+									'+personNum+', '10' + i).replace('+distance+',
+									'100' + i);
+					var newli = $('#activityList').append(realhtml);
+				}
+				$('#activityList').listview("refresh");
+	        }
+	    });
+		}
+	}
 </script>
 </head>
 <body>
-	<!-- 展示当前位置 -->
-	<div class="firstblock">
-		<div class="item" tapmode="presshover"
-			onclick="openNewWindow('myorder')">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>南京市雨花台区 西春路-宁双路</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
+	<div data-role="page" id="pinlePage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			id="indexHeader" data-theme="a">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>美食</h1>
 		</div>
-	</div>
-	<div class="firstblock">
-		<div class="ui-grid-b">
-			<!-- <div class="ui-block-a">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">商铺</a>
+
+		<div id="tabs" data-role="tabs">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#messageList" class="ui-btn-active"
+						id="messageTabLi">美食产品</a></li>
+					<li><a href="#friendList">拼类活动</a></li>
+				</ul>
 			</div>
-			<div class="ui-block-b">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">群</a>
+			<div id="messageList">
+				<ul data-role="listview" id="activityList"
+					style="min-height: inherit; height: auto;">
+					<form>
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<label for="select-h-2a">综合排名</label> <select name="select-h-2a"
+								id="select-h-2a">
+								<option value="#">最新</option>
+								<option value="#">距离</option>
+							</select> <label for="select-h-2b">分类</label> <select name="select-h-2b"
+								id="select-h-2b">
+								<option value="#">美食类</option>
+								<option value="#">娱乐类</option>
+							</select> <label for="select-h-2c">商圈</label> <select name="select-h-2c"
+								id="select-h-2c">
+								<option value="#">新街口</option>
+								<option value="#">夫子庙</option>
+								<option value="#">山西路</option>
+							</select>
+						</fieldset>
+					</form>
+					<li data-icon="false"><a href="showPinActivityInfo.html"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+						data-transition="slidedown"> <img
+							src="images/pro/restau01_mini.jpg" /> <!-- 发起人上传的图片 -->
+
+							<h2>发起人:张3</h2>
+
+							<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+							<div style="float: left;">
+								<i class="fa fa-users" style="color: #f63">12</i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<i class="fa fa-map-marker" style="color: #f63">30m</i>
+							</div>
+					</a></li>
+
+					<li data-icon="false"><a href="showPinActivityInfo.html"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+						data-transition="slidedown"> <img
+							src="images/pro/restau02_mini.jpg " />
+
+							<h2>发起人:张3</h2>
+
+							<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+							<div style="float: left;">
+								<i class="fa fa-users" style="color: #f63">12</i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<i class="fa fa-map-marker" style="color: #f63">30m</i>
+							</div>
+					</a></li>
+
+				</ul>
 			</div>
-			<div class="ui-block-c">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">活动</a>
-			</div> -->
-			<div class="ui-block-a" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/food_u.png"
-						style="background-size: contain; height: 80%; background-color: #fff"></img>
-					<p style="margin: 0px">商铺</p>
-				</div>
-			</div>
-			<div class="ui-block-b" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/boy_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">群</p>
-				</div>
-			</div>
-			<div class="ui-block-c" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/entertainment_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">活动</p>
-				</div>
+			
+			<div id="friendList">
+				<ul data-role="listview" id="activityList"
+					style="min-height: inherit; height: auto;">
+					<form>
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<label for="select-h-2a">综合排名</label> <select name="select-h-2a"
+								id="select-h-2a">
+								<option value="#">最新</option>
+								<option value="#">距离</option>
+							</select> <label for="select-h-2b">分类</label> <select name="select-h-2b"
+								id="select-h-2b">
+								<option value="#">美食类</option>
+								<option value="#">娱乐类</option>
+							</select> <label for="select-h-2c">商圈</label> <select name="select-h-2c"
+								id="select-h-2c">
+								<option value="#">新街口</option>
+								<option value="#">夫子庙</option>
+								<option value="#">山西路</option>
+							</select>
+						</fieldset>
+					</form>
+					<li data-icon="false"><a href="showPinActivityInfo.html"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+						data-transition="slidedown"> <img
+							src="images/pro/restau01_mini.jpg" /> <!-- 发起人上传的图片 -->
+
+							<h2>发起人:张3</h2>
+
+							<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+							<div style="float: left;">
+								<i class="fa fa-users" style="color: #f63">12</i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<i class="fa fa-map-marker" style="color: #f63">30m</i>
+							</div>
+					</a></li>
+
+					<li data-icon="false"><a href="showPinActivityInfo.html"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+						data-transition="slidedown"> <img
+							src="images/pro/restau02_mini.jpg " />
+
+							<h2>发起人:张3</h2>
+
+							<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+							<div style="float: left;">
+								<i class="fa fa-users" style="color: #f63">12</i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<i class="fa fa-map-marker" style="color: #f63">30m</i>
+							</div>
+					</a></li>
+
+				</ul>
 			</div>
 		</div>
-	</div>
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的商铺</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>Mozilla Firefox</h2>
-					<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/opera.png">
-					<h2>Opera</h2>
-					<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/aoyou.png">
-					<h2>傲游浏览器</h2>
-					<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/netscape.png">
-					<h2>Netscape</h2>
-					<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/liebao.png">
-					<h2>猎豹安全浏览器</h2>
-					<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/taobao.png">
-					<h2>淘宝浏览器</h2>
-					<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/baidu.png">
-					<h2>百度浏览器</h2>
-					<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-		</ul>
-	</div>
-
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的群</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>创建人：李4</h2>
-					<p>主题：你不吃他就吃</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-
-		</ul>
-	</div>
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的人</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>张三</h2>
-					<p>张三是个公务员</p>
-					<div style="float: left;">
-						<!-- 性别 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/main_index_home_pressed.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<!-- 距离 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/opera.png">
-					<h2>李4</h2>
-					<p>李4是个白领</p>
-
-					<div style="float: left;">
-						<!-- 性别 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/main_index_home_pressed.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<!-- 距离 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-
-		</ul>
 	</div>
 </body>
 </html>

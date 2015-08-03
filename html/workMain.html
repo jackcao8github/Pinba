@@ -7,6 +7,8 @@
 <script src="js/jquery-1.11.3.js"></script>
 <script src="js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript" src="myjs/changepage.js"></script>
+
 <style>
 .msgStatus {
 	background: #26c281;
@@ -28,6 +30,10 @@
 </style>
 
 <script type="text/javascript">
+$(document).bind('swiperight', function() {
+	closeSubPage();
+	return false;
+})
 	document.addEventListener(touchEvents.touchend, function(ev) {
 		var endX, endY;
 		endX = ev.changedTouches[0].pageX;
@@ -105,16 +111,16 @@
 		<div data-role="header" data-position="fixed" data-fullscreen="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
 
-			<h1>我的消息</h1>
+			<h1>工作</h1>
 		</div>
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#messageList" class="ui-btn-active"
-						id="messageTabLi">消息列表</a></li>
-					<li><a href="#friendList">好友列表</a></li>
+						id="messageTabLi">招聘</a></li>
+					<li><a href="#friendList">求职</a></li>
 				</ul>
 			</div>
 

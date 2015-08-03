@@ -19,33 +19,26 @@
 <body>
 	<div data-role="page" id="searchPage" data-dom-cache="true">
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			style="background-color: white; overflow: hidden;">
+			data-tap-toggle="false"
+			style="">
 			<!-- 返回按钮 -->
-
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
-			<!-- <div
-					style="display: block; float: left; width: 25%;">
-					<select name="classid" id="choose" data-role="none">
-						<option value="0">工作</option>
-						<option value="1">美食</option>
-						<option value="4">娱乐</option>
-					</select>
-				</div> -->
+			<div
+				style="float: left; width: 25%; overflow: hidden; text-align: center;">
+				<a href="#" data-rel="back"
+					class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+					onclick="closeSubPage();return false;">Back</a>
+			</div>
 
 			<div
-				style="float: right; width: 15%;  text-align: center;line-height:49px;">
+				style="float: right; width: 15%; text-align: center; line-height: 49px;">
 				<a href="#" data-role="none" data-ajax="false" id="search"><i
 					class="fa fa-search fa-lg"></i></a>
 			</div>
-			<div style="float: right; width: 70%;">
+			<div style="float: right; width: 60%;">
 				<input type="search" name="keyboard" placeholder="商品名称.."
-					style="width: 100%;" />
+					style="width: 100%;" id="searchBox" />
 			</div>
-
 		</div>
-
-
 	</div>
 </body>
 </html>

@@ -16,6 +16,12 @@
 <script type="text/javascript" src="myjs/changepage.js"></script>
 
 <script type="text/javascript">
+	$(document).bind('swiperight', function() {
+		closeSubPage();
+	})
+	$(document).scroll(function(){
+		console.log(1);
+	});
 	$(document).ready(
 			function() {
 				//图片滚动处理 ------------------------------start
@@ -166,28 +172,38 @@ div.title {
 .title-bg {
 	position: absolute;
 	background: #000;
-	filter: alpha(opacity =     50);
+	filter: alpha(opacity =       50);
 	opacity: 0.5;
 	height: 44px;
 	left: 0px;
 	bottom: 0;
-	color:white;
+	color: white;
 	text-align: center;
-	line-height:44px;
-	width:100%;
+	line-height: 44px;
+	width: 100%;
+}
+
+.floatretbtn {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 9;
+	opacity: 0.8;
 }
 </style>
 
 </head>
 <body>
 	<div data-role="page" id="homePage" style="top: -20px;">
-		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
-			<!-- 返回按钮 -->
+		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
+		<!-- 返回按钮 -->
+		<div class="floatretbtn">
 			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
-
-			<h1>美食详情</h1>
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
 		</div>
+		<!-- <h1>美食详情</h1>
+		</div> -->
 		<div class="main_visual">
 			<div class="flicking_con">
 				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
@@ -209,9 +225,7 @@ div.title {
 				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
 					href="javascript:;" id="btn_next" style="display: none;"></a>
 
-				<div class="title-bg">
-						酸菜鱼
-				</div>
+				<div class="title-bg">酸菜鱼</div>
 
 			</div>
 
@@ -224,10 +238,10 @@ div.title {
 					style="float: left; width: auto; font-size: 1.5em;">
 					<i class="fa fa-rmb">100</i>
 				</div>
-				<div class="price" style="float: left; width: auto;text-decoration:line-through;">
-					120
-				</div>
-				
+				<div class="price"
+					style="float: left; width: auto; text-decoration: line-through;">
+					120</div>
+
 				<div class="price" style="float: right; width: auto;">
 					<i class="fa fa-shopping-cart">已售61</i>
 				</div>
@@ -236,20 +250,21 @@ div.title {
 			<div style="clear: both;"></div>
 			<div class="h1"></div>
 			<div class="item" tapmode="presshover" onclick="">
-				<div style="float: left; margin-left: 5px;color:blue;">
+				<div style="float: left; margin-left: 5px; color: blue;">
 					<i class="fa fa-exchange"></i>返等额积分
 				</div>
 				<img src="image/arrow.png" alt="" class="item_arrow">
 			</div>
 			<div class="h1"></div>
 			<div class="item" tapmode="presshover">
-				<div style="float: left; width: 20%;color:blue;padding-left:5px;">
+				<div
+					style="float: left; width: 20%; color: blue; padding-left: 5px;">
 					<i class="fa fa-tag"></i>随时退
 				</div>
-				<div style="float: left; width: 20%;color:blue;">
+				<div style="float: left; width: 20%; color: blue;">
 					<i class="fa fa-tag"></i>过期退
 				</div>
-				<div style="float: left; width: 20%;color:blue;">
+				<div style="float: left; width: 20%; color: blue;">
 					<i class="fa fa-tag"></i>免预约
 				</div>
 			</div>
@@ -295,15 +310,18 @@ div.title {
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false">
-			<div data-role="navbar" data-grid="c">
-				<ul style="text-align: center;">
-					<li id="favBtn"><i class="fa fa-star-o fa-2x"></i></li>
+			<div data-role="navbar" data-grid="b">
+				<ul style="text-align: center; padding: 5px 0">
+					<li id="favBtn"><i class="fa fa-star-o fa-2x"
+						style="color: #f63"></i></li>
 					<!-- 关注 -->
-					<li id="shareBtn"><i class="fa fa-share-alt fa-2x"></i></li>
+					<li id="shareBtn"><i class="fa fa-share-alt fa-2x"
+						style="color: #f63"></i></li>
 					<!-- 分享 -->
-					<li id="buyBtn"><i class="fa fa-shopping-cart fa-2x"></i></li>
+					<li id="buyBtn"><i class="fa fa-shopping-cart fa-2x"
+						style="color: #f63"></i></li>
 					<!-- 购买 -->
-					<li id="shopcartBtn"><i class="fa fa-cart-plus fa-2x"></i></li>
+					<!-- <li id="shopcartBtn"><i class="fa fa-cart-plus fa-2x" style="color:#f63"></i></li> -->
 					<!-- 加入购物车 -->
 				</ul>
 			</div>

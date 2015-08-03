@@ -8,20 +8,38 @@
 <link rel="stylesheet" href="css/mygrid.css" />
 <script src="js/jquery-1.11.3.js"></script>
 <script src="js/jquery.mobile-1.4.5.js"></script>
-
+<script type="text/javascript" src="myjs/position.js"></script>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=71709218d45a706b9c7e3abc2f037b23"></script>
+	
 <script type="text/javascript">
 	$(document).ready(function() {
+		//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"}
+		$("#location").html(localStorage.addressComponent);
 	});
+	
+	function refreshPos(){
+		getPosition(function(){
+			$("#location").html(localStorage.addressComponent);
+		});
+	}
+	
+	$(document).bind('swipeleft',function(){
+		parent.switchIframeByClick('wode');
+	})
+	$(document).bind('swiperight',function(){
+		parent.switchIframeByClick('fabu');
+	})
 </script>
 </head>
 <body>
-	<div data-role="page" id="faxian">
+	<div data-role="page" id="faxianPage">
 		<div data-role="none">
 			<!-- 展示当前位置 -->
 			<div class="firstblock">
-				<div class="item" tapmode="presshover"
-					onclick="openNewWindow('myorder')">
-					<i class="fa fa-street-view fa-lg"></i> <span>南京市雨花台区 西春路-宁双路</span> <i class="fa fa-refresh "></i>
+				<div class="item"
+					onclick="">
+					<i class="fa fa-street-view fa-lg"></i> <span id="location">南京市雨花台区 西春路-宁双路</span> <i class="fa fa-refresh" onclick="refreshPos()"></i>
 				</div>
 			</div>
 			<div class="firstblock">
@@ -66,15 +84,15 @@
 			</div>
 			<div class="h10"></div>
 			<div class="firstblock">
-				<div class="item" tapmode="presshover" onclick="">
+				<div class="item" onclick="">
 					<i class="fa fa-coffee fa-lg"></i> <span>附近的商铺</span> 
 				</div>
 				<ul data-role="listview">
 					<li data-icon="false"><a href="#"
 						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
 							<img src="images/firefox.png">
-							<h2>Mozilla Firefox</h2>
-							<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
+							<h2>KFC-欧尚超市店</h2>
+							<p>KFC-欧尚超市东门</p>
 							<div style="float: left;">
 								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
 							</div>
@@ -86,8 +104,8 @@
 					<li data-icon="false"><a href="#"
 						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
 							<img src="images/opera.png">
-							<h2>Opera</h2>
-							<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p>
+							<h2>SubWay</h2>
+							<p>一家自选汉堡店。</p>
 							<div style="float: left;">
 								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
 							</div>
@@ -100,8 +118,8 @@
 					<li data-icon="false"><a href="#"
 						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
 							<img src="images/aoyou.png">
-							<h2>傲游浏览器</h2>
-							<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p>
+							<h2>大娘水饺</h2>
+							<p>饺子，饺子，还是饺子。</p>
 							<div style="float: left;">
 								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
 							</div>
@@ -113,8 +131,8 @@
 					<li data-icon="false"><a href="#"
 						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
 							<img src="images/netscape.png">
-							<h2>Netscape</h2>
-							<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p>
+							<h2>星巴克</h2>
+							<p>咖啡，甜点。</p>
 							<div style="float: left;">
 								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
 							</div>
@@ -126,38 +144,11 @@
 					<li data-icon="false"><a href="#"
 						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
 							<img src="images/liebao.png">
-							<h2>猎豹安全浏览器</h2>
-							<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p>
+							<h2>DQ</h2>
+							<p>冰雪皇后。</p>
 							<div style="float: left;">
 								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
 							</div>
-
-							<div style="margin-left: 10px; float: right;">
-								<i class="fa fa-map-marker" style="color:#f63">30m</i>
-							</div>
-
-					</a></li>
-					<li data-icon="false"><a href="#"
-						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-							<img src="images/taobao.png">
-							<h2>淘宝浏览器</h2>
-							<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p>
-							<div style="float: left;">
-								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
-							</div>
-
-							<div style="margin-left: 10px; float: right;">
-								<i class="fa fa-map-marker" style="color:#f63">30m</i>
-							</div>
-					</a></li>
-					<li data-icon="false"><a href="#"
-						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-							<img src="images/baidu.png">
-							<h2>百度浏览器</h2>
-							<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p>
-							<div style="float: left;">
-								<i class="fa fa-thumbs-up" style="color:#f63">37</i>
-							</div> 
 
 							<div style="margin-left: 10px; float: right;">
 								<i class="fa fa-map-marker" style="color:#f63">30m</i>
@@ -169,7 +160,7 @@
 
 			<div class="h10"></div>
 			<div class="firstblock">
-				<div class="item" tapmode="presshover" onclick="">
+				<div class="item" onclick="">
 					<i class="fa fa-group fa-lg"></i> <span>附近的群</span> 
 				</div>
 				<ul data-role="listview">
@@ -191,7 +182,7 @@
 			</div>
 			<div class="h10"></div>
 			<div class="firstblock">
-				<div class="item" tapmode="presshover" onclick="">
+				<div class="item" onclick="">
 					<i class="fa fa-user fa-lg"></i> <span>附近的人</span> 
 				</div>
 				<ul data-role="listview">
@@ -230,7 +221,7 @@
 				</ul>
 			</div>
 		</div>
-		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
 				<ul>
 					<li><a id="homeBtn" href="home.html" data-icon="home"  data-ajax="false">首页</a></li>
@@ -240,7 +231,7 @@
 					<li><a id="wodeBtn" href="wode.html" data-icon="user"  data-ajax="false">我的</a></li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </body>
 </html>

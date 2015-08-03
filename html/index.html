@@ -9,135 +9,85 @@
 <script src="js/jquery.mobile-1.4.5.js"></script>
 
 <script type="text/javascript">
-	var iframeSrcMap = {'home':'home.html', 'pinle':'pinle.html', 'fabu':'fabu.html', 'faxian':'faxian.html', 'wode':'wode.html' };
-
-	function switchIFrame(url) {
-		//只在home上才显示header
-		/* if ('home'!=url){
-			$('#indexHeader').css("display","none");
-		}else{
-			$('#indexHeader').css("display","block");
-		} */
-		//更新iframe内容
-		var ifr = document.getElementById('indexFrame');
-		ifr.style.height = '0px';//将iframe高度设为0，避免更新后的页面高度比当前页面高度低造成的大量空白区域
-		$('#indexFrame').attr('src', iframeSrcMap[url]);
+	var frameIdSrcMap={"homeFrame":"home.html","pinleFrame":"pinle.html","fabuFrame":"fabu.html","faxianFrame":"faxian.html","wodeFrame":"wode.html"};
+	var displayFrameId = 'homeFrame';
+	var clientWindowHeight = 0;
+	function switchIframeByClick(btnId){
+		$('#'+btnId).click();
 	}
-
-	function resizeIFrameHeight() {
-		var ifr = document.getElementById('indexFrame');
-		var iDoc = ifr.contentDocument || ifr.document
-		var height = calcPageHeight(iDoc)
-		ifr.style.height = height-$('#indexFooterDiv').height() + 'px';
-		console.log(height);
-	}
-	// 计算页面的实际高度，iframe自适应会用到
-	function calcPageHeight(doc) {
-		var cHeight = Math.max(doc.body.clientHeight,
-				doc.documentElement.clientHeight)
-		var sHeight = Math.max(doc.body.scrollHeight,
-				doc.documentElement.scrollHeight)
-		var height = Math.max(cHeight, sHeight)
-
-		return height
-	}
-
-	/* function showPosition(position) {
-		// ak = appkey 访问次数流量有限制
-		$
-				.getJSON(
-						'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
-								+ position.coords.latitude
-								+ ','
-								+ position.coords.longitude
-								+ '&output=json&pois=1', function(res) {
-							//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
-							$("#location").html(
-									res.result.addressComponent.city);
-						});
-	}
-	function show(msg) {
-		alert(msg)
-	}
-	function showErr(error) {
-		var result;
-		switch (error.code) {
-		case error.PERMISSION_DENIED:
-			result = "User denied the request for Geolocation."
-			break;
-		case error.POSITION_UNAVAILABLE:
-			result = "Location information is unavailable."
-			break;
-		case error.TIMEOUT:
-			result = "The request to get user location timed out."
-			break;
-		case error.UNKNOWN_ERROR:
-			result = "An unknown error occurred."
-			break;
+	/* 切换iframe
+		先隐藏当前活动iframe
+		然后显示目标iframe
+	*/
+	function switchIframe(obj) {
+		if (displayFrameId != '') {
+			$('#' + displayFrameId).css('display', 'none');
 		}
-		//alert(result);
-	} */
+		var id = obj.id;
+		var iframeid = id + 'Frame';
 
-	/* $(document)
-			.ready(
-					function() {
-						if (navigator.geolocation) {
-							// getCurrentPosition支持三个参数
-							// getSuccess是执行成功的回调函数
-							// getError是失败的回调函数
-							// getOptions是一个对象，用于设置getCurrentPosition的参数
-							// 后两个不是必要参数
-							var getOptions = {
-								//是否使用高精度设备，如GPS。默认是true
-								enableHighAccuracy : true,
-								//超时时间，单位毫秒，默认为0
-								timeout : 5000,
-								//使用设置时间内的缓存数据，单位毫秒
-								//默认为0，即始终请求新数据
-								//如设为Infinity，则始终使用缓存数据
-								maximumAge : 0
-							};
-							navigator.geolocation.getCurrentPosition(
-									showPosition, showErr, getOptions);
-						} else {
-							alert('Your browser does not support navigator.geolocation!')
-						}
-					}); */
+		$('#' + iframeid).css('display', 'block');
+		if (null==$('#' + iframeid).attr('src')){
+			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
+		}
+		
+		resizeIFrameHeight({'id':iframeid});
+		displayFrameId = iframeid;
+	}
+	function resizeIFrameHeight(obj) {
+		var ifr = document.getElementById(obj.id);
+		if (clientWindowHeight==0){
+			clientWindowHeight=window.innerHeight
+			|| document.documentElement.clientHeight
+			|| document.body.clientHeight;
+			
+			clientWindowHeight = clientWindowHeight-$('#footNavBar').height();
+		}
+		
+		ifr.style.height = clientWindowHeight + 'px';
+	}
 </script>
 
 </head>
 <style type="text/css">
-#searchBox {padding-top:0px;font-size:0.8em}
 </style>
-<body>
+<body onmousewheel="return false;"><!-- return false是为了禁止上下滚动 -->
 	<div data-role="page" id="indexPage" data-dom-cache="true">
-	<!-- data-fullscreen=false用于控制header不自动隐藏，data-position="fixed"用于控制header固定在容器最上位置 -->
-		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"
-			id="indexHeader" data-theme="a">
-			<a href="#" data-role="button" id="location">城市</a>
-			<h1>欢迎使用xx</h1>
-			<h3 id="searchBox">
-				<input id="searchCond" type="search" placeholder="商品名称..">
-			</h3>
-			<a href="message.html" data-role="button" data-icon="mail"
-				data-ajax="false" id="messageCnt">10</a>
-		</div> -->
-		<iframe id="indexFrame" name="indexFrame" src="home.html"
-				style="width: 100%; heigth: 100%;" scrolling="auto" frameborder="0"
-				onload="resizeIFrameHeight()"></iframe>
-		<div id="indexFooterDiv" data-role="footer" data-position="fixed" data-fullscreen="false" data-tap-toggle="false" data-theme="e">
+		<iframe id="homeFrame" name="homeFrame" src="home.html"
+			style="width:100%;" scrolling="auto" frameborder="0"
+			onload="resizeIFrameHeight(this)"></iframe>
+
+		<iframe id="pinleFrame" name="pinleFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe>
+
+		<iframe id="fabuFrame" name="fabuFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe>
+
+		<iframe id="faxianFrame" name="faxianFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe>
+
+		<iframe id="wodeFrame" name="wodeFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe>
+
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			id="footNavBar">
 			<div data-role="navbar" data-grid="d">
 				<ul>
-					<li><a id="homeBtn" onclick="switchIFrame('home')"
-						data-icon="home" class="ui-btn-active">首页</a></li>
-					<li><a id="pinleBtn" onclick="switchIFrame('pinle')"
-						data-icon="bars">拼乐</a></li>
-					<li><a id="fabuBtn" onclick="switchIFrame('fabu')"
-						data-icon="grid">发布</a></li>
-					<li><a id="faxianBtn" onclick="switchIFrame('faxian')"
-						data-icon="eye">发现</a></li>
-					<li><a id="wodeBtn" onclick="switchIFrame('wode')"
-						data-icon="phone">我的</a></li>
+					<li><a id="home" href="#" data-icon="home"
+						onclick="switchIframe(this)" data-ajax="false"
+						class="ui-btn-active">首页</a></li>
+					<li><a id="pinle" href="#" data-icon="bars"
+						onclick="switchIframe(this)" data-ajax="false">拼乐</a></li>
+					<li><a id="fabu" href="#" data-icon="grid"
+						onclick="switchIframe(this)" data-ajax="false">发布</a></li>
+					<li><a id="faxian" href="#" data-icon="eye"
+						onclick="switchIframe(this)" data-ajax="false">发现</a></li>
+					<li><a id="wode" href="#" data-icon="user"
+						onclick="switchIframe(this)" data-ajax="false">我的</a></li>
 				</ul>
 			</div>
 		</div>

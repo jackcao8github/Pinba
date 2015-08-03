@@ -13,22 +13,25 @@
 <script type="text/javascript" src="myjs/changepage.js"></script>
 
 <script type="text/javascript">
-
-	$(document).bind("pagecreate",function(){
-		var num = GetRandomNum(1,100);
-		$('#userName').html('user' +num );
-		$('#authSate').html("认证："+GetRandomNum(1,2) );
-		$('#balanceValue').html('余额：' +num );
-		$('#pointsValue').html('积分：' +num );
-		$('#level').html('级别：'+GetRandomNum(1,2));
+	$(document).bind('swipeleft', function() {
+		parent.switchIframeByClick('home');
+	})
+	$(document).bind('swiperight', function() {
+		parent.switchIframeByClick('faxian');
+	})
+	$(document).bind("pagecreate", function() {
+		var num = GetRandomNum(1, 100);
+		$('#userName').html('user' + num);
+		$('#authSate').html("认证：" + GetRandomNum(1, 2));
+		$('#balanceValue').html('余额：' + num);
+		$('#pointsValue').html('积分：' + num);
+		$('#level').html('级别：' + GetRandomNum(1, 2));
 	});
-	function GetRandomNum(Min,Max)
-	{   
-		var Range = Max - Min;   
-		var Rand = Math.random();   
-		return(Min + Math.round(Rand * Range));   
+	function GetRandomNum(Min, Max) {
+		var Range = Max - Min;
+		var Rand = Math.random();
+		return (Min + Math.round(Rand * Range));
 	}
-	
 
 	function viewUserInfo() {
 		//如果未登陆过，则进入登陆页面
@@ -37,24 +40,24 @@
 		var userId = localStorage.userId;
 		if (userId == null) {//未登陆过，则显示登陆页面
 			//$.mobile.changePage("login.html", "pop", false, false);
-			changeSubPage('login','wodePage');
+			changeSubPage('login', 'wodePage');
 		} else {//进入用户信息页面
 			//$.mobile.changePage("userInfo.html", "pop", false, false);
-			changeSubPage('userInfo','wodePage');
+			changeSubPage('userInfo', 'wodePage');
 		}
 	}
-	
-	function changePage(obj){
+
+	function changePage(obj) {
 		var id = obj.id;
-		changeSubPage(id,'wodePage');
+		changeSubPage(id, 'wodePage');
 	}
-	
-	function clearCache(){
+
+	function clearCache() {
 		//清理缓存下来的html,css,js
-			//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-				window.applicationCache.update();
-				alert('sucess');
-			//}
+		//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+		window.applicationCache.update();
+		alert('sucess');
+		//}
 	}
 </script>
 
@@ -88,20 +91,20 @@
 
 				<div class="h1"></div> -->
 				<div class="item" id="myWork" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的工作</span> <img
-						src="image/arrow.png" alt="" class="item_arrow"> <span
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的工作</span>
+					<img src="image/arrow.png" alt="" class="item_arrow"> <span
 						class="fr hint">简历/投递记录/工作记录</span>
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="myOrder" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的订单</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订单</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 
 				<div class="h1"></div>
 				<div class="item" id="myMoneyBag" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的钱包</span> <img
-						src="image/arrow.png" alt="" class="item_arrow"> <span
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的钱包</span>
+					<img src="image/arrow.png" alt="" class="item_arrow"> <span
 						class="fr hint">余额/保证金/红包/优惠券/积分</span>
 				</div>
 			</div>
@@ -111,30 +114,30 @@
 			<div class="h10"></div>
 			<div class="secondblock">
 				<div class="item" id="myPublish" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的发布</span> <img
-						src="image/arrow.png" alt="" class="item_arrow"> <span
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的发布</span>
+					<img src="image/arrow.png" alt="" class="item_arrow"> <span
 						class="fr hint">工作/商品/活动</span>
 				</div>
 
 				<div class="h1"></div>
 				<div class="item" id="myFocus" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的关注</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的关注</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="mySub" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的订阅</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订阅</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="myPromotion" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>我的推广</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的推广</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="verifyOfferVoucher" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>核销商品码</span> <img
-						src="image/arrow.png" alt="" class="item_arrow"> <span
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>核销商品码</span>
+					<img src="image/arrow.png" alt="" class="item_arrow"> <span
 						class="fr hint">商品码/优惠券码/活动码</span>
 				</div>
 			</div>
@@ -143,31 +146,31 @@
 			<div class="h10"></div>
 			<div class="thirdblock">
 				<div class="item" id="myLookHis" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>最近浏览</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>最近浏览</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="serviceCenter" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>服务中心</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>服务中心</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="tobeBusiness" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>成为商家</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为商家</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="tobeVIPMemeber" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color:#f63"></i> <span>成为会员</span> <img
-						src="image/arrow.png" alt="" class="item_arrow">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为会员</span>
+					<img src="image/arrow.png" alt="" class="item_arrow">
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="clearCache" onclick="clearCache(this)">
-					<i class="fa fa-cog fa-spin fa-lg fa-fw" style="color:#f63"></i> <span>清除缓存</span>
+					<i class="fa fa-cog fa-spin fa-lg fa-fw" style="color: #f63"></i> <span>清除缓存</span>
 				</div>
 			</div>
 		</div>
-		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
 				<ul>
 					<li><a id="homeBtn" href="home.html" data-icon="home"
@@ -182,8 +185,8 @@
 						data-ajax="false" class="ui-btn-active">我的</a></li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 	</div>
-	
+
 </body>
 </html>

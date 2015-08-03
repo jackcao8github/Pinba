@@ -3,277 +3,207 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width" />
-
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="css/mygrid.css" />
 <script src="js/jquery-1.11.3.js"></script>
 <script src="js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript" src="myjs/changepage.js"></script>
+
+<style>
+.msgStatus {
+	background: #26c281;
+	border-radius: 50%;
+	width: 9px;
+	height: 9px;
+	position: absolute;
+	top: 31px;
+	right: 17px;
+}
+
+.msgStatus.active {
+	background: #26c281;
+}
+
+.msgStatus.inactive {
+	background: #eaeef0;
+}
+</style>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-	});
+$(document).bind('swiperight', function() {
+	closeSubPage();
+	return false;
+})
+	document.addEventListener(touchEvents.touchend, function(ev) {
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			break;
+		case 2:
+			console.log("向下");
+			//当前是在消息列表页面，需要加载新消息
+			var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
+			if (messageTabLi.length > 0) {
+				loadNewMsg();
+			}
+			break;
+		case 3:
+			console.log("向左");
+			break;
+		case 4:
+			console.log("向右");
+			break;
+		default:
+		}
+	}, false);
+	/* 加载新消息 */
+	function loadNewMsg() {
+		//当是滚动条已在最上时，去加载新信息
+		if ($(document).scrollTop() ==0){
+			$.ajax({
+		        type: "POST",
+		        contentType: "application/json",
+		        url: "",
+		        beforeSend: function () {         
+		        	//显示加载中 
+		        	$.mobile.loading( "show", {
+		        		            text: '加载...',
+		        		            textVisible: true,
+		        		            theme: 'a',
+		        		            textonly: true,
+		        		            html: ''
+		        		    }); 
+		        },
+		        complete:function(){
+		        	//隐藏加载中
+		        	$.mobile.loading( "hide");
+		        },
+		        success: function (msg) {
+		        	//从后台返回数据
+		        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" data-ajax="false">';
+		    		newhtml += '<img src="images/login01.png">';
+		    		newhtml += '<h3>xx美食</h3>';
+		    		newhtml += '<p>免预约到店的哟</p>';
+		    		newhtml += '<p class="ui-li-aside">';
+		    		newhtml += '	<strong>9:19</strong>AM';
+		    		newhtml += '</p> </a></li>';
+
+		    		for ( var i = 0; 10 > i; i++) {
+		    			var newli = $('#messageListUL').prepend(newhtml);
+		    		}
+		    		$('#messageListUL').listview("refresh");
+		        }
+		    });
+		}
+		
+	}
 </script>
 </head>
 <body>
-	<!-- 展示当前位置 -->
-	<div class="firstblock">
-		<div class="item" tapmode="presshover"
-			onclick="openNewWindow('myorder')">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>南京市雨花台区 西春路-宁双路</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
+	<div data-role="page" id="messagePage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
+
+			<h1>娱乐</h1>
 		</div>
-	</div>
-	<div class="firstblock">
-		<div class="ui-grid-b">
-			<!-- <div class="ui-block-a">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">商铺</a>
+		<div id="tabs" data-role="tabs">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#messageList" class="ui-btn-active"
+						id="messageTabLi">娱乐产品</a></li>
+					<li><a href="#friendList">拼类活动</a></li>
+				</ul>
 			</div>
-			<div class="ui-block-b">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">群</a>
+
+			<div id="messageList">
+				<ul data-role="listview" id="messageListUL">
+					<!-- 聊天信息 -->
+					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
+						data-ajax="false"> <img src="images/login01.png"> <!-- 聊天对象头像 -->
+							<h3>xx美食</h3> <!-- 聊天对象昵称 -->
+							<p>免预约到店的哟</p> <!-- 最新聊天内容 -->
+							<p class="ui-li-aside">
+								<strong>9:18</strong>AM
+							</p> <!-- 最新消息时间 -->
+							<div class="msgStatus active"></div>
+					</a></li>
+					<!-- 业务通知 -->
+					<li data-icon="false"><a href="servNoticeMsg.html"
+						data-ajax="false"> <img src="images/login01.png"> <!-- 业务通知图标 -->
+							<h3>积分到帐通知</h3> <!-- 通知标题 -->
+							<p>1个签到积分到帐</p> <!-- 通知内容 -->
+							<p class="ui-li-aside">
+								<strong>9:18</strong>AM
+							</p> <!-- 通知时间 -->
+							<div class="msgStatus active"></div>
+					</a></li>
+					<!-- 业务提醒 -->
+					<li data-icon="false"><a href="servRemindMsg.html"
+						data-ajax="false"> <img src="images/login01.png"> <!-- 业务提醒 图标 -->
+							<h3>面试通知</h3> <!-- 业务提醒 标题 -->
+							<p>到xx酒店参加面试</p> <!-- 业务提醒 内容 -->
+							<p class="ui-li-aside">
+								<strong>9:18</strong>AM
+							</p> <!-- 业务提醒 时间 -->
+							<div class="msgStatus active"></div>
+					</a></li>
+					<!-- 订阅 -->
+					<li data-icon="false"><a href="subscribeMsg.html"
+						data-ajax="false"> <img src="images/login01.png"> <!-- 订阅 图标 -->
+							<h3>优惠信息订阅</h3> <!-- 订阅 标题 -->
+							<p>xx美食店：新推出满100优惠10块活动</p> <!-- 订阅 内容 -->
+							<p class="ui-li-aside">
+								<strong>9:18</strong>AM
+							</p> <!-- 订阅 时间 -->
+							<div class="msgStatus inactive"></div>
+					</a></li>
+
+					<!-- 系统公告 -->
+					<li data-icon="false"><a href="systemMsg.html"
+						data-ajax="false"> <img src="images/login01.png"> <!-- 系统公告图标 -->
+							<h3>系统升级公告</h3> <!-- 系统公告标题 -->
+							<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p> <!-- 系统公告内容 -->
+							<p class="ui-li-aside">
+								<strong>9:18</strong>AM
+							</p> <!-- 系统公告时间 -->
+							<div class="msgStatus inactive"></div>
+					</a></li>
+				</ul>
 			</div>
-			<div class="ui-block-c">
-				<a href="#link" data-role="button" data-icon="search"
-					data-iconpos="top">活动</a>
-			</div> -->
-			<div class="ui-block-a" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/food_u.png"
-						style="background-size: contain; height: 80%; background-color: #fff"></img>
-					<p style="margin: 0px">商铺</p>
-				</div>
-			</div>
-			<div class="ui-block-b" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/boy_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">群</p>
-				</div>
-			</div>
-			<div class="ui-block-c" style="text-align: center;">
-				<div class="ui-bar ui-bar-a"
-					style="height: 80px; border: 0; background-color: #fff;">
-					<img src="image/firstpage/entertainment_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">活动</p>
-				</div>
+			<div id="friendList">
+				<ul data-role="listview">
+					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
+						data-ajax="false" style="padding-top: 0px; padding-bottom: 0px;">
+							<img src="image/firstcover02.png">
+							<h2>Hilton</h2> <!-- 名字 -->
+							<p>life is beaultiful.</p> <!-- 签名 -->
+							<div style="float: left;">
+								<!-- 性别 -->
+								<img style="height: 0.8em; width: 0.8em;"
+									src="image/main_index_home_pressed.png"><span
+									style="font-size: 0.8em">335</span> </img>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<!-- 距离 -->
+								<img style="height: 0.8em; width: 0.8em;"
+									src="image/my_favorite_user_icon_normal.png"><span
+									style="font-size: 0.8em">3350米</span> </img>
+							</div>
+					</a></li>
+				</ul>
 			</div>
 		</div>
-	</div>
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的商铺</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>Mozilla Firefox</h2>
-					<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
 
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/opera.png">
-					<h2>Opera</h2>
-					<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/aoyou.png">
-					<h2>傲游浏览器</h2>
-					<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/netscape.png">
-					<h2>Netscape</h2>
-					<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/liebao.png">
-					<h2>猎豹安全浏览器</h2>
-					<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/taobao.png">
-					<h2>淘宝浏览器</h2>
-					<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/baidu.png">
-					<h2>百度浏览器</h2>
-					<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350</span> </img>
-					</div>
-
-			</a></li>
-		</ul>
-	</div>
-
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的群</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>创建人：李4</h2>
-					<p>主题：你不吃他就吃</p>
-					<div style="float: left;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/tuan_review_good.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-
-		</ul>
-	</div>
-	<div class="h10"></div>
-	<div class="firstblock">
-		<div class="item" tapmode="presshover" onclick="">
-			<img src="image/my_order_user_icon_normal.png" alt=""
-				class="item_ico"> <span>附近的人</span> <img
-				src="image/main_index_search_normal.png" alt="" class="item_arrow">
-		</div>
-		<ul data-role="listview">
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/firefox.png">
-					<h2>张三</h2>
-					<p>张三是个公务员</p>
-					<div style="float: left;">
-						<!-- 性别 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/main_index_home_pressed.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<!-- 距离 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-			<li data-icon="false"><a href="#"
-				style="padding-top: 0px; padding-bottom: 0px; background-color: white">
-					<img src="images/opera.png">
-					<h2>李4</h2>
-					<p>李4是个白领</p>
-
-					<div style="float: left;">
-						<!-- 性别 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/main_index_home_pressed.png"><span
-							style="font-size: 0.8em">335</span> </img>
-					</div>
-
-					<div style="margin-left: 10px; float: right;">
-						<!-- 距离 -->
-						<img style="height: 0.8em; width: 0.8em;"
-							src="image/my_favorite_user_icon_normal.png"><span
-							style="font-size: 0.8em">3350米</span> </img>
-					</div>
-			</a></li>
-
-		</ul>
 	</div>
 </body>
 </html>

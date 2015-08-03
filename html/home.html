@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="css/photoswipe.css" />
 <link rel="stylesheet" href="css/font-awesome.css" />
+<link rel="stylesheet" href="css/scrolltotop.css" />
+
 <script src="js/jquery-1.7.1.min.js"></script>
 <!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script src="js/jquery.mobile-1.4.5.js"></script>
@@ -14,6 +16,7 @@
 <script type="text/javascript" src="js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="js/mydownandupslide.js"></script>
 <script type="text/javascript" src="myjs/changepage.js"></script>
+<script type="text/javascript" src="myjs/position.js"></script>
 
 <script type="text/javascript"
 	src="http://api.map.baidu.com/api?v=2.0&ak=71709218d45a706b9c7e3abc2f037b23"></script>
@@ -21,12 +24,23 @@
 	$(document).scroll(function() {
 		addOfferLi();
 	});
-	$(document).bind('pagecreate',
+	$(document).bind('swipeleft',function(){
+		parent.switchIframeByClick('pinle');
+	})
+	$(document).bind('swiperight',function(){
+		parent.switchIframeByClick('wode');
+	})
+	$(document).ready(
 			function() {
-				//searchBox绑定点击时间
-				$('#searchBox').bind('click',function(){
+				$('.location').click(function() {
+					$('html,body').animate({
+						scrollTop : '0px'
+					}, 800);
+				});
+				//searchBox绑定点击事件
+				$('#searchBox').bind('click', function() {
 					//$.mobile.changePage("search.html", "pop", false, false);
-					changeSubPage('search','homePage');
+					changeSubPage('search', 'homePage');
 				});
 				//图片滚动处理 ------------------------------start
 				$(".main_visual").hover(function() {
@@ -85,103 +99,17 @@
 				});
 				//图片滚动处理 ------------------------------end
 
-				//使用baidu api实现定位功能
-				var geolocation = new BMap.Geolocation();
-				geolocation.getCurrentPosition(function(r) {
-					if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-						/* var mk = new BMap.Marker(r.point);
-						map.addOverlay(mk);
-						map.panTo(r.point); */
-						//alert('您的位置：'+r.point.lng+','+r.point.lat);
-						showPosition(r.point.lat, r.point.lng);
-					} else {
-						alert('failed' + this.getStatus());
-					}
-				}, {
-					enableHighAccuracy : true
-				})
-				//关于状态码
-				//BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
-				//BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
-				//BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
-				//BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
-				//BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
-				//BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
-				//BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
-				//BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
-				//BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
+				//定位
+				getPosition(showPosition);
 			});
 
-	function showPosition(latitude, longitude) {
-		//将经纬度缓存下来
-		localStorage.latitude = latitude;
-		localStorage.longitude = longitude;
-
-		if (localStorage.city == undefined) {
-			// ak = appkey 访问次数流量有限制
-			$
-					.getJSON(
-							'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
-									+ latitude
-									+ ','
-									+ longitude
-									+ '&output=json&pois=1',
-							function(res) {
-								//将位置缓存下来
-								localStorage.city = res.result.addressComponent.city;
-								//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
-								$("#location").html(
-										res.result.addressComponent.city);
-							});
-		} else {
+	function showPosition() {
+		if (localStorage.qryCity != null) {
+			$("#location").html(localStorage.qryCity);
+		}else{
 			$("#location").html(localStorage.city);
 		}
-
 	}
-	/* html5自身的定位在webview中不起作用
-	 if (navigator.geolocation) {
-							// getCurrentPosition支持三个参数
-							// getSuccess是执行成功的回调函数
-							// getError是失败的回调函数
-							// getOptions是一个对象，用于设置getCurrentPosition的参数
-							// 后两个不是必要参数
-							var getOptions = {
-								//是否使用高精度设备，如GPS。默认是true
-								enableHighAccuracy : false,
-								//超时时间，单位毫秒，默认为0
-								timeout : 60000,
-								//使用设置时间内的缓存数据，单位毫秒
-								//默认为0，即始终请求新数据
-								//如设为Infinity，则始终使用缓存数据
-								maximumAge : 0
-							};
-							navigator.geolocation.getCurrentPosition(
-									showPosition, showErr, getOptions);
-						} else {
-							alert('Your browser does not support navigator.geolocation!')
-						} 
-	
-	function show(msg) {
-		alert(msg)
-	}
-	function showErr(error) {
-		var result;
-		switch (error.code) {
-		case error.PERMISSION_DENIED:
-			result = "User denied the request for Geolocation."
-			break;
-		case error.POSITION_UNAVAILABLE:
-			result = "Location information is unavailable."
-			break;
-		case error.TIMEOUT:
-			result = "The request to get user location timed out."
-			break;
-		case error.UNKNOWN_ERROR:
-			result = "An unknown error occurred."
-			break;
-		}
-		alert(result);
-	} */
 	function myTouchEnd(ev) {
 		var endX, endY;
 		endX = ev.changedTouches[0].pageX;
@@ -201,12 +129,12 @@
 		case 3:
 			console.log("向左");
 			//打开当前页面左边页面
-			
+
 			break;
 		case 4:
 			console.log("向右");
 			//打开当前页面右边页面
-			
+
 			break;
 		default:
 		}
@@ -220,18 +148,18 @@
 		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
 			console.log("滚动条已经到达底部为" + $(document).scrollTop());
 			var newhtml = '<div class="+class+">';
-			newhtml += '<a href="#" data-ajax="false" target="_top" onclick="changeSubPage("foodDetail","homePage","offerId=4")"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
+			newhtml += '<a href="#" data-ajax="false" target="_top" onclick="changeSubPage(\'foodDetail\',\'homePage\',\'offerId=4\')"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
      		newhtml+= 'class="bigImg" alt="Ballade">';
 
 			newhtml += '<div class="title">+name+</div>';
 			newhtml += '<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
 			newhtml += '	</a>';
-			newhtml += '	<div style="float: left;">';
+			newhtml += '	<div style="margin-left: 5px;float: left;">';
 			newhtml += '<i class="fa fa-thumbs-o-up" style="color:#f63"></i><span';
      		newhtml+='	style="font-size: 0.8em">335</span> ';
 			newhtml += '</div>';
 
-			newhtml += '<div style="margin-left: 10px; float: left;">';
+			newhtml += '<div style="margin-left: 5px; float: left;">';
 			newhtml += '	<i class="fa fa-star-o" style="color:#f63"></i><span';
      		newhtml+='		style="font-size: 0.8em">3350</span> ';
 			newhtml += '</div>';
@@ -314,10 +242,7 @@ div.price {
 	background: #f0f0f0;
 }
 
-#searchBox {
-	padding-top: 0px;
-	font-size: 0.8em
-}
+
 </style>
 
 </head>
@@ -325,29 +250,22 @@ div.price {
 	<div data-role="page" id="homePage" style="top: -20px;">
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="homeHeader"
-			style="background-color: white; line-height: 49px;">
+			>
 			<div
-				style="float: left; width: 25%; overflow: hidden; text-align: center;">
-				<a href="changeCity.html" data-role="none" data-ajax="false"><i
+				style="float: left; width: 25%; overflow: hidden; text-align: center;line-height:49px;">
+				<a href="#" data-role="none" data-ajax="false"
+					onclick="changeSubPage('changeCity','homePage')"><i
 					class="fa fa-street-view"></i><span id="location">城市</span></a>
 			</div>
-			<!-- <div
-					style="display: block; float: left; width: 25%;">
-					<select name="classid" id="choose" data-role="none">
-						<option value="0">工作</option>
-						<option value="1">美食</option>
-						<option value="4">娱乐</option>
-					</select>
-				</div> -->
 			<div style="float: left; width: 60%;">
 				<input type="search" name="keyboard" placeholder="商品名称.."
-					style="width: 100%;" id="searchBox"/>
+					style="width: 100%;" id="searchBox" />
 			</div>
 			<div
-				style="float: right; width: 15%; overflow: hidden; text-align: center;">
-				<a href="message.html" data-role="none" target="_top"
-					data-ajax="false" id="messageCnt"><i class="fa fa-envelope-o"></i><span
-					id="msgCnt">28</span></a>
+				style="float: right; width: 15%; overflow: hidden; text-align: center;line-height:49px;">
+				<a href="#" data-role="none" data-ajax="false"
+					onclick="changeSubPage('message','homePage')"><i
+					class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
 			</div>
 		</div>
 		<div class="main_visual">
@@ -367,45 +285,44 @@ div.price {
 					href="javascript:;" id="btn_next" style="display: none;"></a>
 			</div>
 		</div>
-		<div class="h10"></div>
+
 		<div class="ui-grid-b">
 			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
 				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;"
-					href="#" data-ajax="false" onclick="changeSubPage('foodMain','homePage')"> <img
-					src="image/firstpage/food_u.png"
-					style="background-size: contain; height: 80%; background-color: #fff"></img>
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false" onclick="changeSubPage('foodMain','homePage')">
+					<i class="fa fa-cutlery fa-3x" style="color: #f63"></i>
 					<p style="margin: 0px">美食</p>
 				</a>
 			</div>
 			<div class="ui-block-b" style="text-align: center;" id="workDiv">
 				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;"
-					href="#" data-ajax="false" onclick="changeSubPage('workMain','homePage')"> <img
-					src="image/firstpage/boy_o.png"
-					style="background-size: contain; height: 80%;"></img>
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false" onclick="changeSubPage('workMain','homePage')">
+					<i class="fa fa-desktop fa-3x" style="color: #f63"></i></img>
 					<p style="margin: 0px">工作</p>
 				</a>
 			</div>
 			<div class="ui-block-c" style="text-align: center;"
 				id="entertainmentDiv">
 				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;"
-					href="#" data-ajax="false" onclick="changeSubPage('entertainmentMain','homePage')"> <img
-					src="image/firstpage/entertainment_o.png"
-					style="background-size: contain; height: 80%;"></img>
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false"
+					onclick="changeSubPage('entertainmentMain','homePage')"> <i
+					class="fa fa-gamepad fa-3x" style="color: #f63"></i>
 					<p style="margin: 0px">娱乐</p>
 				</a>
 			</div>
 
 		</div>
-		<div class="h10"></div>
-		<p style="margin: 0 5px; text-align: center;" id="yourLike">猜你喜欢</p>
+		<div class="h1"></div>
+		<p style="margin: 5px 5px; text-align: center;" id="yourLike">猜你喜欢</p>
 
 		<div id="yourLikeDiv">
 			<div class="offerleftli">
-				<a href="#" data-ajax="false" target="_top" onclick="changeSubPage('foodDetail','homePage','offerId=1')">
-					<img src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=1')"> <img
+					src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
 					<div class="price">
@@ -417,7 +334,7 @@ div.price {
 						style="font-size: 0.8em">335</span>
 				</div>
 
-				<div style="margin-left: 10px; float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-star-o" style="color: #f63"></i><span
 						style="font-size: 0.8em;">3350</span>
 				</div>
@@ -425,7 +342,8 @@ div.price {
 
 
 			<div class="offerrightli">
-				<a href="#" data-ajax="false" target="_top" onclick="changeSubPage('foodDetail','homePage','offerId=2')"> <img
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=2')"> <img
 					src="image/funlife/funlife03.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
@@ -433,18 +351,19 @@ div.price {
 						<i class="fa fa-rmb"></i>100
 					</div>
 				</a>
-				<div style="float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
 						style="font-size: 0.8em">335</span>
 				</div>
 
-				<div style="margin-left: 10px; float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-star-o" style="color: #f63"></i><span
 						style="font-size: 0.8em">3350</span>
 				</div>
 			</div>
 			<div class="offerleftli">
-				<a href="#" data-ajax="false" target="_top" onclick="changeSubPage('foodDetail','homePage','offerId=3')"> <img
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=3')"> <img
 					src="image/funlife/funlife02.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">酸菜鱼</div>
@@ -452,12 +371,12 @@ div.price {
 						<i class="fa fa-rmb"></i>100
 					</div>
 				</a>
-				<div style="float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
 						style="font-size: 0.8em">335</span>
 				</div>
 
-				<div style="margin-left: 10px; float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-star-o" style="color: #f63"></i><span
 						style="font-size: 0.8em;">3350</span>
 				</div>
@@ -465,7 +384,8 @@ div.price {
 
 
 			<div class="offerrightli">
-				<a href="#" data-ajax="false" target="_top" onclick="changeSubPage('foodDetail','homePage','offerId=4')"> <img
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=4')"> <img
 					src="image/funlife/funlife03.jpg" class="bigImg" alt="Ballade">
 
 					<div class="title">糖醋鱼</div>
@@ -473,21 +393,25 @@ div.price {
 						<i class="fa fa-rmb"></i>100
 					</div>
 				</a>
-				<div style="float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
 						style="font-size: 0.8em">335</span>
 				</div>
 
-				<div style="margin-left: 10px; float: left;">
+				<div style="margin-left: 5px; float: left;">
 					<i class="fa fa-star-o" style="color: #f63"></i><span
 						style="font-size: 0.8em">3350</span>
 				</div>
 			</div>
 
 		</div>
+		<div class="location">
+			<a href="#"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-carat-u ui-btn-icon-notext ui-btn-b ui-btn-inline">Delete</a>
+		</div>
 		<div id="bottom"></div>
 
-		<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar" data-grid="d">
 				<ul>
 					<li><a id="homeBtn" href="home.html" data-icon="home"
@@ -502,7 +426,7 @@ div.price {
 						data-ajax="false">我的</a></li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </body>
 </html>

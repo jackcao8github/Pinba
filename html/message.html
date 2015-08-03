@@ -7,6 +7,8 @@
 <script src="js/jquery-1.11.3.js"></script>
 <script src="js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="js/mydownandupslide.js"></script>
+<script type="text/javascript" src="myjs/changepage.js"></script>
+
 <style>
 .msgStatus {
 	background: #26c281;
@@ -28,7 +30,10 @@
 </style>
 
 <script type="text/javascript">
-
+$(document).bind('swiperight', function() {
+	closeSubPage();
+	return false;
+})
 function myTouchEnd(ev){
 	var endX, endY;
 	endX = ev.changedTouches[0].pageX;
@@ -107,7 +112,7 @@ function myTouchEnd(ev){
 		<div data-role="header" data-position="fixed" data-fullscreen="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l">Back</a>
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
 
 			<h1>我的消息</h1>
 		</div>
@@ -123,7 +128,7 @@ function myTouchEnd(ev){
 			<div id="messageList">
 				<ul data-role="listview" id="messageListUL">
 					<!-- 聊天信息 -->
-					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('friendsMsg','messagePage','friendId=101')"
 						data-ajax="false"> <img src="images/login01.png"> <!-- 聊天对象头像 -->
 							<h3>xx美食</h3> <!-- 聊天对象昵称 -->
 							<p>免预约到店的哟</p> <!-- 最新聊天内容 -->
@@ -133,7 +138,7 @@ function myTouchEnd(ev){
 							<div class="msgStatus active"></div>
 					</a></li>
 					<!-- 业务通知 -->
-					<li data-icon="false"><a href="servNoticeMsg.html"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('servNoticeMsg','messagePage')"
 						data-ajax="false"> <img src="images/login01.png"> <!-- 业务通知图标 -->
 							<h3>积分到帐通知</h3> <!-- 通知标题 -->
 							<p>1个签到积分到帐</p> <!-- 通知内容 -->
@@ -143,7 +148,7 @@ function myTouchEnd(ev){
 							<div class="msgStatus active"></div>
 					</a></li>
 					<!-- 业务提醒 -->
-					<li data-icon="false"><a href="servRemindMsg.html"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('servRemindMsg','messagePage')"
 						data-ajax="false"> <img src="images/login01.png"> <!-- 业务提醒 图标 -->
 							<h3>面试通知</h3> <!-- 业务提醒 标题 -->
 							<p>到xx酒店参加面试</p> <!-- 业务提醒 内容 -->
@@ -153,7 +158,7 @@ function myTouchEnd(ev){
 							<div class="msgStatus active"></div>
 					</a></li>
 					<!-- 订阅 -->
-					<li data-icon="false"><a href="subscribeMsg.html"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('subscribeMsg','messagePage')"
 						data-ajax="false"> <img src="images/login01.png"> <!-- 订阅 图标 -->
 							<h3>优惠信息订阅</h3> <!-- 订阅 标题 -->
 							<p>xx美食店：新推出满100优惠10块活动</p> <!-- 订阅 内容 -->
@@ -164,7 +169,7 @@ function myTouchEnd(ev){
 					</a></li>
 
 					<!-- 系统公告 -->
-					<li data-icon="false"><a href="systemMsg.html"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('systemMsg','messagePage')"
 						data-ajax="false"> <img src="images/login01.png"> <!-- 系统公告图标 -->
 							<h3>系统升级公告</h3> <!-- 系统公告标题 -->
 							<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p> <!-- 系统公告内容 -->
@@ -177,7 +182,7 @@ function myTouchEnd(ev){
 			</div>
 			<div id="friendList">
 				<ul data-role="listview">
-					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
+					<li data-icon="false"><a href="#" onclick="changeSubPage('friendsMsg','messagePage','friendId=101')"
 						data-ajax="false" style="padding-top: 0px; padding-bottom: 0px;">
 							<img src="image/firstcover02.png">
 							<h2>Hilton</h2> <!-- 名字 -->

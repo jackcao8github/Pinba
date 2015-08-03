@@ -57,16 +57,7 @@
 	top: 3px;
 }
 
-.location {
-	position: fixed;
-	right: 0;
-	bottom: 10px;
-	width: 20px;
-	background: #FFC;
-	padding: 5px;
-	cursor: pointer;
-	color: #003
-}
+
 
 .talk_time {
 	color: #666;
