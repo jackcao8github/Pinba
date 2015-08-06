@@ -1,0 +1,2 @@
+pinle.html
+showPinActivityInfo.html

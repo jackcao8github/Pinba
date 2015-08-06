@@ -1,0 +1,1 @@
+DIR *.js  /B >LIST.TXT

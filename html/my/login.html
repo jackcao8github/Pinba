@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<script src="../js/jquery-1.11.3.js"></script>
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<script src="../myjs/changepage.js"></script>
+
+
+</head>
+<body>
+	<div data-role="page" id="pagethree">
+		<script type="text/javascript">
+			$(document).ready(function() {
+			});
+			function login() {
+				var userName = $('#userName').val();
+				var password = $('#password').val();
+
+				localStorage.userId = "1";
+				localStorage.userName = userName;
+				localStorage.token = "12312334452232323";
+
+				history.back();
+			}
+			function myTouchEnd(ev){
+				var endX, endY;
+				endX = ev.changedTouches[0].pageX;
+				endY = ev.changedTouches[0].pageY;
+				var direction = GetSlideDirection(startX, startY, endX, endY);
+				console.log("touchend,endX="+endX+"endY="+endY);
+				switch (direction) {
+				case 0:
+					console.log("没滑动");
+					break;
+				case 1:
+					console.log("向上");
+					break;
+				case 2:
+					console.log("向下");
+					//当前是在消息列表页面，需要加载新消息
+					var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
+					if (messageTabLi.length > 0) {
+						loadNewMsg();
+					}
+					break;
+				case 3:
+					console.log("向左");
+					break;
+				case 4:
+					console.log("向右");
+					closeSubPage();
+					break;
+				default:
+				}
+			}
+		</script>
+		<div data-role="header">
+			<a href="#" data-rel="back" class="button" data-icon="back" onclick="closeSubPage();return false;">Back</a>
+			<h1>登陆</h1>
+		</div>
+		<div data-role="content">
+
+			<label for="userName">用户名:</label> <input type="text" name="userName"
+				id="userName" value="" placeholder="用户名或手机号"> <label
+				for="password">密码:</label> <input type="password" name="password"
+				id="password" value="" placeholder="密码">     <a href="#"
+				data-role="button" onclick="login()">登陆</a> <a>注册</a><a
+				style="margin: 10px;">忘记密码?</a>
+		</div>
+	</div>
+</body>
+</html>

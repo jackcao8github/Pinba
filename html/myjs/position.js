@@ -1,4 +1,4 @@
-
+document.write('<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=71709218d45a706b9c7e3abc2f037b23"></script>');
 //使用baidu api实现定位功能
 function getPosition(showPosition){
 	var geolocation = new BMap.Geolocation();

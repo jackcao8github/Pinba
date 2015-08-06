@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../css/mygrid.css" />
+
+<script src="../js/jquery-1.11.3.js"></script>
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript">
+
+function myTouchEnd(ev) {
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+		console.log("touchend,endX=" + endX + "endY=" + endY);
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			break;
+		case 2:
+			console.log("向下");
+			break;
+		case 3:
+			console.log("向左");
+			//打开当前页面左边页面
+			parent.switchIframeByClick('fabu');
+			break;
+		case 4:
+			console.log("向右");
+			//打开当前页面右边页面
+			parent.switchIframeByClick('home');
+			break;
+		default:
+		}
+	}
+$(document).ready(function() {
+	//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"}
+	$("#location").html(localStorage.addressComponent);
+});
+
+function refreshPos(){
+	getPosition(function(){
+		$("#location").html(localStorage.addressComponent);
+	});
+}
+</script>
+</head>
+<body>
+	<div data-role="page" id="pinlePage">
+
+		<div data-role="none" style="min-height: 800px;">
+			<div class="firstblock">
+				<div class="item" onclick="">
+					<i class="fa fa-street-view fa-lg"></i> <span id="location">南京市雨花台区
+						西春路-宁双路</span> <i class="fa fa-refresh" onclick="refreshPos()"></i>
+				</div>
+			</div>
+			<form>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+					<label for="select-h-2a">综合排名</label> <select name="select-h-2a"
+						id="select-h-2a">
+						<option value="#">最新</option>
+						<option value="#">距离</option>
+					</select> <label for="select-h-2b">分类</label> <select name="select-h-2b"
+						id="select-h-2b">
+						<option value="#">美食类</option>
+						<option value="#">娱乐类</option>
+					</select> <label for="select-h-2c">商圈</label> <select name="select-h-2c"
+						id="select-h-2c">
+						<option value="#">新街口</option>
+						<option value="#">夫子庙</option>
+						<option value="#">山西路</option>
+					</select>
+				</fieldset>
+			</form>
+			<ul data-role="listview" id="activityList"
+				style="min-height: inherit; height: auto;">
+				<li data-icon="false"><a href="showPinActivityInfo.html"
+					style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+					data-transition="slidedown"> <img
+						src="images/pro/restau01_mini.jpg" /> <!-- 发起人上传的图片 -->
+
+						<h2>发起人:张3</h2>
+
+						<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+						<div style="float: left;">
+							<i class="fa fa-users" style="color: #f63">12</i>
+						</div>
+
+						<div style="margin-left: 10px; float: right;">
+							<i class="fa fa-map-marker" style="color: #f63">30m</i>
+						</div>
+				</a></li>
+
+				<li data-icon="false"><a href="showPinActivityInfo.html"
+					style="padding-top: 0px; padding-bottom: 0px; background-color: white"
+					data-transition="slidedown"> <img
+						src="images/pro/restau02_mini.jpg " />
+
+						<h2>发起人:张3</h2>
+
+						<p class="classement four">活动内容:圣诞夜庆祝活动</p>
+
+						<div style="float: left;">
+							<i class="fa fa-users" style="color: #f63">12</i>
+						</div>
+
+						<div style="margin-left: 10px; float: right;">
+							<i class="fa fa-map-marker" style="color: #f63">30m</i>
+						</div>
+				</a></li>
+
+			</ul>
+		</div>
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						data-ajax="false">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
+						class="ui-btn-active" data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
+						data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
+						data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="user"
+						data-ajax="false">我的</a></li>
+				</ul>
+			</div>
+		</div> -->
+	</div>
+</body>
+</html>

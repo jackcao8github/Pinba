@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../css/photoswipe.css" />
+<link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../css/scrolltotop.css" />
+
+<script src="../js/jquery-1.7.1.min.js"></script>
+<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
+<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/position.js"></script>
+
+
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$('.location').click(function() {
+					$('html,body').animate({
+						scrollTop : '0px'
+					}, 800);
+				});
+				//searchBox绑定点击事件
+				$('#searchBox').bind('click', function() {
+					//$.mobile.changePage("search.html", "pop", false, false);
+					changeSubPage('search', 'homePage');
+				});
+				//图片滚动处理 ------------------------------start
+				$(".main_visual").hover(function() {
+
+				}, function() {
+
+				});
+
+				$dragBln = false;
+
+				$(".main_image").touchSlider(
+						{
+							flexible : true,
+							speed : 200,
+							btn_prev : $("#btn_prev"),
+							btn_next : $("#btn_next"),
+							paging : $(".flicking_con a"),
+							counter : function(e) {
+								$(".flicking_con a").removeClass("on").eq(
+										e.current - 1).addClass("on");
+							}
+						});
+
+				$(".main_image").bind("mousedown", function() {
+					$dragBln = false;
+				});
+
+				$(".main_image").bind("dragstart", function() {
+					$dragBln = true;
+				});
+
+				$(".main_image a").click(function() {
+					if ($dragBln) {
+						return false;
+					}
+				});
+
+				timer = setInterval(function() {
+					$("#btn_next").click();
+				}, 5000);
+
+				$(".main_visual").hover(function() {
+					clearInterval(timer);
+				}, function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+
+				$(".main_image").bind("touchstart", function() {
+					clearInterval(timer);
+				}).bind("touchend", function() {
+					timer = setInterval(function() {
+						$("#btn_next").click();
+					}, 5000);
+				});
+				//图片滚动处理 ------------------------------end
+
+				//定位
+				getPosition(showPosition);
+			});
+
+	/* 显示当前定位城市 */
+	function showPosition() {
+		if (localStorage.qryCity != null) {
+			$("#location").html(localStorage.qryCity);
+		} else {
+			$("#location").html(localStorage.city);
+		}
+	}
+	function myTouchEnd(ev) {
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+		console.log("touchend,endX=" + endX + "endY=" + endY);
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			addOfferLi();
+			break;
+		case 2:
+			console.log("向下");
+			break;
+		case 3:
+			console.log("向左");
+			//打开当前页面左边页面
+			parent.switchIframeByClick('pinle');
+			break;
+		case 4:
+			console.log("向右");
+			//打开当前页面右边页面
+			parent.switchIframeByClick('wode');
+			break;
+		default:
+		}
+	}
+
+	function addOfferLi() {
+		$('#yourLike').html("猜你喜欢....");
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
+			var newhtml = '<div class="+class+">';
+			newhtml += '<a href="#" data-ajax="false" target="_top" onclick="changeSubPage(\'foodDetail\',\'homePage\',\'offerId=4\')"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
+     		newhtml+= 'class="bigImg" alt="Ballade">';
+
+			newhtml += '<div class="title">+name+</div>';
+			newhtml += '<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
+			newhtml += '	</a>';
+			newhtml += '	<div style="margin-left: 5px;float: left;">';
+			newhtml += '<i class="fa fa-thumbs-o-up" style="color:#f63"></i><span';
+     		newhtml+='	style="font-size: 0.8em">335</span> ';
+			newhtml += '</div>';
+
+			newhtml += '<div style="margin-left: 5px; float: left;">';
+			newhtml += '	<i class="fa fa-star-o" style="color:#f63"></i><span';
+     		newhtml+='		style="font-size: 0.8em">3350</span> ';
+			newhtml += '</div>';
+			newhtml += '</div>';
+
+			for ( var i = 0; 10 > i; i++) {
+				var leftli = newhtml.replace('+class+', 'offerleftli').replace(
+						'+name+', '糖醋鱼' + i).replace('+price+', '30' + i);
+				var rightli = newhtml.replace('+class+', 'offerrightli')
+						.replace('+name+', '红烧排骨' + i).replace('+price+',
+								'40' + i).replace('+offerid+', i);
+				$('#yourLikeDiv').append(leftli);
+				$('#yourLikeDiv').append(rightli);
+			}
+		}
+	}
+</script>
+
+</head>
+<style type="text/css">
+.offerleftli {
+	margin: 1px 0;
+	border: 1px solid #bebebe;
+	height: auto;
+	width: 49%;
+	float: left;
+	text-align: center;
+}
+
+.offerrightli {
+	margin: 1px 0;
+	border: 1px solid #bebebe;
+	height: auto;
+	width: 49%;
+	float: right;
+	text-align: center;
+}
+
+/* 列表中大图片 */
+.bigImg {
+	display: inline;
+	margin: 1px;
+	border: 1px solid #bebebe;
+	height: 100%;
+	width: 100%;
+	background-size: contain;
+}
+/* 列表中小图片 */
+.smallimg {
+	height: 0.8em;
+	width: 0.8em;
+	display: auto;
+	margin-left: 5px;
+	border: 0;
+}
+
+div.img a:hover img {
+	border: 1px solid #333333;
+}
+
+div.title {
+	text-align: left;
+	font-weight: normal;
+	width: 140px;
+	font-size: 12px;
+	margin: 0px 5px 0px 5px;
+}
+
+div.price {
+	text-align: left;
+	font-weight: bold;
+	width: 140px;
+	font-size: 12px;
+	margin: 5px 5px 0px 5px;
+	color: red
+}
+
+.h10 {
+	height: 10px;
+	background: #f0f0f0;
+}
+</style>
+
+</head>
+<body>
+	<div data-role="page" id="homePage" style="top: -20px;">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false" id="homeHeader">
+			<div
+				style="float: left; width: 25%; overflow: hidden; text-align: center; line-height: 49px;">
+				<a href="#" data-role="none" data-ajax="false"
+					onclick="changeSubPage('changeCity','homePage')"><i
+					class="fa fa-street-view"></i><span id="location">城市</span></a>
+			</div>
+			<div style="float: left; width: 60%;">
+				<input type="search" name="keyboard" placeholder="关键字.."
+					style="width: 100%;" id="searchBox" />
+			</div>
+			<div
+				style="float: right; width: 15%; overflow: hidden; text-align: center; line-height: 49px;">
+				<a href="#" data-role="none" data-ajax="false"
+					onclick="changeSubPage('message','homePage')"><i
+					class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
+			</div>
+		</div>
+		<div class="main_visual">
+			<div class="flicking_con">
+				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
+				<a href="#">5</a>
+			</div>
+			<div class="main_image">
+				<ul>
+					<li><img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"></li>
+					<li><img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"></li>
+					<li><img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"></li>
+					<li><img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"></li>
+					<li><img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"></li>
+				</ul>
+				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
+					href="javascript:;" id="btn_next" style="display: none;"></a>
+			</div>
+		</div>
+
+		<div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false" onclick="changeSubPage('foodMain','homePage')">
+					<i class="fa fa-cutlery fa-3x" style="color: #f63"></i>
+					<p style="margin: 0px">美食</p>
+				</a>
+			</div>
+			<div class="ui-block-b" style="text-align: center;" id="workDiv">
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false" onclick="changeSubPage('workMain','homePage')">
+					<i class="fa fa-desktop fa-3x" style="color: #f63"></i></img>
+					<p style="margin: 0px">工作</p>
+				</a>
+			</div>
+			<div class="ui-block-c" style="text-align: center;"
+				id="entertainmentDiv">
+				<a class="ui-bar ui-bar-a"
+					style="height: 70px; border: 0; background-color: #fff;" href="#"
+					data-ajax="false"
+					onclick="changeSubPage('entertainmentMain','homePage')"> <i
+					class="fa fa-gamepad fa-3x" style="color: #f63"></i>
+					<p style="margin: 0px">娱乐</p>
+				</a>
+			</div>
+
+		</div>
+		<div class="h1"></div>
+		<p style="margin: 5px 5px; text-align: center;" id="yourLike">猜你喜欢</p>
+
+		<div id="yourLikeDiv">
+			<div class="offerleftli">
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=1')"> <img
+					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
+
+					<div class="title">酸菜鱼</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
+				</a>
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
+						style="font-size: 0.8em">335</span>
+				</div>
+
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-star-o" style="color: #f63"></i><span
+						style="font-size: 0.8em;">3350</span>
+				</div>
+			</div>
+
+
+			<div class="offerrightli">
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=2')"> <img
+					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
+
+					<div class="title">糖醋鱼</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
+				</a>
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
+						style="font-size: 0.8em">335</span>
+				</div>
+
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-star-o" style="color: #f63"></i><span
+						style="font-size: 0.8em">3350</span>
+				</div>
+			</div>
+			<div class="offerleftli">
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=3')"> <img
+					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
+
+					<div class="title">酸菜鱼</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
+				</a>
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
+						style="font-size: 0.8em">335</span>
+				</div>
+
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-star-o" style="color: #f63"></i><span
+						style="font-size: 0.8em;">3350</span>
+				</div>
+			</div>
+
+
+			<div class="offerrightli">
+				<a href="#" data-ajax="false" target="_top"
+					onclick="changeSubPage('foodDetail','homePage','offerId=4')"> <img
+					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
+
+					<div class="title">糖醋鱼</div>
+					<div class="price">
+						<i class="fa fa-rmb"></i>100
+					</div>
+				</a>
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
+						style="font-size: 0.8em">335</span>
+				</div>
+
+				<div style="margin-left: 5px; float: left;">
+					<i class="fa fa-star-o" style="color: #f63"></i><span
+						style="font-size: 0.8em">3350</span>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 显示返回到页面顶端浮动按钮-->
+		<div class="location">
+			<a href="#"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-carat-u ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
+		</div>
+
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						data-ajax="false" class="ui-btn-active">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
+						data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
+						data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
+						data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="user"
+						data-ajax="false">我的</a></li>
+				</ul>
+			</div>
+		</div> -->
+	</div>
+</body>
+</html>

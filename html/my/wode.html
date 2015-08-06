@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../css/mygrid.css" />
+<link rel="stylesheet" href="../css/font-awesome.css" />
+<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" src="../js/jquery.mobile-1.4.5.js"></script>
+
+<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript">
+	
+	function myTouchEnd(ev) {
+		var endX, endY;
+		endX = ev.changedTouches[0].pageX;
+		endY = ev.changedTouches[0].pageY;
+		var direction = GetSlideDirection(startX, startY, endX, endY);
+		console.log("touchend,endX=" + endX + "endY=" + endY);
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			break;
+		case 2:
+			console.log("向下");
+			break;
+		case 3:
+			console.log("向左");
+			//打开当前页面左边页面
+			parent.switchIframeByClick('home');
+			break;
+		case 4:
+			console.log("向右");
+			//打开当前页面右边页面
+			parent.switchIframeByClick('faxian');
+			break;
+		default:
+		}
+	}
+	$(document).bind("pagecreate", function() {
+		var num = GetRandomNum(1, 100);
+		$('#userName').html('user' + num);
+		$('#authSate').html("认证：" + GetRandomNum(1, 2));
+		$('#balanceValue').html('余额：' + num);
+		$('#pointsValue').html('积分：' + num);
+		$('#level').html('级别：' + GetRandomNum(1, 2));
+	});
+	function GetRandomNum(Min, Max) {
+		var Range = Max - Min;
+		var Rand = Math.random();
+		return (Min + Math.round(Rand * Range));
+	}
+
+	function viewUserInfo() {
+		//如果未登陆过，则进入登陆页面
+		//userId为用户ID
+		//localStorage.removeItem("userId");
+		var userId = localStorage.userId;
+		if (userId == null) {//未登陆过，则显示登陆页面
+			//$.mobile.changePage("login.html", "pop", false, false);
+			changeSubPage('login', 'wodePage');
+		} else {//进入用户信息页面
+			//$.mobile.changePage("userInfo.html", "pop", false, false);
+			changeSubPage('userInfo', 'wodePage');
+		}
+	}
+
+	function changePage(obj) {
+		var id = obj.id;
+		changeSubPage(id, 'wodePage');
+	}
+
+	function clearCache() {
+		//清理缓存下来的html,css,js
+		//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+		window.applicationCache.update();
+		alert('sucess');
+		//}
+	}
+</script>
+
+<style>
+</style>
+</head>
+<body>
+	<div data-role="page" id="wodePage" data-dom-cache="true">
+		<div data-role="none">
+			<div class="login">
+				<img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" alt="" class="personal_logo"
+					onclick="viewUserInfo()">
+				<div class="userinfo">
+					<div class="title" id="userName">用户A</div>
+					<div class="subtitle" id="authSate">未认证</div>
+					<div class="subtitle" id="balanceValue">余额</div>
+					<div class="subtitle" id="pointsValue">积分</div>
+					<div class="subtitle" id="level">等级</div>
+				</div>
+
+			</div>
+
+			<!-- 第一块 -->
+			<div class="firstblock">
+
+				<div class="h1"></div>
+				<div class="item" id="myWork" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的工作</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+					<span
+						class="fr hint">简历/投递记录/工作记录</span>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="myOrder" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订单</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" id="myMoneyBag" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的钱包</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
+						class="fr hint">余额/保证金/红包/优惠券/积分</span>
+				</div>
+			</div>
+
+
+			<!-- 第二块 -->
+			<div class="h10"></div>
+			<div class="secondblock">
+				<div class="item" id="myPublish" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的发布</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
+						class="fr hint">工作/商品/活动</span>
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" id="myFocus" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的关注</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="mySub" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订阅</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="myPromotion" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的推广</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="verifyOfferVoucher" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>核销商品码</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
+						class="fr hint">商品码/优惠券码/活动码</span>
+				</div>
+			</div>
+
+			<!-- 第三块 -->
+			<div class="h10"></div>
+			<div class="thirdblock">
+				<div class="item" id="myLookHis" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>最近浏览</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="serviceCenter" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>服务中心</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="tobeBusiness" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为商家</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="tobeVIPMemeber" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为会员</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="clearCache" onclick="clearCache(this)">
+					<i class="fa fa-cog fa-spin fa-lg fa-fw" style="color: #f63"></i> <span>清除缓存</span>
+				</div>
+			</div>
+		</div>
+		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar" data-grid="d">
+				<ul>
+					<li><a id="homeBtn" href="home.html" data-icon="home"
+						data-ajax="false">首页</a></li>
+					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
+						data-ajax="false">拼乐</a></li>
+					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
+						data-ajax="false">发布</a></li>
+					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
+						data-ajax="false">发现</a></li>
+					<li><a id="wodeBtn" href="wode.html" data-icon="user"
+						data-ajax="false" class="ui-btn-active">我的</a></li>
+				</ul>
+			</div>
+		</div> -->
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+friendsMsg.html
+message.html
+servNoticeMsg.html
+servRemindMsg.html
+subscribeMsg.html
+systemMsg.html

@@ -1,0 +1,10 @@
+changeCity.html
+entertainmentDetail.html
+entertainmentMain.html
+foodDetail.html
+foodMain.html
+home.html
+search.html
+searchResult.html
+workDetail.html
+workMain.html

@@ -1,0 +1,1 @@
+DIR *.html  /B >LIST.TXT
