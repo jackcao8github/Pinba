@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html manifest="pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1" />
+<script src="js/jquery-1.11.3.js"></script>
+<link rel="stylesheet" href="mycss/mycommon.css" />
+
+<script type="text/javascript">
+	var frameIdSrcMap = {
+		"homeFrame" : "home/home.html",
+		"pinleFrame" : "together/pinle.html",
+		"fabuFrame" : "publish/fabu.html",
+		"faxianFrame" : "nearby/faxian.html",
+		"wodeFrame" : "my/wode.html"
+	};
+	var displayFrameId = 'homeFrame';
+	var clientWindowHeight = 0;
+	function switchIframeByClick(btnId) {
+		$('#' + btnId).click();
+	}
+	/* 切换iframe
+		先隐藏当前活动iframe
+		然后显示目标iframe
+	 */
+	function switchIframe(obj) {
+		if (displayFrameId != '') {
+			$('#' + displayFrameId).css('display', 'none');
+		}
+		var id = obj.id;
+		var iframeid = id + 'Frame';
+		$('#' + iframeid).css('display', 'block');
+		if (null == $('#' + iframeid).attr('src')) {
+			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
+		}
+
+		resizeIFrameHeight({
+			'id' : iframeid
+		});
+		displayFrameId = iframeid;
+
+		//改变底总导航按钮颜色
+		var oldactivebtn = $('[active="true"]');
+		var oldbtnid = oldactivebtn.attr('id');
+		var oldbtnnewcss = oldactivebtn
+				.removeClass('active' + oldbtnid + 'btn');
+		oldactivebtn.removeAttr('active');
+
+		$('#' + id).addClass('active' + id + 'btn');
+		$('#' + id).attr('active', 'true');
+	}
+	function resizeIFrameHeight(obj) {
+		var ifr = document.getElementById(obj.id);
+		if (clientWindowHeight == 0) {
+			clientWindowHeight = window.innerHeight
+					|| document.documentElement.clientHeight
+					|| document.body.clientHeight;
+
+			clientWindowHeight = clientWindowHeight - $('#footNavBar').height();
+		}
+
+		ifr.style.height = clientWindowHeight + 'px';
+	}
+</script>
+
+</head>
+<style type="text/css">
+</style>
+<body onmousewheel="return false;">
+	<!-- return false是为了禁止上下滚动 -->
+	<div class="page" id="indexPage">
+		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
+			style="width: 100%;" scrolling="auto" frameborder="0"
+			onload="resizeIFrameHeight(this)"></iframe>
+
+		<iframe id="pinleFrame" name="pinleFrame"
+			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
+
+		<iframe id="fabuFrame" name="fabuFrame"
+			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
+
+		<iframe id="faxianFrame" name="faxianFrame"
+			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
+
+		<iframe id="wodeFrame" name="wodeFrame"
+			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
+
+		<div class="footer" id="footNavBar">
+			<ul>
+				<li><a id="home" onclick="switchIframe(this)"
+					class="bottom_btn homebtn activehomebtn" active="true">首页</a></li>
+				<li><a id="pinle" onclick="switchIframe(this)"
+					class="bottom_btn pinlebtn">拼乐</a></li>
+				<li><a id="fabu" onclick="switchIframe(this)"
+					class="bottom_btn fabubtn">发布</a></li>
+				<li><a id="faxian" onclick="switchIframe(this)"
+					class="bottom_btn faxianbtn">发现</a></li>
+				<li><a id="wode" onclick="switchIframe(this)"
+					class="bottom_btn wodebtn">我的</a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
