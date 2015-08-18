@@ -30,8 +30,14 @@
 </style>
 
 <script type="text/javascript">
+function swipeLeft(){
+	//打开当前页面左边页面
+	parent.switchIframeByClick('wode');
+}
+
 function swipeRight(){
-	closeSubPage();
+	//打开当前页面右边页面
+	parent.switchIframeByClick('fabu');
 }
 	/* 加载新消息 */
 	function loadNewMsg() {

@@ -38,7 +38,6 @@
 				}, function() {
 
 				});
-
 				$dragBln = false;
 
 				$(".main_image").touchSlider(
@@ -58,8 +57,9 @@
 					$dragBln = false;
 				});
 
-				$(".main_image").bind("dragstart", function() {
+				$(".main_image").bind("dragstart", function(e) {
 					$dragBln = true;
+					e.preventDefault();
 				});
 
 				$(".main_image a").click(function() {
@@ -91,6 +91,10 @@
 
 				//定位
 				getPosition(showPosition);
+				
+				//阻止在图片上滑动时引起的翻页行为
+				$(".main_visual").bind(touchEvents.touchend,function(){return false;} , false);
+				$(".main_visual").bind(touchEvents.toucancel,function(){return false;} , false);
 			});
 
 	/* 显示当前定位城市 */
@@ -104,7 +108,7 @@
 
 	function swipeLeft(){
 		//打开当前页面左边页面
-		parent.switchIframeByClick('pinle');
+		parent.switchIframeByClick('faxian');
 	}
 	
 	function swipeRight(){

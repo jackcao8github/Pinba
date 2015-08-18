@@ -21,11 +21,11 @@
 	*/
 	function switchIframe(obj) {
 		if (displayFrameId != '') {
-			$('#' + displayFrameId).css('display', 'none');
+			$('#' + displayFrameId).hide();
 		}
 		var id = obj.id;
 		var iframeid = id + 'Frame';
-		$('#' + iframeid).css('display', 'block');
+		$('#' + iframeid).show();
 		if (null==$('#' + iframeid).attr('src')){
 			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
 		}
