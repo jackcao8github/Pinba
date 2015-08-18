@@ -28,12 +28,16 @@ var idHtmlMap = {
 	"servRemindMsg":"message/servRemindMsg.html",
 	"subscribeMsg":"message/subscribeMsg.html",
 	"systemMsg":"message/systemMsg.html",
-	"searchResult":"home/searchResult.html"
+	"searchResult":"home/searchResult.html",
+	"register":"my/register.html",
+	"changePass":"my/changePass.html",
+	"work":"publish/work.html",
+	"reqwork":"publish/reqwork.html"
 };
 
 /* 显示子页面，隐藏原页面 */
 function changeSubPage(newpageid, oldpageid,params) {
-	/*if (parent.$('#indexPage').length>0){
+	if (parent.$('#indexPage').length>0){
 		parent.$('#footNavBar').css('display','none');
 		//刷新parent.displayFrameId的高度
 		var newh =parent.window.innerHeight
@@ -41,7 +45,7 @@ function changeSubPage(newpageid, oldpageid,params) {
 		|| parent.document.body.clientHeight;
 		parent.$('#'+parent.displayFrameId).css('height',newh+'px');
 		
-	}*/
+	}
 	
 	var clientWindowHeight=window.innerHeight
 	|| document.documentElement.clientHeight
@@ -95,8 +99,8 @@ function changeSubPage(newpageid, oldpageid,params) {
 
 /* 关闭子页面 */
 function closeSubPage(destpageid) {
-	//显示主页面上的导航栏，并重新设置当前iframe的高度
-	/*if (parent.parent.$('#indexPage').length>0){
+	//显示上级页面上的footer导航栏，并重新设置当前iframe的高度
+	if (parent.parent.$('#indexPage').length>0){
 		parent.parent.$('#footNavBar').css('display','block');
 		
 		var newh =parent.window.innerHeight
@@ -105,12 +109,16 @@ function closeSubPage(destpageid) {
 		var navbarh = parent.parent.$('#footNavBar').height();
 		
 		parent.parent.$('#'+parent.parent.displayFrameId).css('height',newh-navbarh +'px');
-	}*/
+	}
 	parent.$('#otherPage').css('display', 'none');
 	if (destpageid == null) {
 		destpageid = parent.$('[data-role="page"]').attr('id');
 	}
 	parent.$('#' + destpageid).css('display', 'block');
+	//调用上级页面中的页面初始化方法
+	if (parent.pageInit){
+		parent.pageInit();
+	}
 }
 
 /*

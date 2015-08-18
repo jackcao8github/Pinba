@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+<script src="../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<link rel="stylesheet" href="../mycss/mycommon.css" />
+<style>
+.msgStatus {
+	background: #26c281;
+	border-radius: 50%;
+	width: 9px;
+	height: 9px;
+	position: relative;
+	top: 31px;
+	right: 17px;
+}
+
+.msgStatus.active {
+	background: #26c281;
+}
+
+.msgStatus.inactive {
+	background: #eaeef0;
+}
+
+.bbtn01 {
+	background: url(../image/main_index_home_normal.png) no-repeat center
+		4px;
+}
+
+.bbtn02 {
+	background: url(../image/main_index_tuan_normal.png) no-repeat center
+		4px;
+}
+
+.bbtn03 {
+	background: url(../image/main_index_search_normal.png) no-repeat center
+		4px;
+}
+
+.bbtn04 {
+	background: url(../image/main_index_my_normal.png) no-repeat center 4px;
+}
+
+.bottom_btn {
+	display: inline-block;
+	width: 99%;
+	background-size: 30px;
+	color: #A5A5A5;
+	padding-top: 18px;
+}
+/* 底部按钮激活样式 */
+.activehome {
+	background: url(../image/main_index_home_pressed.png) no-repeat center
+		4px;
+	color: #FF7419;
+	background-size: 30px;
+}
+
+.activetuan {
+	background: url(../image/main_index_tuan_pressed.png) no-repeat center
+		4px;
+	color: #FF7419;
+	background-size: 30px;
+}
+
+.activebtn2 {
+	background: url(../image/main_index_search_pressed.png) no-repeat center
+		4px;
+	color: #FF7419;
+	background-size: 30px;
+}
+
+.activebtn3 {
+	background: url(../image/main_index_my_pressed.png) no-repeat center 4px;
+	color: #FF7419;
+	background-size: 30px;
+}
+</style>
+
+<script type="text/javascript">
+	function myTouchEnd(ev) {
+		switch (direction) {
+		case 0:
+			console.log("没滑动");
+			break;
+		case 1:
+			console.log("向上");
+			break;
+		case 2:
+			console.log("向下");
+			//当前是在消息列表页面，需要加载新消息
+			var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
+			if (messageTabLi.length > 0) {
+				loadNewMsg();
+			}
+			break;
+		case 3:
+			console.log("向左");
+			break;
+		case 4:
+			console.log("向右");
+			closeSubPage();
+			break;
+		default:
+		}
+	}
+
+	function nav(obj) {
+		var hideDivId = $('.selectswitch').attr('to');
+		$('#' + hideDivId).css('display', 'none');
+		$('.selectswitch').attr('class', '');
+
+		$(obj).attr('class', 'selectswitch');
+		var displayDivId = $(obj).attr('to');
+		$('#' + displayDivId).css('display', 'block');
+
+	}
+
+	function switchframe(obj) {
+		var oldactivebtn = $('[active]');
+		var oldbtnid = oldactivebtn.attr('id');
+		var oldbtnnewcss = oldactivebtn.removeClass('active' + oldbtnid);
+		oldactivebtn.removeAttr('active');
+
+		$('#' + obj).addClass('active' + obj);
+		$('#' + obj).attr('active', 'true');
+	}
+</script>
+</head>
+<body>
+	<div id="messagePage" class="page">
+		<div class="header white" id="header">
+
+			<!-- 返回按钮 -->
+			<div class="back" onclick="closeSubPage();return false;">
+				<img src="../image/ic_back_u.png" alt="">
+			</div>
+
+
+			<div class="switch">
+				<div class="selectswitch" id="leftbtn" onclick="nav(this)"
+					to="jobList">招聘</div>
+				<div class="" id="centerbtn" onclick="nav(this)" to="">求职2</div>
+				<div class="" id="rightbtn" onclick="nav(this)" to="reqList">求职</div>
+			</div>
+		</div>
+		<div class="content">
+			<div id="jobList" class="list">
+				<ul id="jobListUL">
+					<!-- 聊天信息 -->
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx2酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx2酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx2酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx2酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>xx2酒店临时工</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+				</ul>
+			</div>
+			<div id="reqList" class="list" style="display: none;">
+				<ul id="reqListUL">
+
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>美工求职</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+					<li><img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+						style="float: left">
+						<div style="float: left; margin-left: 15px;">
+							<h3>程序员求职</h3>
+							<p>工资当天结算</p>
+						</div>
+						<div class="msgStatus active" style="float: right"></div></li>
+				</ul>
+			</div>
+		</div>
+		<div id="footer" class="footer">
+			<ul>
+				<li onclick="switchframe('home')"><a
+					class="bottom_btn bbtn01 activehome" id="home" active="true">首页</a>
+				</li>
+
+				<li onclick="switchframe('tuan')"><a
+					class="bottom_btn bbtn02 " id="tuan">团购</a></li>
+
+				<li onclick="switchframe(this)"><a class="bottom_btn bbtn03 ">发现</a>
+				</li>
+
+				<li onclick="switchframe(this)"><a class="bottom_btn bbtn04 ">我的</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

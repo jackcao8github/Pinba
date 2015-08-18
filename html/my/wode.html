@@ -5,52 +5,34 @@
 <meta name="viewport" content="width=device-width" />
 
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../css/mygrid.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
 <script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
 <script type="text/javascript" src="../js/jquery.mobile-1.4.5.js"></script>
 
 <script type="text/javascript" src="../myjs/changepage.js"></script>
-<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
 	
-	function myTouchEnd(ev) {
-		var endX, endY;
-		endX = ev.changedTouches[0].pageX;
-		endY = ev.changedTouches[0].pageY;
-		var direction = GetSlideDirection(startX, startY, endX, endY);
-		console.log("touchend,endX=" + endX + "endY=" + endY);
-		switch (direction) {
-		case 0:
-			console.log("没滑动");
-			break;
-		case 1:
-			console.log("向上");
-			break;
-		case 2:
-			console.log("向下");
-			break;
-		case 3:
-			console.log("向左");
-			//打开当前页面左边页面
-			parent.switchIframeByClick('home');
-			break;
-		case 4:
-			console.log("向右");
-			//打开当前页面右边页面
-			parent.switchIframeByClick('faxian');
-			break;
-		default:
-		}
+	function swipeLeft(){
+		//打开当前页面左边页面
+		parent.switchIframeByClick('home');
 	}
-	$(document).bind("pagecreate", function() {
+	
+	function swipeRight(){
+		//打开当前页面右边页面
+		parent.switchIframeByClick('faxian');
+	}
+	$(document).bind("pagecreate", pageInit);
+	
+	function pageInit(){
 		var num = GetRandomNum(1, 100);
 		$('#userName').html('user' + num);
 		$('#authSate').html("认证：" + GetRandomNum(1, 2));
 		$('#balanceValue').html('余额：' + num);
 		$('#pointsValue').html('积分：' + num);
 		$('#level').html('级别：' + GetRandomNum(1, 2));
-	});
+	}
 	function GetRandomNum(Min, Max) {
 		var Range = Max - Min;
 		var Rand = Math.random();
@@ -78,10 +60,10 @@
 
 	function clearCache() {
 		//清理缓存下来的html,css,js
-		//if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-		window.applicationCache.update();
-		alert('sucess');
-		//}
+		if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+			window.applicationCache.update();
+			alert('sucess');
+		}
 	}
 </script>
 
@@ -114,11 +96,11 @@
 					<span
 						class="fr hint">简历/投递记录/工作记录</span>
 				</div>
-				<div class="h1"></div>
+				<!-- <div class="h1"></div>
 				<div class="item" id="myOrder" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订单</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div>
+				</div> -->
 
 				<div class="h1"></div>
 				<div class="item" id="myMoneyBag" onclick="changePage(this)">
@@ -153,12 +135,12 @@
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的推广</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
 				</div>
-				<div class="h1"></div>
+				<!-- <div class="h1"></div>
 				<div class="item" id="verifyOfferVoucher" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>核销商品码</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
 						class="fr hint">商品码/优惠券码/活动码</span>
-				</div>
+				</div> -->
 			</div>
 
 			<!-- 第三块 -->
@@ -173,20 +155,20 @@
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>服务中心</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
 				</div>
-				<div class="h1"></div>
+				<!-- <div class="h1"></div>
 				<div class="item" id="tobeBusiness" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为商家</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div>
+				</div> -->
 				<div class="h1"></div>
 				<div class="item" id="tobeVIPMemeber" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为会员</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
 				</div>
-				<div class="h1"></div>
+				<!-- <div class="h1"></div>
 				<div class="item" id="clearCache" onclick="clearCache(this)">
 					<i class="fa fa-cog fa-spin fa-lg fa-fw" style="color: #f63"></i> <span>清除缓存</span>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">

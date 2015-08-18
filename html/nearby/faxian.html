@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../css/mygrid.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/changepage.js"></script>
-<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -23,39 +23,22 @@
 		});
 	}
 	
-	function myTouchEnd(ev) {
-		var endX, endY;
-		endX = ev.changedTouches[0].pageX;
-		endY = ev.changedTouches[0].pageY;
-		var direction = GetSlideDirection(startX, startY, endX, endY);
-		console.log("touchend,endX=" + endX + "endY=" + endY);
-		switch (direction) {
-		case 0:
-			console.log("没滑动");
-			break;
-		case 1:
-			console.log("向上");
-			break;
-		case 2:
-			console.log("向下");
-			break;
-		case 3:
-			console.log("向左");
-			//打开当前页面左边页面
-			parent.switchIframeByClick('wode');
-			break;
-		case 4:
-			console.log("向右");
-			//打开当前页面右边页面
-			parent.switchIframeByClick('fabu');
-			break;
-		default:
-		}
+	function swipeLeft(){
+		//打开当前页面左边页面
+		parent.switchIframeByClick('wode');
+	}
+
+	function swipeRight(){
+		//打开当前页面右边页面
+		parent.switchIframeByClick('fabu');
 	}
 </script>
 </head>
 <body>
 	<div data-role="page" id="faxianPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<h1>发现新事物</h1>
+		</div>
 		<div data-role="none">
 			<!-- 展示当前位置 -->
 			<div class="firstblock">
@@ -95,7 +78,7 @@
 			<div class="h10"></div>
 			<div class="firstblock">
 				<div class="item" onclick="">
-					<i class="fa fa-coffee fa-lg"></i> <span>附近的商铺</span> 
+					<i class="fa fa-coffee fa-lg"></i> <span>附近的用人企业</span> 
 				</div>
 				<ul data-role="listview">
 					<li data-icon="false"><a href="#"
@@ -168,7 +151,7 @@
 				</ul>
 			</div>
 
-			<div class="h10"></div>
+			<!-- <div class="h10"></div>
 			<div class="firstblock">
 				<div class="item" onclick="">
 					<i class="fa fa-group fa-lg"></i> <span>附近的群</span> 
@@ -189,11 +172,52 @@
 					</a></li>
 
 				</ul>
-			</div>
+			</div> -->
 			<div class="h10"></div>
 			<div class="firstblock">
 				<div class="item" onclick="">
-					<i class="fa fa-user fa-lg"></i> <span>附近的人</span> 
+					<i class="fa fa-user fa-lg"></i> <span>附近的小伙伴</span> 
+				</div>
+				<ul data-role="listview">
+					<li data-icon="false"><a href="#"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+							<img src="images/firefox.png">
+							<h2>张三</h2>
+							<p>张三是个公务员</p>
+							<div style="float: left;">
+								<!-- 性别 -->
+								<i class="fa fa-male"></i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;">
+								<!-- 距离 -->
+								<i class="fa fa-map-marker" style="color:#f63">30m</i>
+							</div>
+					</a></li>
+					<li data-icon="false"><a href="#"
+						style="padding-top: 0px; padding-bottom: 0px; background-color: white">
+							<img src="images/opera.png">
+							<h2>李4</h2>
+							<p>李4是个白领</p>
+
+							<div style="float: left;">
+								<!-- 性别 -->
+								<i class="fa fa-female"></i>
+							</div>
+
+							<div style="margin-left: 10px; float: right;"> 
+								<!-- 距离 -->
+								<i class="fa fa-map-marker" style="color:#f63">304m</i>
+							</div>
+					</a></li>
+
+				</ul>
+			</div>
+			
+			<div class="h10"></div>
+			<div class="firstblock">
+				<div class="item" onclick="">
+					<i class="fa fa-user fa-lg"></i> <span>朋友圈</span> 
 				</div>
 				<ul data-role="listview">
 					<li data-icon="false"><a href="#"

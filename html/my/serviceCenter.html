@@ -6,43 +6,15 @@
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/mydownandupslide.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script src="../myjs/changepage.js"></script>
 
 <style>
 </style>
 
 <script type="text/javascript">
-function myTouchEnd(ev){
-	var endX, endY;
-	endX = ev.changedTouches[0].pageX;
-	endY = ev.changedTouches[0].pageY;
-	var direction = GetSlideDirection(startX, startY, endX, endY);
-	console.log("touchend,endX="+endX+"endY="+endY);
-	switch (direction) {
-	case 0:
-		console.log("没滑动");
-		break;
-	case 1:
-		console.log("向上");
-		break;
-	case 2:
-		console.log("向下");
-		//当前是在消息列表页面，需要加载新消息
-		var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
-		if (messageTabLi.length > 0) {
-			loadNewMsg();
-		}
-		break;
-	case 3:
-		console.log("向左");
-		break;
-	case 4:
-		console.log("向右");
-		closeSubPage();
-		break;
-	default:
-	}
+function swipeRight(){
+	closeSubPage();
 }
 </script>
 </head>

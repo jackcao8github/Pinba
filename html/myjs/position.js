@@ -4,17 +4,20 @@ function getPosition(showPosition){
 	var geolocation = new BMap.Geolocation();
 	geolocation.getCurrentPosition(function(r) {
 		if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-			//将经纬度缓存下来
-			localStorage.latitude = r.point.lat;
-			localStorage.longitude = r.point.lng;
 			
-			// alert('您的位置：'+r.point.lng+','+r.point.lat);
+			//将经纬度缓存下来
+			var newlatitude =r.point.lat;
+			var newlongitude = r.point.lng;
+			localStorage.latitude = newlatitude;
+			localStorage.longitude = newlongitude;
+			
+			//alert('您的位置：'+r.point.lng+','+r.point.lat);
 			// ak = appkey 访问次数流量有限制
 			$.getJSON(
 							'http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
-									+ r.point.lat
+									+ newlatitude
 									+ ','
-									+ r.point.lng
+									+ newlongitude
 									+ '&output=json&pois=1',
 							function(res) {
 								//将位置缓存下来

@@ -9,7 +9,7 @@
 <script src="js/jquery.mobile-1.4.5.js"></script>
 
 <script type="text/javascript">
-	var frameIdSrcMap={"homeFrame":"home.html","pinleFrame":"pinle.html","fabuFrame":"fabu.html","faxianFrame":"faxian.html","wodeFrame":"wode.html"};
+	var frameIdSrcMap={"homeFrame":"home/home.html","pinleFrame":"together/pinle.html","fabuFrame":"publish/fabu.html","faxianFrame":"nearby/faxian.html","wodeFrame":"my/wode.html","messageFrame":"message/message.html"};
 	var displayFrameId = 'homeFrame';
 	var clientWindowHeight = 0;
 	function switchIframeByClick(btnId){
@@ -25,7 +25,6 @@
 		}
 		var id = obj.id;
 		var iframeid = id + 'Frame';
-
 		$('#' + iframeid).css('display', 'block');
 		if (null==$('#' + iframeid).attr('src')){
 			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
@@ -53,13 +52,13 @@
 </style>
 <body onmousewheel="return false;"><!-- return false是为了禁止上下滚动 -->
 	<div data-role="page" id="indexPage" data-dom-cache="true">
-		<iframe id="homeFrame" name="homeFrame" src="home.html"
+		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
 			style="width:100%;" scrolling="auto" frameborder="0"
 			onload="resizeIFrameHeight(this)"></iframe>
 
-		<iframe id="pinleFrame" name="pinleFrame" 
+		<!-- <iframe id="pinleFrame" name="pinleFrame" 
 			style="width:100%;display: none;" scrolling="auto"
-			frameborder="0" ></iframe>
+			frameborder="0" ></iframe> -->
 
 		<iframe id="fabuFrame" name="fabuFrame" 
 			style="width:100%;display: none;" scrolling="auto"
@@ -72,22 +71,26 @@
 		<iframe id="wodeFrame" name="wodeFrame" 
 			style="width:100%;display: none;" scrolling="auto"
 			frameborder="0" ></iframe>
-
+		<iframe id="messageFrame" name="messageFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe>
 		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
 			id="footNavBar">
 			<div data-role="navbar" data-grid="d">
 				<ul>
 					<li><a id="home" href="#" data-icon="home"
-						onclick="switchIframe(this)" data-ajax="false"
+						onclick="switchIframe(this)" 
 						class="ui-btn-active">首页</a></li>
-					<li><a id="pinle" href="#" data-icon="bars"
-						onclick="switchIframe(this)" data-ajax="false">拼乐</a></li>
+					<!-- <li><a id="pinle" href="#" data-icon="bars"
+						onclick="switchIframe(this)" >拼乐</a></li> -->
+						<li><a id="faxian" href="#" data-icon="eye"
+						onclick="switchIframe(this)" >发现</a></li>
 					<li><a id="fabu" href="#" data-icon="grid"
-						onclick="switchIframe(this)" data-ajax="false">发布</a></li>
-					<li><a id="faxian" href="#" data-icon="eye"
-						onclick="switchIframe(this)" data-ajax="false">发现</a></li>
+						onclick="switchIframe(this)" >发布</a></li>
+					<li><a id="message" href="#" data-icon="mail"
+						onclick="switchIframe(this)" >消息</a></li>
 					<li><a id="wode" href="#" data-icon="user"
-						onclick="switchIframe(this)" data-ajax="false">我的</a></li>
+						onclick="switchIframe(this)" >我的</a></li>
 				</ul>
 			</div>
 		</div>
