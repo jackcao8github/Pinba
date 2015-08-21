@@ -1,4 +1,4 @@
-package com.xx.common;
+package com.webapp.common.util;
 
 import java.sql.Date;
 

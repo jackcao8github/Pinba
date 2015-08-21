@@ -1,4 +1,4 @@
-package com.xx.common;
+package com.webapp.common.util;
 
 //bean属性取值
 public class AttrValue {

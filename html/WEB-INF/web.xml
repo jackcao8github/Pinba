@@ -11,4 +11,18 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/Application-Context.xml</param-value>
   </context-param>
+  <servlet>
+		<servlet-name>verifyImage</servlet-name>
+		<servlet-class>com.ailk.web.servlet.file.ImageServlet</servlet-class>
+		<init-param>
+			<param-name>image-class</param-name>
+			<param-value>com.ailk.base.util.VerifyImage</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>verifyImage</servlet-name>
+		<url-pattern>/verifyImage</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -1,9 +1,9 @@
-package com.xx.bean;
+package com.webapp.user.bean;
 
 import java.sql.Date;
 
-import com.xx.common.AbstractBean;
-import com.xx.common.DataTypeTrans;
+import com.webapp.common.util.AbstractBean;
+import com.webapp.common.util.DataTypeTrans;
 
 //用户bean
 public class UserBean extends AbstractBean{

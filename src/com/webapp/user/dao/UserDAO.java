@@ -1,4 +1,4 @@
-package com.xx.dao;
+package com.webapp.user.dao;
 
 import javax.sql.DataSource;
 
@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.xx.bean.UserBean;
-import com.xx.common.PreparedSqlAndParams;
+import com.webapp.common.util.PreparedSqlAndParams;
+import com.webapp.user.bean.UserBean;
 
 public class UserDAO {
 	private DataSource dataSource;

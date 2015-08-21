@@ -26,13 +26,13 @@
 
 				closeSubPage();
 			}
-			function swipeRight(){
+			function swipeRight() {
 				closeSubPage();
 			}
-			function register(){
+			function register() {
 				parent.changeSubPage('register', 'wodePage');
 			}
-			function changePass(){
+			function changePass() {
 				parent.changeSubPage('changePass', 'wodePage');
 			}
 		</script>
@@ -47,9 +47,20 @@
 			<label for="userName">用户名:</label> <input type="text" name="userName"
 				id="userName" value="" placeholder="用户名或手机号"> <label
 				for="password">密码:</label> <input type="password" name="password"
-				id="password" value="" placeholder="密码">     <a href="#"
-				data-role="button" onclick="login()">登陆</a> <a onclick="register()">注册</a><a
-				style="margin: 10px;" onclick="changePass()">忘记密码?</a>
+				id="password" value="" placeholder="密码">      <label
+				for="password">验证码:</label>
+			<div style="display: inline-flex; width: 100%">
+				<div style="width: 70%; height: 100%;">
+					<input type="text" name="verifyCode" id="verifyCode" value=""
+						placeholder="验证码">
+				</div>
+				<a data-mini="true" href="#"
+					style="width: 30%; height: 100%; margin-top: 8px;"><img
+					src="/verifyImage?width=70&height=21&length=4"></img></a>
+			</div>
+			<a href="#" data-role="button" onclick="login()">登陆</a> <a
+				onclick="register()">注册</a><a style="margin: 10px;"
+				onclick="changePass()">忘记密码?</a>
 		</div>
 	</div>
 </body>
