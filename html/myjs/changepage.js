@@ -19,6 +19,7 @@ var idHtmlMap = {
 	"search" : "home/search.html",
 	"foodMain" : "home/foodMain.html",
 	"workMain" : "home/workMain.html",
+	"workDetail" : "home/workDetail.html",
 	"entertainmentMain" : "home/entertainmentMain.html",
 	"foodDetail" : "home/foodDetail.html",
 	"changeCity" : "home/changeCity.html",
@@ -32,7 +33,10 @@ var idHtmlMap = {
 	"register":"my/register.html",
 	"changePass":"my/changePass.html",
 	"work":"publish/work.html",
-	"reqwork":"publish/reqwork.html"
+	"reqwork":"publish/reqwork.html",
+	"userContract":"my/userContract.html",
+	"resumeDetail":"my/resumeDetail.html",
+	"editResumeDetail":"my/editResumeDetail.html"
 };
 
 /* 显示子页面，隐藏原页面 */

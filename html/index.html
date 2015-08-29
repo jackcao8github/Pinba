@@ -40,7 +40,7 @@
 			|| document.documentElement.clientHeight
 			|| document.body.clientHeight;
 			
-			clientWindowHeight = clientWindowHeight-$('#footNavBar').height();
+			clientWindowHeight = clientWindowHeight-$('#footNavBar').height()-10;
 		}
 		
 		ifr.style.height = clientWindowHeight + 'px';

@@ -46,7 +46,25 @@
 
 				<label for="num">人数:</label> <input type="text" name="num" id="num"
 					value="">
-
+				<label for="area" class="select">区域:</label>
+				<select name="area" id="area" data-native-menu="false">
+				    <option>区域</option>
+				    <option value="njgulou">鼓楼</option>
+				    <option value="njqinhuai">秦淮</option>
+				    <option value="njbaixia">白下</option>
+				    <option value="njqixia">栖霞</option>
+					<option value="njjianye">建邺</option>
+					<option value="njyuhua">雨花</option>
+					<option value="njjiangning">江宁</option>
+					<option value="njpukou">浦口</option>
+					<option value="njdachang">大厂</option>
+					<option value="njliuhe">六合</option>
+					<option value="njgaochun">高淳</option>
+					<option value="njlishui">溧水</option>
+				</select>
+				<label for="address">详细地址:</label> <input type="text" name="address" id="address"
+					value="">
+				
 				<fieldset data-role="controlgroup">
 					<legend>学历要求:</legend>
 					<input type="radio" value="nolimit" id="degreenolimit"
@@ -69,6 +87,14 @@
 						type="radio" name="experience" id="3year" value="3year"><label
 						for="3year">3年</label>
 				</fieldset>
+				<fieldset data-role="controlgroup">
+					<legend>年龄:</legend>
+					<input type="radio" name="age" id="nolimit" value="nolimit"
+						checked="checked"><label for="nolimit">不限</label><input
+						type="18-30" name="age" id="18-30" value="18-30"><label
+						for="1year">18-30</label><input type="radio" name="age"
+						id="31-40" value="31-40"><label for="31-40">31-40</label>
+				</fieldset>
 
 				<label for="dayRate">日薪:</label><input type="range" name="dayRate"
 					id="dayRate" value="100" min="0" max="1000"> <label
@@ -82,10 +108,20 @@
 					id="foodAndBed" data-role="slider" data-mini="true">     
 					<option value="off">No</option>     
 					<option value="on" selected="">Yes</option>
-				</select> <label for="endDate">失效时间:</label> <input type="date"
+				</select>
+				<label for="endDate">失效时间:</label> <input type="date"
 					name="endDate" id="endDate" value=""> <label
-					for="verifyCode">验证码:</label> <input type="text" name="verifyCode"
-					id="verifyCode" value=""> <a href="#" data-role="button"
+					for="verifyCode">验证码:</label><div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码">
+						</div>
+						<a data-mini="true" href="#"
+							style="width: 30%; height: 100%; margin-top: 8px;"><img
+							src="/verifyImage?width=70&height=21&length=4"></img></a>
+				</div> 
+			
+			<a href="#" data-role="button"
 					onclick="publish()">发布</a>
 			</form>
 		</div>

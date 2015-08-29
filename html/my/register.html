@@ -33,12 +33,12 @@
 
 	}
 	function showContract() {
-
+		changeSubPage('userContract', 'regPage');
 	}
 </script>
 </head>
 <body>
-	<div id="messagePage" data-role="page">
+	<div id="regPage" data-role="page">
 		<div data-role="header" id="header">
 
 			<a href="#" data-rel="back"
@@ -56,11 +56,13 @@
 					</ul>
 				</div>
 				<div id="jobList" class="list">
-					<label for="ptel">手机号码:</label><div style="display:inline-flex;width:100%">
-						<div style="width:70%;height:100%;">
-							<input type="tel" name="ptel" id="ptel" value="" >
+					<label for="ptel">手机号码:</label>
+					<div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
+							<input type="tel" name="ptel" id="ptel" value="">
 						</div>
-						<button data-mini="true" style="width:30%;height:100%;margin-top:8px;">发送验证码</button>
+						<button data-mini="true"
+							style="width: 30%; height: 100%; margin-top: 8px;">发送验证码</button>
 					</div>
 					<label for="pmsgverifyCode">短信验证码:</label> <input type="text"
 						name="pmsgverifyCode" id="pmsgverifyCode" value=""> <label
@@ -68,19 +70,20 @@
 						name="ppassword" id="ppassword" value="" autocomplete="off">
 
 					<fieldset data-role="controlgroup">
-						         <label for="agreeContractP">同意<a href="#"
-							onclick="showPContract()">用户协议</a></label>     <input type="checkbox"
-							name="agreeContractP" id="agreeContractP">
+						<label for="agreeContractP">已阅读并同意用户协议</label><input
+							type="checkbox" name="agreeContractP" id="agreeContractP">
 					</fieldset>
-					<a href="#" data-role="button" onclick="reg4Private()">注册</a>
+					<a href="#" onclick="showContract()">用户协议</a> <a href="#"
+						data-role="button" onclick="reg4Private()">注册</a>
 				</div>
 				<div id="reqList" class="list" style="display: none;">
 					<label for="tel">手机号码:</label>
-					<div style="display:inline-flex;width:100%">
-						<div style="width:70%;height:100%;">
+					<div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
 							<input type="tel" name="ptel" id="ptel" value="">
 						</div>
-						<button data-mini="true" style="width:30%;height:100%;margin-top:8px;">发送验证码</button>
+						<button data-mini="true"
+							style="width: 30%; height: 100%; margin-top: 8px;">发送验证码</button>
 					</div>
 
 					<label for="msgverifyCode">短信验证码:</label> <input type="text"
@@ -88,9 +91,9 @@
 						for="name">企业名称:</label> <input type="text" name="name" id="name"
 						value=""> <label for="text-basic">企业地址:</label> <input
 						type="text" name="text-basic" id="text-basic" value=""> <label
-						for="password">密码:</label> <input type="password"
-						name="password" id="password" value="" autocomplete="off">
-					<label for="size" class="select">企业规模:</label> <select name="size"
+						for="password">密码:</label> <input type="password" name="password"
+						id="password" value="" autocomplete="off"> <label
+						for="size" class="select">企业规模:</label> <select name="size"
 						id="size" data-native-menu="false">     
 						<option>企业规模</option>     
 						<option value="standard">1-50</option>     
@@ -106,11 +109,11 @@
 						<option value="overnight">其它</option>
 					</select>
 					<fieldset data-role="controlgroup">
-						         <label for="agreeContract">同意<a href="#"
-							onclick="showContract()">用户协议</a></label>     <input type="checkbox"
-							name="agreeContract" id="agreeContract">
+						         <label for="agreeContract">已阅读并同意 用户协议</label><input
+							type="checkbox" name="agreeContract" id="agreeContract">
 					</fieldset>
-					<a href="#" data-role="button" onclick="reg4Company()">注册</a>
+					<a href="#" onclick="showContract()">用户协议</a> <a href="#"
+						data-role="button" onclick="reg4Company()">注册</a>
 				</div>
 			</div>
 		</div>

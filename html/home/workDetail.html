@@ -7,382 +7,300 @@
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="../mycss/photoswipe.css" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
 <script src="../js/jquery-1.7.1.min.js"></script>
-<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script src="../js/jquery.mobile-1.4.5.js"></script>
+<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
 <script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
 <script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
-
+<script type="text/javascript" src="../myjs/changepage.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				//图片滚动处理 ------------------------------start
-				$(".main_visual").hover(function() {
-
-				}, function() {
-
-				});
-
-				$dragBln = false;
-
-				$(".main_image").touchSlider(
-						{
-							flexible : true,
-							speed : 200,
-							btn_prev : $("#btn_prev"),
-							btn_next : $("#btn_next"),
-							paging : $(".flicking_con a"),
-							counter : function(e) {
-								$(".flicking_con a").removeClass("on").eq(
-										e.current - 1).addClass("on");
-							}
-						});
-
-				$(".main_image").bind("mousedown", function() {
-					$dragBln = false;
-				});
-
-				$(".main_image").bind("dragstart", function() {
-					$dragBln = true;
-				});
-
-				$(".main_image a").click(function() {
-					if ($dragBln) {
-						return false;
-					}
-				});
-
-				timer = setInterval(function() {
-					$("#btn_next").click();
-				}, 5000);
-
-				$(".main_visual").hover(function() {
-					clearInterval(timer);
-				}, function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-
-				$(".main_image").bind("touchstart", function() {
-					clearInterval(timer);
-				}).bind("touchend", function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-				//图片滚动处理 ------------------------------end
-			});
-
-	function swipeRight(){
+	function swipeRight() {
 		closeSubPage();
 	}
-	function addOfferLi() {
-		$('#yourLike').html("猜你喜欢....");
-		if ($(document).scrollTop() >= $(document).height()
-				- $(window).height()) {
-			var newhtml = '<div class="+class+">';
-			newhtml += '<a href="foodDetail.html?offerId=+offerid+"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
-     		newhtml+= 'class="bigImg" alt="Ballade">';
+	$(document).ready(function() {
 
-			newhtml += '<div class="title">+name+</div>';
-			newhtml += '<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
-			newhtml += '	</a>';
-			newhtml += '	<div style="float: left;">';
-			newhtml += '<img class="smallimg" src="image/tuan_review_good.png"><span';
-     		newhtml+='	style="font-size: 0.8em">335</span> </img>';
-			newhtml += '</div>';
-
-			newhtml += '<div style="margin-left: 10px; float: left;">';
-			newhtml += '	<img class="smallimg"';
-     		newhtml+='		src="image/my_favorite_user_icon_normal.png"><span';
-     		newhtml+='		style="font-size: 0.8em">3350</span> </img>';
-			newhtml += '</div>';
-			newhtml += '</div>';
-
-			for ( var i = 0; 10 > i; i++) {
-				var leftli = newhtml.replace('+class+', 'offerleftli').replace(
-						'+name+', '糖醋鱼' + i).replace('+price+', '30' + i);
-				var rightli = newhtml.replace('+class+', 'offerrightli')
-						.replace('+name+', '红烧排骨' + i).replace('+price+',
-								'40' + i).replace('+offerid+',i);
-				$('#yourLikeDiv').append(leftli);
-				$('#yourLikeDiv').append(rightli);
+		//为关注按钮增加响应事件
+		$('#favBtn').bind('click', function() {
+			var css = $(this).find('i').attr('class');
+			if (css.indexOf('fa-star-o') > 0) {
+				$(this).find('i').attr('class', 'fa fa-star fa-2x');
+			} else {
+				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
 			}
-		}
+		});
+		//为分享按钮增加响应事件
+		$('#shareBtn').bind('click', function() {
+
+		});
+		//为购买按钮增加响应事件
+		$('#buyBtn').bind('click', function() {
+
+		});
+		//为加入购物车按钮增加响应事件
+		$('#shopcartBtn').bind('click', function() {
+
+		});
+	});
+	
+	function openWork(obj){
+		var workid = obj.workid;
+		changeSubPage('workDetail', 'workdetailPage');
 	}
 </script>
+
+
 <style type="text/css">
-.offerleftli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: left;
-	text-align: center;
-}
-
-.offerrightli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: right;
-	text-align: center;
-}
-
-/* 列表中大图片 */
-.bigImg {
-	display: inline;
-	margin: 1px;
-	border: 1px solid #bebebe;
-	height: 100%;
-	width: 100%;
-	background-size: contain;
-}
-/* 列表中小图片 */
-.smallimg {
-	height: 0.8em;
-	width: 0.8em;
-	display: auto;
-	margin-left: 5px;
-	border: 0;
-}
-
-div.img a:hover img {
-	border: 1px solid #333333;
-}
-
-div.title {
-	text-align: left;
-	font-weight: normal;
-	width: 140px;
-	font-size: 12px;
-	margin: 0px 5px 0px 5px;
-}
-
-div.price {
-	text-align: left;
-	font-weight: bold;
-	width: 140px;
-	font-size: 12px;
-	margin: 5px 5px 0px 5px;
-	color: red
-}
-
-.h10 {
-	height: 10px;
-	background: #f0f0f0;
-}
+li{padding:0em 1em}
 </style>
 
 </head>
 <body>
-	<div data-role="page" id="homePage" style="top: -20px;">
-		<div class="main_visual">
-			<div class="flicking_con">
-				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
-				<a href="#">5</a>
-			</div>
-			<div class="main_image">
-				<ul>
-					<li><img src="images/img_main_1.jpg"></li>
-					<li><img src="images/img_main_2.jpg"></li>
-					<li><img src="images/img_main_3.jpg"></li>
-					<li><img src="images/img_main_4.jpg"></li>
-					<li><img src="images/img_main_5.jpg"></li>
+	<div data-role="page" id="workdetailPage">
+		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
+		<!-- 返回按钮 -->
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>工作详情</h1>
+		</div>
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">招聘营业员(江宁)<span class="ui-li-count">2人关注</span></li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>人数:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>不限</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>区域:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>江宁</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>地址:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>河定桥</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>发布时间:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>2015-9-1 23:06</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>截止时间:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>2015-9-30 23:06</p>
+					</div>
+				</div>
+			</li>
+			<li data-role="list-divider">待遇</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>日薪:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>100元</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>工资当天结算:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>是</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>提供食宿:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>是</p>
+					</div>
+				</div>
+			</li>
+			<li data-role="list-divider">要求</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>学历:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>不限</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>工作经验:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>不限</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>年龄:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>不限</p>
+					</div>
+				</div>
+			</li>
+			<li data-role="list-divider">工作内容</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p style="white-space: pre-line;">（1）在所指派的岗位内招呼客人，留意客人进餐情况，服从上司指派，为客人提供良好服务。
+					（2）按照工作程序和标准做好各项工作，如换台布、摆台、收拾餐具，准备餐具及作好清洁卫生等。
+					（3）每日按时凭单到仓库领取日用品(可由领班负责或接受领班交待)。 （4）了解每日供应菜式及酒水以便介绍给客人。
+					（5）为客人上菜、分菜、斟酒，收换餐具，服务客人就餐。
+					（6）注意客人所点的菜品。尽量帮助客人解决就餐过程中的各类问题。若自己不能解决的可及时反映请示领班。
+					（7）尽量避免用具破损，轻拿轻放，使自己工作尽责。 （8）负责好餐后各项收尾工作，清洁好当值卫生，交接好。</p>
+			</li>
+			<li data-role="list-divider">公司信息<span class="ui-li-count"><div
+						style="float: right; color: #f63">
+						<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+							class="fa fa-star"></i><i class="fa fa-star"></i><i
+							class="fa fa-star-half-full"></i>
+					</div></span></li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>公司名称:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p style="white-space: pre-line;">xxx店</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>公司介绍:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p style="white-space: pre-line;">怎样怎样的好</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>公司地址:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>
+						<p style="white-space: pre-line;">江宁-上元大街南京市江宁区（万达E座对面）上元大街336号爱婴岛旁</p>
+						</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>电话:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>025-52160001</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>邮箱:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>xxx@qq.com</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>网址:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>www.dd.com</p>
+					</div>
+				</div>
+			</li>
+
+
+			<li data-role="list-divider">该公司其它招聘<span class="ui-li-count">2</span></li>
+			<li data-icon="false" style="padding:0em 1em">
+				<ul data-role="listview" id="workList">
+					<li data-icon="false" onclick="openWork(this)" workid="1"><a
+						href="#" class="ui-btn ui-mini">
+							<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<div style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</div>
+							</div>
+							<p class="ui-li-aside">
+								<strong>22:23 PM</strong>
+							</p>
+					</a></li>
+					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+							<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<div style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</div>
+							</div>
+							<p class="ui-li-aside">
+								<strong>22:23 PM</strong>
+							</p>
+					</a></li>
 				</ul>
-				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
-					href="javascript:;" id="btn_next" style="display: none;"></a>
-			</div>
-		</div>
-		<div class="h10"></div>
-		<div class="ui-grid-b" style="">
-			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="foodMain.html" data-ajax="false">
-					<img src="image/firstpage/food_u.png"
-						style="background-size: contain; height: 80%;background-color:#fff"></img>
-					<p style="margin: 0px">美食</p>
-				</a>
-			</div>
-			<div class="ui-block-b" style="text-align: center;" id="workDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="workMain.html" data-ajax="false">
-					<img src="image/firstpage/boy_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">工作</p>
-				</a>
-			</div>
-			<div class="ui-block-c" style="text-align: center;" id="entertainmentDiv">
-				<a class="ui-bar ui-bar-a" style="height: 80px; border: 0;background-color:#fff;" href="entertainmentMain.html" data-ajax="false">
-					<img src="image/firstpage/entertainment_o.png"
-						style="background-size: contain; height: 80%;"></img>
-					<p style="margin: 0px">娱乐</p>
-				</a>
-			</div>
-
-		</div>
-		<div class="h10"></div>
-		<p style="margin: 0 5px;text-align:center;" id="yourLike">猜你喜欢</p>
-
-		<div id="yourLikeDiv">
-			<div class="offerleftli">
-				<a href="foodDetail.html?offerId=1"> <img src="image/funlife/funlife02.jpg"
-					class="bigImg" alt="Ballade">
-
-					<div class="title">酸菜鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="margin-left: 5px; float: left;">
-					<img class="smallimg" src="image/tuan_review_good.png"><span
-						style="font-size: 0.8em">335</span> </img>
-				</div>
-
-				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
-						style="font-size: 0.8em;">3350</span> </img>
-				</div>
-			</div>
+			</li>
+		</ul>
 
 
-			<div class="offerrightli">
-				<a href="foodDetail.html?offerId=2"> <img src="image/funlife/funlife03.jpg"
-					class="bigImg" alt="Ballade">
 
-					<div class="title">糖醋鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="float: left;">
-					<img class="smallimg" src="image/tuan_review_good.png"><span
-						style="font-size: 0.8em">335</span> </img>
-				</div>
+		<div data-role="footer" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<div data-role="navbar" data-grid="b">
+				<ul style="text-align: center; padding: 5px 0">
+					<!-- 关注 -->
+					<li id="favBtn" style="width: 20%"><a class="ui-btn">关注</a></li>
+					<!-- 分享 -->
+					<li id="shareBtn" style="width: 20%"><a class="ui-btn">咨询</a></li>
+					<!-- 发送简历 -->
+					<li id="buyBtn" style="width: 60%;"><a data-role="button"
+						style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">投递简历</a></li>
 
-				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
-						style="font-size: 0.8em">3350</span> </img>
-				</div>
-			</div>
-			<div class="offerleftli">
-				<a href="foodDetail.html?offerId=3"> <img src="image/funlife/funlife02.jpg"
-					class="bigImg" alt="Ballade">
-
-					<div class="title">酸菜鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="float: left;">
-					<img class="smallimg" src="image/tuan_review_good.png"><span
-						style="font-size: 0.8em">335</span> </img>
-				</div>
-
-				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
-						style="font-size: 0.8em;">3350</span> </img>
-				</div>
-			</div>
-
-
-			<div class="offerrightli">
-				<a href="foodDetail.html?offerId=4"> <img src="image/funlife/funlife03.jpg"
-					class="bigImg" alt="Ballade">
-
-					<div class="title">糖醋鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="float: left;">
-					<img class="smallimg" src="image/tuan_review_good.png"><span
-						style="font-size: 0.8em">335</span> </img>
-				</div>
-
-				<div style="margin-left: 10px; float: left;">
-					<img class="smallimg" src="image/my_favorite_user_icon_normal.png"><span
-						style="font-size: 0.8em">3350</span> </img>
-				</div>
-			</div>
-
-		</div>
-		<div id="bottom"></div>
-		<!-- <ul data-role="listview">
-				<li data-icon="false" ><a href="#" style="padding-top:0px;padding-bottom:0px;"> <img src="images/firefox.png" >
-						<h2>Mozilla Firefox</h2>
-						<p>Firefox 是来自 Mozilla 的 web 浏览器。发布于 2004 年。</p>
-						<div style="float:left;">
-							<img style="height:0.8em;width:0.8em;" src="image/tuan_review_good.png"><span style="font-size:0.8em">335</span> </img>
-						</div>
-						
-						<div style="margin-left:10px;float:left;">
-							<img style="height:0.8em;width:0.8em;" src="image/my_favorite_user_icon_normal.png"><span style="font-size:0.8em">3350</span> </img>
-						</div>
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/opera.png">
-						<h2>Opera</h2>
-						<p>是一款挪威Opera Software ASA公司制作的支持多页面标签式浏览的网络浏览器。发布于1995年。</p> <span
-						class="ui-li-count">已售335</span>
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/aoyou.png">
-						<h2>傲游浏览器</h2>
-						<p>傲游浏览器是一款多功能、个性化多标签浏览器。发布于 2012年。</p> <span class="ui-li-count">已售335</span>
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/netscape.png">
-						<h2>Netscape</h2>
-						<p>网景浏览器（Netscape ）是一个是由 Netscape 通信公司开发的网页浏览器。发布于 1994 年。</p> <span
-						class="ui-li-count">已售335</span> 
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/liebao.png">
-						<h2>猎豹安全浏览器</h2>
-						<p>猎豹安全浏览器，是由金山网络技术有限公司推出的一款浏览器。发布于2012 年。</p> <span
-						class="ui-li-count">已售335</span>
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/taobao.png">
-						<h2>淘宝浏览器</h2>
-						<p>淘宝浏览器，支持快捷登录淘宝网及旗下网站，提供多重安全防护浏览器。发布于 2012 年。</p> <span
-						class="ui-li-count">已售335</span> 
-
-				</a></li>
-				<li data-icon="false"><a href="#"> <img src="images/baidu.png">
-						<h2>百度浏览器</h2>
-						<p>百度浏览器，以APP打造个性化应用平台,一款简洁轻快的浏览器。发布于 2011 年。</p> <span
-						class="ui-li-count">已售335</span> 
-
-				</a></li>
-			</ul> -->
-		<!--endpart1-->
-
-
-		<div data-role="popup" id="addFavorite" data-overlay-theme="b"
-			class="ui-content" style="max-width: 340px; padding-bottom: 2em;">
-			<h3>Purchase Album?</h3>
-			<p>Your download will begin immediately on your mobile device
-				when you purchase.</p>
-			<a href="#"
-				class="ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-shadow ui-btn-icon-left ui-icon-check"
-				data-rel="back">Buy: $10.99</a> <a href="#"
-				class="ui-btn ui-btn-inline ui-mini ui-corner-all ui-shadow"
-				data-rel="back">Cancel</a>
-		</div>
-
-
-		<!-- <div data-role="footer" data-position="fixed">
-			<div data-role="navbar" data-grid="d">
-				<ul>
-					<li><a id="homeBtn" href="home.html" data-icon="home"
-						class="ui-btn-active">首页</a></li>
-					<li><a id="pinleBtn" href="pinle.html" data-icon="bars">拼乐</a></li>
-					<li><a id="fabuBtn" href="fabu.html" data-icon="grid">发布</a></li>
-					<li><a id="faxianBtn" href="faxian.html" data-icon="eye">发现</a></li>
-					<li><a id="wodeBtn" href="wode.html" data-icon="phone">我的</a></li>
 				</ul>
 			</div>
-		</div> -->
+		</div>
 	</div>
 </body>
 </html>

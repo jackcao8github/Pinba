@@ -46,7 +46,7 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="userDAO" class="com.xx.dao.UserDAO">
+	<bean id="userDAO" class="com.webapp.user.dao.UserDAO">
 		<property name="dataSource">
 			<ref local="dataSource" />
 		</property>

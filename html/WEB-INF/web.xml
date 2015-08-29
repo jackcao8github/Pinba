@@ -13,7 +13,7 @@
   </context-param>
   <servlet>
 		<servlet-name>verifyImage</servlet-name>
-		<servlet-class>com.ailk.web.servlet.file.ImageServlet</servlet-class>
+		<servlet-class>com.webapp.common.servlet.VerifyImageServlet</servlet-class>
 		<init-param>
 			<param-name>image-class</param-name>
 			<param-value>com.ailk.base.util.VerifyImage</param-value>

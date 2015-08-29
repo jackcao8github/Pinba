@@ -91,10 +91,14 @@
 
 				//定位
 				getPosition(showPosition);
-				
+
 				//阻止在图片上滑动时引起的翻页行为
-				$(".main_visual").bind(touchEvents.touchend,function(){return false;} , false);
-				$(".main_visual").bind(touchEvents.toucancel,function(){return false;} , false);
+				$(".main_visual").bind(touchEvents.touchend, function() {
+					return false;
+				}, false);
+				$(".main_visual").bind(touchEvents.toucancel, function() {
+					return false;
+				}, false);
 			});
 
 	/* 显示当前定位城市 */
@@ -106,16 +110,16 @@
 		}
 	}
 
-	function swipeLeft(){
+	function swipeLeft() {
 		//打开当前页面左边页面
 		parent.switchIframeByClick('faxian');
 	}
-	
-	function swipeRight(){
+
+	function swipeRight() {
 		//打开当前页面右边页面
 		parent.switchIframeByClick('wode');
 	}
-	function swipeUp(){
+	function swipeUp() {
 		addOfferLi();
 	}
 	function addOfferLi() {
@@ -124,100 +128,44 @@
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
 		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
-			var newhtml = '<div class="+class+">';
-			newhtml += '<a href="#" data-ajax="false" target="_top" onclick="changeSubPage(\'foodDetail\',\'homePage\',\'offerId=4\')"> <img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" ';
-     		newhtml+= 'class="bigImg" alt="Ballade">';
-
-			newhtml += '<div class="title">+name+</div>';
-			newhtml += '<div class="price"><i class="fa fa-rmb"></i>+price+</div>';
-			newhtml += '	</a>';
-			newhtml += '	<div style="margin-left: 5px;float: left;">';
-			newhtml += '<i class="fa fa-thumbs-o-up" style="color:#f63"></i><span';
-     		newhtml+='	style="font-size: 0.8em">335</span> ';
-			newhtml += '</div>';
-
-			newhtml += '<div style="margin-left: 5px; float: left;">';
-			newhtml += '	<i class="fa fa-star-o" style="color:#f63"></i><span';
-     		newhtml+='		style="font-size: 0.8em">3350</span> ';
-			newhtml += '</div>';
-			newhtml += '</div>';
+			var newhtml = '<li data-icon="false"><a href="#" class="ui-btn ui-mini">\
+							<h2>+title+</h2>\
+							<div style="overflow: hidden;">\
+							<p style="float: left">+condition+</p>\
+							<p style="color: red; float: right">日薪:100-200</p>\
+						</div>\
+						<div style="overflow: hidden;">\
+							<p style="float: left">+username+</p>\
+							<div style="float: right; color: #f63">\
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i\
+										class="fa fa-star"></i><i class="fa fa-star"></i><i\
+										class="fa fa-star-half-full"></i>\
+							</div>\
+						</div>\
+						<p class="ui-li-aside"><strong>+time+ PM</strong></p>\
+					</a></li>';
 
 			for ( var i = 0; 10 > i; i++) {
-				var leftli = newhtml.replace('+class+', 'offerleftli').replace(
-						'+name+', '糖醋鱼' + i).replace('+price+', '30' + i);
-				var rightli = newhtml.replace('+class+', 'offerrightli')
-						.replace('+name+', '红烧排骨' + i).replace('+price+',
-								'40' + i).replace('+offerid+', i);
-				$('#yourLikeDiv').append(leftli);
-				$('#yourLikeDiv').append(rightli);
+				var html = newhtml.replace('+userimage+', '#').replace(
+						'+username+', '企业用户' + i).replace('+title+',
+						'需要用人' + i + '(江宁)').replace('+time+', '22:2' + i)
+						.replace('+condition+', '学历不限|经验不限|年龄不限');
+
+				$('#workList').append(html);
 			}
+
+			$('#workList').listview("refresh");
 		}
+	}
+	
+	function openWork(obj){
+		var workid = obj.workid;
+		changeSubPage('workDetail', 'homePage','workid='+workid);
 	}
 </script>
 
 </head>
 <style type="text/css">
-.offerleftli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: left;
-	text-align: center;
-}
-
-.offerrightli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: right;
-	text-align: center;
-}
-
-/* 列表中大图片 */
-.bigImg {
-	display: inline;
-	margin: 1px;
-	border: 1px solid #bebebe;
-	height: 100%;
-	width: 100%;
-	background-size: contain;
-}
-/* 列表中小图片 */
-.smallimg {
-	height: 0.8em;
-	width: 0.8em;
-	display: auto;
-	margin-left: 5px;
-	border: 0;
-}
-
-div.img a:hover img {
-	border: 1px solid #333333;
-}
-
-div.title {
-	text-align: left;
-	font-weight: normal;
-	width: 140px;
-	font-size: 12px;
-	margin: 0px 5px 0px 5px;
-}
-
-div.price {
-	text-align: left;
-	font-weight: bold;
-	width: 140px;
-	font-size: 12px;
-	margin: 5px 5px 0px 5px;
-	color: red
-}
-
-.h10 {
-	height: 10px;
-	background: #f0f0f0;
-}
 </style>
 
 </head>
@@ -249,11 +197,16 @@ div.price {
 			</div>
 			<div class="main_image">
 				<ul>
-					<li><img src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
+					<li><img
+						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
+					<li><img
+						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
+					<li><img
+						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
+					<li><img
+						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
+					<li><img
+						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
 				</ul>
 				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
 					href="javascript:;" id="btn_next" style="display: none;"></a>
@@ -293,90 +246,113 @@ div.price {
 		<p style="margin: 5px 5px; text-align: center;" id="yourLike">猜你喜欢</p>
 
 		<div id="yourLikeDiv">
-			<div class="offerleftli">
-				<a href="#" data-ajax="false" target="_top"
-					onclick="changeSubPage('foodDetail','homePage','offerId=1')"> <img
-					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
-
-					<div class="title">酸菜鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
-						style="font-size: 0.8em">335</span>
-				</div>
-
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-star-o" style="color: #f63"></i><span
-						style="font-size: 0.8em;">3350</span>
-				</div>
-			</div>
-
-
-			<div class="offerrightli">
-				<a href="#" data-ajax="false" target="_top"
-					onclick="changeSubPage('foodDetail','homePage','offerId=2')"> <img
-					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
-
-					<div class="title">糖醋鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
-						style="font-size: 0.8em">335</span>
-				</div>
-
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-star-o" style="color: #f63"></i><span
-						style="font-size: 0.8em">3350</span>
-				</div>
-			</div>
-			<div class="offerleftli">
-				<a href="#" data-ajax="false" target="_top"
-					onclick="changeSubPage('foodDetail','homePage','offerId=3')"> <img
-					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
-
-					<div class="title">酸菜鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
-						style="font-size: 0.8em">335</span>
-				</div>
-
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-star-o" style="color: #f63"></i><span
-						style="font-size: 0.8em;">3350</span>
-				</div>
-			</div>
-
-
-			<div class="offerrightli">
-				<a href="#" data-ajax="false" target="_top"
-					onclick="changeSubPage('foodDetail','homePage','offerId=4')"> <img
-					src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" class="bigImg" alt="Ballade">
-
-					<div class="title">糖醋鱼</div>
-					<div class="price">
-						<i class="fa fa-rmb"></i>100
-					</div>
-				</a>
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-thumbs-o-up" style="color: #f63"></i><span
-						style="font-size: 0.8em">335</span>
-				</div>
-
-				<div style="margin-left: 5px; float: left;">
-					<i class="fa fa-star-o" style="color: #f63"></i><span
-						style="font-size: 0.8em">3350</span>
-				</div>
-			</div>
+			<ul data-role="listview" id="workList">
+				<li data-icon="false" onclick="openWork(this)" workid="1"><a href="#" class="ui-btn ui-mini">
+						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+						<div style="overflow: hidden;">
+							<p style="float: left">学历不限|经验不限|年龄不限</p>
+							<!--要求-->
+							<p style="color: red; float: right">日薪:100-200</p>
+							<!--待遇-->
+						</div>
+						<div style="overflow: hidden;">
+							<p style="float: left">KFC-欧尚超市店</p>
+							<!--招聘用户名称-->
+							<div style="float: right; color: #f63">
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star-half-full"></i>
+							</div>
+						</div>
+						<p class="ui-li-aside">
+							<strong>22:23 PM</strong>
+						</p>
+				</a></li>
+				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+						<div style="overflow: hidden;">
+							<p style="float: left">学历不限|经验不限|年龄不限</p>
+							<!--要求-->
+							<p style="color: red; float: right">日薪:100-200</p>
+							<!--待遇-->
+						</div>
+						<div style="overflow: hidden;">
+							<p style="float: left">KFC-欧尚超市店</p>
+							<!--招聘用户名称-->
+							<div style="float: right; color: #f63">
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star-half-full"></i>
+							</div>
+						</div>
+						<p class="ui-li-aside">
+							<strong>22:23 PM</strong>
+						</p>
+				</a></li>
+				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+						<div style="overflow: hidden;">
+							<p style="float: left">学历不限|经验不限|年龄不限</p>
+							<!--要求-->
+							<p style="color: red; float: right">日薪:100-200</p>
+							<!--待遇-->
+						</div>
+						<div style="overflow: hidden;">
+							<p style="float: left">KFC-欧尚超市店</p>
+							<!--招聘用户名称-->
+							<div style="float: right; color: #f63">
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star-half-full"></i>
+							</div>
+						</div>
+						<p class="ui-li-aside">
+							<strong>22:23 PM</strong>
+						</p>
+				</a></li>
+				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+						<div style="overflow: hidden;">
+							<p style="float: left">学历不限|经验不限|年龄不限</p>
+							<!--要求-->
+							<p style="color: red; float: right">日薪:100-200</p>
+							<!--待遇-->
+						</div>
+						<div style="overflow: hidden;">
+							<p style="float: left">KFC-欧尚超市店</p>
+							<!--招聘用户名称-->
+							<div style="float: right; color: #f63">
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star-half-full"></i>
+							</div>
+						</div>
+						<p class="ui-li-aside">
+							<strong>22:23 PM</strong>
+						</p>
+				</a></li>
+				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
+						<div style="overflow: hidden;">
+							<p style="float: left">学历不限|经验不限|年龄不限</p>
+							<!--要求-->
+							<p style="color: red; float: right">日薪:100-200</p>
+							<!--待遇-->
+						</div>
+						<div style="overflow: hidden;">
+							<p style="float: left">KFC-欧尚超市店</p>
+							<!--招聘用户名称-->
+							<div style="float: right; color: #f63">
+								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star"></i><i class="fa fa-star"></i><i
+									class="fa fa-star-half-full"></i>
+							</div>
+						</div>
+						<p class="ui-li-aside">
+							<strong>22:23 PM</strong>
+						</p>
+				</a></li>
+			</ul>
 
 		</div>
 
@@ -385,23 +361,6 @@ div.price {
 			<a href="#"
 				class="ui-btn ui-shadow ui-corner-all ui-icon-carat-u ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
 		</div>
-
-		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-			<div data-role="navbar" data-grid="d">
-				<ul>
-					<li><a id="homeBtn" href="home.html" data-icon="home"
-						data-ajax="false" class="ui-btn-active">首页</a></li>
-					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
-						data-ajax="false">拼乐</a></li>
-					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
-						data-ajax="false">发布</a></li>
-					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
-						data-ajax="false">发现</a></li>
-					<li><a id="wodeBtn" href="wode.html" data-icon="user"
-						data-ajax="false">我的</a></li>
-				</ul>
-			</div>
-		</div> -->
 	</div>
 </body>
 </html>
