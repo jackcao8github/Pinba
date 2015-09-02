@@ -36,7 +36,9 @@ var idHtmlMap = {
 	"reqwork":"publish/reqwork.html",
 	"userContract":"my/userContract.html",
 	"resumeDetail":"my/resumeDetail.html",
-	"editResumeDetail":"my/editResumeDetail.html"
+	"editResumeDetail":"my/editResumeDetail.html",
+	"reqwork":"publish/reqwork.html",
+	"resume":"my/resume.html"
 };
 
 /* 显示子页面，隐藏原页面 */

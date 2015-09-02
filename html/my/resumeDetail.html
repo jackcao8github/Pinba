@@ -16,310 +16,201 @@
 <script type="text/javascript" src="../myjs/changepage.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
-function swipeRight(){
-	closeSubPage();
-}
-	$(document).ready(
-			function() {
-				//图片滚动处理 ------------------------------start
-				$(".main_visual").hover(function() {
+	function swipeRight() {
+		closeSubPage();
+	}
+	$(document).ready(function() {
 
-				}, function() {
+		//为关注按钮增加响应事件
+		$('#favBtn').bind('click', function() {
+			var css = $(this).find('i').attr('class');
+			if (css.indexOf('fa-star-o') > 0) {
+				$(this).find('i').attr('class', 'fa fa-star fa-2x');
+			} else {
+				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
+			}
+		});
+		//为分享按钮增加响应事件
+		$('#shareBtn').bind('click', function() {
 
-				});
+		});
+		//为购买按钮增加响应事件
+		$('#buyBtn').bind('click', function() {
 
-				$dragBln = false;
+		});
+		//为加入购物车按钮增加响应事件
+		$('#shopcartBtn').bind('click', function() {
 
-				$(".main_image").touchSlider(
-						{
-							flexible : true,
-							speed : 200,
-							btn_prev : $("#btn_prev"),
-							btn_next : $("#btn_next"),
-							paging : $(".flicking_con a"),
-							counter : function(e) {
-								$(".flicking_con a").removeClass("on").eq(
-										e.current - 1).addClass("on");
-							}
-						});
-
-				$(".main_image").bind("mousedown", function() {
-					$dragBln = false;
-				});
-
-				$(".main_image").bind("dragstart", function() {
-					$dragBln = true;
-				});
-
-				$(".main_image a").click(function() {
-					if ($dragBln) {
-						return false;
-					}
-				});
-
-				timer = setInterval(function() {
-					$("#btn_next").click();
-				}, 5000);
-
-				$(".main_visual").hover(function() {
-					clearInterval(timer);
-				}, function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-
-				$(".main_image").bind("touchstart", function() {
-					clearInterval(timer);
-				}).bind("touchend", function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-				//图片滚动处理 ------------------------------end
-
-				//为关注按钮增加响应事件
-				$('#favBtn').bind('click', function() {
-					var css = $(this).find('i').attr('class');
-					if (css.indexOf('fa-star-o') > 0) {
-						$(this).find('i').attr('class', 'fa fa-star fa-2x');
-					} else {
-						$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
-					}
-				});
-				//为分享按钮增加响应事件
-				$('#shareBtn').bind('click', function() {
-
-				});
-				//为购买按钮增加响应事件
-				$('#buyBtn').bind('click', function() {
-
-				});
-				//为加入购物车按钮增加响应事件
-				$('#shopcartBtn').bind('click', function() {
-
-				});
-			});
+		});
+	});
+	
+	function openWork(obj){
+		var workid = obj.workid;
+		changeSubPage('workDetail', 'workdetailPage');
+	}
 </script>
 
 
 <style type="text/css">
-.offerleftli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: left;
-	text-align: center;
-}
-
-.offerrightli {
-	margin: 1px 0;
-	border: 1px solid #bebebe;
-	height: auto;
-	width: 49%;
-	float: right;
-	text-align: center;
-}
-
-/* 列表中大图片 */
-.bigImg {
-	display: inline;
-	margin: 1px;
-	border: 1px solid #bebebe;
-	height: 100%;
-	width: 100%;
-	background-size: contain;
-}
-/* 列表中小图片 */
-.smallimg {
-	height: 0.8em;
-	width: 0.8em;
-	display: auto;
-	margin-left: 5px;
-	border: 0;
-}
-
-div.img a:hover img {
-	border: 1px solid #333333;
-}
-
-div.title {
-	text-align: left;
-	font-weight: normal;
-	width: 140px;
-	font-size: 12px;
-	margin: 0px 5px 0px 5px;
-}
-
-.price {
-	text-align: left;
-	font-weight: bold;
-	width: 140px;
-	font-size: 12px;
-	margin: 5px 5px 0px 5px;
-	color: red
-}
-
-.h10 {
-	height: 10px;
-	background: #f0f0f0;
-}
-
-.title-bg {
-	position: absolute;
-	background: #000;
-	filter: alpha(opacity =       50);
-	opacity: 0.5;
-	height: 44px;
-	left: 0px;
-	bottom: 0;
-	color: white;
-	text-align: center;
-	line-height: 44px;
-	width: 100%;
-}
-
-.floatretbtn {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	z-index: 9;
-	opacity: 0.8;
-}
+li{padding:0em 1em}
 </style>
 
 </head>
 <body>
-	<div data-role="page" id="homePage" style="top: -20px;">
+	<div data-role="page" id="workdetailPage">
 		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
 		<!-- 返回按钮 -->
-		<div class="floatretbtn">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
+			<h1>兼职简历1</h1>
 		</div>
-		<!-- <h1>美食详情</h1>
-		</div> -->
-		<div class="main_visual">
-			<div class="flicking_con">
-				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
-				<a href="#">5</a>
-			</div>
-			<div class="main_image">
-				<ul>
-					<li style="float: left"><img src="images/img_main_1.jpg">
-					</li>
-					<li style="float: left"><img src="images/img_main_2.jpg">
-					</li>
-					<li style="float: left"><img src="images/img_main_3.jpg">
-					</li>
-					<li style="float: left"><img src="images/img_main_4.jpg">
-					</li>
-					<li style="float: left"><img src="images/img_main_5.jpg">
-					</li>
-				</ul>
-				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
-					href="javascript:;" id="btn_next" style="display: none;"></a>
-
-				<div class="title-bg">酸菜鱼</div>
-
-			</div>
-
-		</div>
-
-		<div class="firstblock">
-			<div class="h1"></div>
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="price"
-					style="float: left; width: auto; font-size: 1.5em;">
-					<i class="fa fa-rmb">100</i>
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">基本信息</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>姓名:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>张三/李4</p>
+					</div>
 				</div>
-				<div class="price"
-					style="float: left; width: auto; text-decoration: line-through;">
-					120</div>
-
-				<div class="price" style="float: right; width: auto;">
-					<i class="fa fa-shopping-cart">已售61</i>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>性别:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>男/女</p>
+					</div>
 				</div>
-
-			</div>
-			<div style="clear: both;"></div>
-			<div class="h1"></div>
-			<div class="item" tapmode="presshover" onclick="">
-				<div style="float: left; margin-left: 5px; color: blue;">
-					<i class="fa fa-exchange"></i>返等额积分
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>工作经验:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>3年</p>
+					</div>
 				</div>
-				<img src="image/arrow.png" alt="" class="item_arrow">
-			</div>
-			<div class="h1"></div>
-			<div class="item" tapmode="presshover">
-				<div
-					style="float: left; width: 20%; color: blue; padding-left: 5px;">
-					<i class="fa fa-tag"></i>随时退
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>学历:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>本科</p>
+					</div>
 				</div>
-				<div style="float: left; width: 20%; color: blue;">
-					<i class="fa fa-tag"></i>过期退
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>期望区域:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>江宁</p>
+					</div>
 				</div>
-				<div style="float: left; width: 20%; color: blue;">
-					<i class="fa fa-tag"></i>免预约
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>期望行业:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>酒店/餐饮</p>
+					</div>
 				</div>
-			</div>
-		</div>
-		<div class="h10"></div>
-		<div class="firstblock">
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="title">店铺信息</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>期望职位:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>不限</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>手机:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>13913923321</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>邮箱:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>xx@xx.com</p>
+					</div>
+				</div>
+			</li>
+			<li data-role="list-divider">期望待遇</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>日薪:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>200元/面议</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>工资当天结算:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>是</p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%;color:#a3a3a3">
+						<p>提供食宿:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p>是</p>
+					</div>
+				</div>
+			</li>
+			<li data-role="list-divider">工作经历</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p>2015-1~2015-7 | xx公司</p>
+				<p>所属行业：培训行业</p>
+				<p>岗位：培训师</p>
+				<p style="white-space: pre-line;">工作内容：xxxx</p>
+			</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p>2015-7~ | yy公司</p>
+				<p>所属行业：培训行业</p>
+				<p>岗位：培训师</p>
+				<p style="white-space: pre-line;">工作内容：xxxx</p>
+			</li>
+			
+			<li data-role="list-divider">教育经历</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p>2015-1~2015-7 | xx学校</p>
+				<p>所学专业：培训师</p>
+				<p>学历：大学</p>
+			</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p>2015-1~2015-7 | xx学校</p>
+				<p>所学专业：培训师</p>
+				<p>学历：大学</p>
+			</li>
+			<li data-role="list-divider">自我评价</li>
+			<li data-icon="false" style="padding:0em 1em">
+				<p style="white-space: pre-line;">本科期间，本人为学校社团负责人，负责协调各部门活动，以及学生与外教之间的沟通，经过几年的锻炼，本人的协调组织能力得到很大提高。
+研究生期间，担任本班班长，负责协调班级活动，以及与学校有关部门和老师进行沟通联系，这一经历，使得自己的社交能力有了很大提高。</p>
+			</li>
+		</ul>
 
-			</div>
-		</div>
-		<div class="h10"></div>
-		<div class="firstblock">
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="title">美食详情</div>
 
-			</div>
-		</div>
-
-		<div class="h10"></div>
-		<div class="firstblock">
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="title">购买须知</div>
-
-			</div>
-		</div>
-
-		<div class="h10"></div>
-		<div class="firstblock">
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="title">网友点评</div>
-
-			</div>
-		</div>
-
-		<div class="h10"></div>
-		<div class="firstblock">
-			<div class="item" tapmode="presshover" onclick="">
-				<div class="title">本店其它</div>
-
-			</div>
-		</div>
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false">
-			<div data-role="navbar" data-grid="b">
-				<ul style="text-align: center; padding: 5px 0">
-					<li id="favBtn"><i class="fa fa-star-o fa-2x"
-						style="color: #f63"></i></li>
-					<!-- 关注 -->
-					<li id="shareBtn"><i class="fa fa-share-alt fa-2x"
-						style="color: #f63"></i></li>
-					<!-- 分享 -->
-					<li id="buyBtn"><i class="fa fa-shopping-cart fa-2x"
-						style="color: #f63"></i></li>
-					<!-- 购买 -->
-					<!-- <li id="shopcartBtn"><i class="fa fa-cart-plus fa-2x" style="color:#f63"></i></li> -->
-					<!-- 加入购物车 -->
+			<div data-role="navbar" data-grid="a">
+				<ul>
+					<!-- 修改简历 -->
+					<li id="modBtn"><a data-role="button">修改简历</a></li>
+					<li id="delBtn"><a data-role="button">删除简历</a></li>
 				</ul>
 			</div>
 		</div>

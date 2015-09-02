@@ -123,13 +123,16 @@
 		addOfferLi();
 	}
 	function addOfferLi() {
-		$('#yourLike').html("猜你喜欢....");
+		//$('#yourLike').html("猜你喜欢....");
 		var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
 		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
-			var newhtml = '<li data-icon="false"><a href="#" class="ui-btn ui-mini">\
-							<h2>+title+</h2>\
+			var newhtml = '<li data-icon="false" onclick="openWork(this)" workid="1"><a href="#" class="ui-btn ui-mini">\
+				<div style="overflow: hidden;">\
+				<p style="float: left;font-weight:bold;">+title+</p>\
+				<p style="color: black; float: right">+time+</p>\
+				</div>\
 							<div style="overflow: hidden;">\
 							<p style="float: left">+condition+</p>\
 							<p style="color: red; float: right">日薪:100-200</p>\
@@ -142,7 +145,6 @@
 										class="fa fa-star-half-full"></i>\
 							</div>\
 						</div>\
-						<p class="ui-li-aside"><strong>+time+ PM</strong></p>\
 					</a></li>';
 
 			for ( var i = 0; 10 > i; i++) {
@@ -157,10 +159,10 @@
 			$('#workList').listview("refresh");
 		}
 	}
-	
-	function openWork(obj){
+
+	function openWork(obj) {
 		var workid = obj.workid;
-		changeSubPage('workDetail', 'homePage','workid='+workid);
+		changeSubPage('workDetail', 'homePage', 'workid=' + workid);
 	}
 </script>
 
@@ -213,149 +215,182 @@
 			</div>
 		</div>
 
-		<div class="ui-grid-b">
+		<div class="h1"></div>
+		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">今日精选</p>
+		<div class="ui-grid-a">
 			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;" href="#"
-					data-ajax="false" onclick="changeSubPage('foodMain','homePage')">
-					<i class="fa fa-cutlery fa-3x" style="color: #f63"></i>
-					<p style="margin: 0px">美食</p>
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">关注最多企业</p>
 				</a>
 			</div>
 			<div class="ui-block-b" style="text-align: center;" id="workDiv">
-				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;" href="#"
-					data-ajax="false" onclick="changeSubPage('workMain','homePage')">
-					<i class="fa fa-desktop fa-3x" style="color: #f63"></i></img>
-					<p style="margin: 0px">工作</p>
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">评价最好企业</p>
 				</a>
 			</div>
-			<div class="ui-block-c" style="text-align: center;"
+		</div>
+		<div class="ui-grid-a">
+			<div class="ui-block-a" style="text-align: center;"
 				id="entertainmentDiv">
-				<a class="ui-bar ui-bar-a"
-					style="height: 70px; border: 0; background-color: #fff;" href="#"
-					data-ajax="false"
-					onclick="changeSubPage('entertainmentMain','homePage')"> <i
-					class="fa fa-gamepad fa-3x" style="color: #f63"></i>
-					<p style="margin: 0px">娱乐</p>
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">关注最多招聘</p>
 				</a>
 			</div>
-
+			<div class="ui-block-b" style="text-align: center;"
+				id="entertainmentDiv">
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">简历最多招聘</p>
+				</a>
+			</div>
 		</div>
 		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center;" id="yourLike">猜你喜欢</p>
-
-		<div id="yourLikeDiv">
-			<ul data-role="listview" id="workList">
-				<li data-icon="false" onclick="openWork(this)" workid="1"><a href="#" class="ui-btn ui-mini">
-						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-						<div style="overflow: hidden;">
-							<p style="float: left">学历不限|经验不限|年龄不限</p>
-							<!--要求-->
-							<p style="color: red; float: right">日薪:100-200</p>
-							<!--待遇-->
-						</div>
-						<div style="overflow: hidden;">
-							<p style="float: left">KFC-欧尚超市店</p>
-							<!--招聘用户名称-->
-							<div style="float: right; color: #f63">
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star-half-full"></i>
-							</div>
-						</div>
-						<p class="ui-li-aside">
-							<strong>22:23 PM</strong>
-						</p>
-				</a></li>
-				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
-						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-						<div style="overflow: hidden;">
-							<p style="float: left">学历不限|经验不限|年龄不限</p>
-							<!--要求-->
-							<p style="color: red; float: right">日薪:100-200</p>
-							<!--待遇-->
-						</div>
-						<div style="overflow: hidden;">
-							<p style="float: left">KFC-欧尚超市店</p>
-							<!--招聘用户名称-->
-							<div style="float: right; color: #f63">
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star-half-full"></i>
-							</div>
-						</div>
-						<p class="ui-li-aside">
-							<strong>22:23 PM</strong>
-						</p>
-				</a></li>
-				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
-						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-						<div style="overflow: hidden;">
-							<p style="float: left">学历不限|经验不限|年龄不限</p>
-							<!--要求-->
-							<p style="color: red; float: right">日薪:100-200</p>
-							<!--待遇-->
-						</div>
-						<div style="overflow: hidden;">
-							<p style="float: left">KFC-欧尚超市店</p>
-							<!--招聘用户名称-->
-							<div style="float: right; color: #f63">
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star-half-full"></i>
-							</div>
-						</div>
-						<p class="ui-li-aside">
-							<strong>22:23 PM</strong>
-						</p>
-				</a></li>
-				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
-						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-						<div style="overflow: hidden;">
-							<p style="float: left">学历不限|经验不限|年龄不限</p>
-							<!--要求-->
-							<p style="color: red; float: right">日薪:100-200</p>
-							<!--待遇-->
-						</div>
-						<div style="overflow: hidden;">
-							<p style="float: left">KFC-欧尚超市店</p>
-							<!--招聘用户名称-->
-							<div style="float: right; color: #f63">
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star-half-full"></i>
-							</div>
-						</div>
-						<p class="ui-li-aside">
-							<strong>22:23 PM</strong>
-						</p>
-				</a></li>
-				<li data-icon="false"><a href="#" class="ui-btn ui-mini">
-						<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-						<div style="overflow: hidden;">
-							<p style="float: left">学历不限|经验不限|年龄不限</p>
-							<!--要求-->
-							<p style="color: red; float: right">日薪:100-200</p>
-							<!--待遇-->
-						</div>
-						<div style="overflow: hidden;">
-							<p style="float: left">KFC-欧尚超市店</p>
-							<!--招聘用户名称-->
-							<div style="float: right; color: #f63">
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star"></i><i class="fa fa-star"></i><i
-									class="fa fa-star-half-full"></i>
-							</div>
-						</div>
-						<p class="ui-li-aside">
-							<strong>22:23 PM</strong>
-						</p>
-				</a></li>
-			</ul>
-
+		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">热门企业</p>
+		<div class="ui-grid-a">
+			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">关注最多</p>
+				</a>
+			</div>
+			<div class="ui-block-b" style="text-align: center;" id="workDiv">
+				<a class="ui-bar ui-bar-a">
+					<p style="margin: 0px">评价最好</p>
+				</a>
+			</div>
 		</div>
+		<div class="h1"></div>
+		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">猜你喜欢</p>
+		<div id="tabs" data-role="tabs">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#workDiv" class="ui-btn-active">招聘</a></li>
+					<li><a href="#reqWorkDiv">求职</a></li>
+				</ul>
+			</div>
 
+
+
+			<div id="workDiv">
+				<ul data-role="listview" id="workList">
+					<li data-icon="false" onclick="openWork(this)" workid="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+								<!--招聘标题-->
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<p style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</p>
+							</div>
+					</a></li>
+					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+								<!--招聘标题-->
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<p style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</p>
+							</div>
+					</a></li>
+					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+								<!--招聘标题-->
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<p style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</p>
+							</div>
+					</a></li>
+					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+								<!--招聘标题-->
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<p style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</p>
+							</div>
+					</a></li>
+					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+								<!--招聘标题-->
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<!--要求-->
+								<p style="color: red; float: right">日薪:100-200</p>
+								<!--待遇-->
+							</div>
+							<div style="overflow: hidden;">
+								<p style="float: left">KFC-欧尚超市店</p>
+								<!--招聘用户名称-->
+								<p style="float: right; color: #f63">
+									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star"></i><i class="fa fa-star"></i><i
+										class="fa fa-star-half-full"></i>
+								</p>
+							</div>
+					</a></li>
+				</ul>
+
+			</div>
+			<div id="reqWorkDiv">
+				<ul data-role="listview" id="reqworkList">
+
+				</ul>
+			</div>
+		</div>
 		<!-- 显示返回到页面顶端浮动按钮-->
 		<div class="location">
 			<a href="#"

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+<script src="../js/jquery-1.11.3.js"></script>
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<script src="../js/jquery-1.11.3.js"></script>
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<style>
+.controlgroup-textinput {
+	    padding-top: .22em;
+	    padding-bottom: .22em;
+}
+</style>
+
+<script type="text/javascript">
+	function swipeRight() {
+		closeSubPage();
+	}
+
+	function publish() {
+		alert("developing...");
+		closeSubPage();
+	}
+</script>
+</head>
+<body>
+	<div id="messagePage" data-role="page">
+		<div data-role="header" id="header">
+
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>发布求职</h1>
+
+		</div>
+		<div data-role="content">
+			<form method="post" action="">
+				<label for="title">标题:</label> <input type="text" name="title"
+					id="title" value="" class="required">
+					
+					<label
+					for="resumeList" class="select">简历列表:</label> <select name="resumeList" id="resumeList"
+					data-native-menu="false">     
+					<option>简历列表</option>     
+					<option value="njgulou">简历1</option>     
+					<option value="njqinhuai">简历2</option>     
+				
+				</select>
+					
+					<label
+					for="industry" class="select">期望行业:</label> <select name="industry" id="industry"
+					data-native-menu="false">     
+					<option>行业</option>     
+					<option value="njgulou">销售</option>     
+					<option value="njqinhuai">餐饮、酒店</option>     
+					<option value="njbaixia">美容美发</option>     
+					<option value="njqixia">零售、百货</option>
+					<option value="njjianye">技工、工人</option>
+					<option value="njyuhua">人事、行政</option>
+					<option value="njjiangning">客服</option>
+					
+					<option value="njjiangning">教育、培训</option>
+					<option value="njjiangning">家政、安保</option>
+					<option value="njjiangning">保险</option>
+					<option value="njjiangning">账务、审计</option>
+					<option value="njjiangning">实习生</option>
+				
+				</select>
+					
+					<label
+					for="post" class="select">期望职位:</label> <select name="post" id="post"
+					data-native-menu="false">     
+					<option>职位</option>     
+					<option value="njgulou">学生兼职</option>     
+					<option value="njqinhuai">小时工</option>     
+					<option value="njbaixia">实习生</option>     
+					<option value="njqixia">促销</option>
+					<option value="njjianye">家教</option>
+					<option value="njyuhua">传单派发</option>
+					<option value="njjiangning">模特</option>
+					
+				</select>
+					
+					<label
+					for="area" class="select">期望区域:</label> <select name="area" id="area"
+					data-native-menu="false">     
+					<option>区域</option>     
+					<option value="njgulou">鼓楼</option>     
+					<option value="njqinhuai">秦淮</option>     
+					<option value="njbaixia">白下</option>     
+					<option value="njqixia">栖霞</option>
+					<option value="njjianye">建邺</option>
+					<option value="njyuhua">雨花</option>
+					<option value="njjiangning">江宁</option>
+					<option value="njpukou">浦口</option>
+					<option value="njdachang">大厂</option>
+					<option value="njliuhe">六合</option>
+					<option value="njgaochun">高淳</option>
+					<option value="njlishui">溧水</option>
+				</select> <label for="dayRate">期望日薪:</label><input type="range" name="dayRate"
+					id="dayRate" value="100" min="0" max="1000">
+				<label
+					for="showMoney">期望工资当天结算:</label> <select name=""
+					showMoney""
+					id="" showMoney"" data-role="slider"
+					data-mini="true">     
+					<option value="off">No</option>     
+					<option value="on" selected="">Yes</option>
+				</select> <label for="foodAndBed">期望提供食宿:</label><select name="foodAndBed"
+					id="foodAndBed" data-role="slider" data-mini="true">     
+					<option value="off">No</option>     
+					<option value="on" selected="">Yes</option>
+				</select> <label for="endDate">失效时间:</label> <input type="date"
+					name="endDate" id="endDate" value=""> <label
+					for="verifyCode">验证码:</label>
+				<div style="display: inline-flex; width: 100%">
+					<div style="width: 70%; height: 100%;">
+						<input type="text" name="verifyCode" id="verifyCode" value=""
+							placeholder="验证码">
+					</div>
+					<a data-mini="true" href="#"
+						style="width: 30%; height: 100%; margin-top: 8px;"><img
+						src="/verifyImage?width=70&height=21&length=4"></img></a>
+				</div>
+
+				<a href="#" data-role="button" onclick="publish()">发布</a>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

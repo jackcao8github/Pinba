@@ -39,7 +39,9 @@
 
 .login .personal_logo {
 	margin-top: 10%;
-	width: 70px;
+	width: 80px;
+	height:80px;
+	border-radius:50px;
 }
 
 .person_arrow {
