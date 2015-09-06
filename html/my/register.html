@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
 .controlgroup-textinput {
@@ -21,12 +21,71 @@
 	}
 
 	function reg4Private() {
-
-		closeSubPage();
+		var cellphone = $('#ptel').val();
+		var password = $('#ppassword').val();
+		var verifyCode = $('#pmsgverifyCode').val();
+		
+		var userInfo = '{userName:"'+cellphone+'",password:"'+password+'",msgverifyCode:"'+verifyCode+'",cellphone:'+cellphone+'}';
+		
+		var userInfo = {};
+		userInfo.userName = cellphone;
+		userInfo.password= password;
+		userInfo.msgverifyCode = verifyCode;
+		userInfo.cellphone = cellphone;
+		userInfo.userType = "person";
+		
+		ajaxReq('userAction',{method:'newUser',userInfo:json2Str(userInfo)},function (data){
+			if (data.flag=='success'){
+				localStorage.userId = data.userId;
+				localStorage.userName = data.userName;
+				localStorage.userToken = data.userToken;
+				localStorage.userType = data.userType;
+				localStorage.userCredit = data.userCredit;
+				localStorage.userLevel = data.userLevel;
+				localStorage.balance = data.balance;
+				localStorage.points = data.points;
+				localStorage.userAuthState = data.userAuthState;
+				closeSubPage();
+			}else{
+				alert(data.msg);
+			}
+		});
 	}
 	function reg4Company() {
+		var cellphone = $('#tel').val();
+		var password = $('#password').val();
+		var verifyCode = $('#msgverifyCode').val();
+		var companyName = $('#name').val();
+		var companyAddress = $('#address').val();
+		var companySize = $('#address').val();
+		var companyIndustry = $('#type').val();
 
-		closeSubPage();
+		var userInfo = {};
+		userInfo.userName = companyName;
+		userInfo.password= password;
+		userInfo.msgverifyCode = verifyCode;
+		userInfo.cellphone = cellphone;
+		userInfo.address = companyAddress;
+		userInfo.size = companySize;
+		userInfo.industry = companyIndustry;
+		userInfo.userType = "company";
+				
+		ajaxReq('userAction',{method:'newUser',userInfo:json2Str(userInfo)},function (data){
+			if (data.flag=='success'){
+				localStorage.userId = data.userId;
+				localStorage.userName = data.userName;
+				localStorage.userToken = data.userToken;
+				localStorage.userType = data.userType;
+				localStorage.userCredit = data.userCredit;
+				localStorage.userLevel = data.userLevel;
+				localStorage.balance = data.balance;
+				localStorage.points = data.points;
+				localStorage.userAuthState = data.userAuthState;
+				closeSubPage();
+			}else{
+				alert(data.msg);
+			}
+		});
 	}
 
 	function showPContract() {
@@ -90,7 +149,7 @@
 						name="msgverifyCode" id="msgverifyCode" value=""> <label
 						for="name">企业名称:</label> <input type="text" name="name" id="name"
 						value=""> <label for="text-basic">企业地址:</label> <input
-						type="text" name="text-basic" id="text-basic" value=""> <label
+						type="text" name="address" id="address" value=""> <label
 						for="password">密码:</label> <input type="password" name="password"
 						id="password" value="" autocomplete="off"> <label
 						for="size" class="select">企业规模:</label> <select name="size"

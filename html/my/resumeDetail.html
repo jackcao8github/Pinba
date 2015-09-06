@@ -10,43 +10,30 @@
 <link rel="stylesheet" href="../mycss/mygrid.css" />
 <script src="../js/jquery-1.7.1.min.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
-<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
-<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
-<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
-<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
 	function swipeRight() {
 		closeSubPage();
 	}
 	$(document).ready(function() {
-
-		//为关注按钮增加响应事件
-		$('#favBtn').bind('click', function() {
-			var css = $(this).find('i').attr('class');
-			if (css.indexOf('fa-star-o') > 0) {
-				$(this).find('i').attr('class', 'fa fa-star fa-2x');
-			} else {
-				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
-			}
-		});
-		//为分享按钮增加响应事件
-		$('#shareBtn').bind('click', function() {
-
-		});
-		//为购买按钮增加响应事件
-		$('#buyBtn').bind('click', function() {
-
-		});
-		//为加入购物车按钮增加响应事件
-		$('#shopcartBtn').bind('click', function() {
-
-		});
+		//如果不是简历所有者，需要删除修改简历和删除简历按钮
+		var resumeUserId = $('#resumeUserId').val();
+		if (localStorage.userId != resumeUserId){
+			$('#footer').remove();
+		}
 	});
-	
-	function openWork(obj){
-		var workid = obj.workid;
-		changeSubPage('workDetail', 'workdetailPage');
+	/* 删除简历 */
+	function delResume(){
+		alert('建设中');
+	}
+	/* 修改简历 */
+	function modResume(){
+		alert('建设中');
+	}
+	/* 增加关注 */
+	function addFocus(){
+		alert('建设中');
 	}
 </script>
 
@@ -66,7 +53,10 @@ li{padding:0em 1em}
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
 			<h1>兼职简历1</h1>
+			
+			<a onclick="addFocus()" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart">100</a>
 		</div>
+		<input type="hidden" value="" id="resumeUserId">
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">基本信息</li>
 			<li data-icon="false" style="padding:0em 1em">
@@ -202,15 +192,27 @@ li{padding:0em 1em}
 			</li>
 		</ul>
 
-
+<div data-role="popup" id="delResume" data-theme="a"
+				data-overlay-theme="b" class="ui-content"
+				style="max-width: 340px; padding-bottom: 2em;">
+				    
+				<h3>删除这个简历?</h3>
+				<p>确定要删除这个简历吗?</p>
+				    <a onclick="delResume()" data-rel="back"
+					class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">确定</a>
+					<a data-rel="back"
+					class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">取消</a>
+			</div>
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false">
+			data-tap-toggle="false" id="footer">
 			<div data-role="navbar" data-grid="a">
 				<ul>
 					<!-- 修改简历 -->
 					<li id="modBtn"><a data-role="button">修改简历</a></li>
-					<li id="delBtn"><a data-role="button">删除简历</a></li>
+					<li id="delBtn"><a href="#delResume" data-rel="popup" data-position-to="window"
+						data-transition="pop">删除简历</a></li>
+					
 				</ul>
 			</div>
 		</div>

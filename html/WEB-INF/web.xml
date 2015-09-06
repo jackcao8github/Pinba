@@ -9,7 +9,7 @@
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/Application-Context.xml</param-value>
+    <param-value>/WEB-INF/classes/Application-Context.xml</param-value>
   </context-param>
   <servlet>
 		<servlet-name>verifyImage</servlet-name>
@@ -24,5 +24,16 @@
 	<servlet-mapping>
 		<servlet-name>verifyImage</servlet-name>
 		<url-pattern>/verifyImage</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>userAction</servlet-name>
+		<servlet-class>com.webapp.user.servlet.UserManagerServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>userAction</servlet-name>
+		<url-pattern>/userAction</url-pattern>
 	</servlet-mapping>
 </web-app>

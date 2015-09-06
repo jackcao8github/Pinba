@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html manifest="../pinba.appcache">
 <head>
@@ -7,7 +8,7 @@
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
-<script src="../myjs/changepage.js"></script>
+<script src="../myjs/mycommon.js"></script>
 
 
 </head>
@@ -15,16 +16,31 @@
 	<div data-role="page" id="pagethree">
 		<script type="text/javascript">
 			$(document).ready(function() {
+				$('#verifyImg').attr('src',getContextPath()+'/verifyImage?width=70&height=21&length=4')
 			});
 			function login() {
 				var userName = $('#userName').val();
 				var password = $('#password').val();
-
-				localStorage.userId = "1";
-				localStorage.userName = userName;
-				localStorage.token = "12312334452232323";
-
-				closeSubPage();
+				var verifyCode = $('#verifyCode').val();
+				
+				var userInfo = '{loginCode:"'+userName+'",password:"'+password+'",verifyCode:"'+verifyCode+'"}';
+				ajaxReq('userAction',{method:'login',userInfo:userInfo},function (data){
+					if (data.flag=='success'){
+						localStorage.userId = data.userId;
+						localStorage.userName = data.userName;
+						localStorage.userToken = data.userToken;
+						localStorage.userType = data.userType;
+						localStorage.userCredit = data.userCredit;
+						localStorage.userLevel = data.userLevel;
+						localStorage.balance = data.balance;
+						localStorage.points = data.points;
+						localStorage.userAuthState = data.userAuthState;
+						closeSubPage();
+					}else{
+						alert(data.msg);
+					}
+				});
+				
 			}
 			function swipeRight() {
 				closeSubPage();
@@ -55,8 +71,8 @@
 						placeholder="验证码">
 				</div>
 				<a data-mini="true" href="#"
-					style="width: 30%; height: 100%; margin-top: 8px;"><img
-					src="/verifyImage?width=70&height=21&length=4"></img></a>
+					style="width: 30%; height: 100%; margin-top: 8px;"><img id="verifyImg"
+					src=""></img></a>
 			</div>
 			<a href="#" data-role="button" onclick="login()">登陆</a> <a
 				onclick="register()">注册</a><a style="margin: 10px;"

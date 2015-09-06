@@ -7,7 +7,7 @@
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
 
 <style>
 .msgStatus {
@@ -46,6 +46,7 @@ function swipeRight(){
 			$.ajax({
 		        type: "POST",
 		        contentType: "application/json",
+		        dataType:"json",
 		        url: "",
 		        beforeSend: function () {         
 		        	//显示加载中 

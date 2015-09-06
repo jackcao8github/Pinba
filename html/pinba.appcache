@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#version=0.198
+#version=0.199
 ./index.html
 ./my/login.html
 ./my/myFocus.html
@@ -47,7 +47,6 @@ CACHE MANIFEST
 ./js/jquery.mobile-1.4.5.min.js
 ./js/jquery.touchSlider.js
 ./js/swipe.js
-./myjs/changepage.js
 ./myjs/myswipe.js
 ./myjs/position.js
 ./css/font-awesome.css

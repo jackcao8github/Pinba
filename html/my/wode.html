@@ -10,7 +10,7 @@
 <script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
 <script type="text/javascript" src="../js/jquery.mobile-1.4.5.js"></script>
 
-<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
 	
@@ -26,23 +26,24 @@
 	$(document).bind("pagecreate", pageInit);
 	
 	function pageInit(){
-		var num = GetRandomNum(1, 100);
-		$('#userName').html('user' + num);
-		$('#authSate').html("认证：" + GetRandomNum(1, 2));
-		$('#balanceValue').html('余额：' + num);
-		$('#pointsValue').html('积分：' + num);
-		$('#level').html('级别：' + GetRandomNum(1, 2));
+		var userName = localStorage.userName!=null?localStorage.userName:'未知';
+		var authState = localStorage.userAuthState!=null?localStorage.userAuthState:'未知';
+		var balance = localStorage.balance!=null?localStorage.balance:'未知';
+		var points = localStorage.points!=null?localStorage.points:'未知';
+		var userLevel = localStorage.userLevel!=null?localStorage.userLevel:'未知';
+		
+		
+		$('#userName').html('用户名：'+userName);
+		$('#authSate').html('认证状态：'+authState);
+		$('#balanceValue').html('余额：'+balance);
+		$('#pointsValue').html('积分：'+points);
+		$('#level').html('级别：' + userLevel);
 	}
-	function GetRandomNum(Min, Max) {
-		var Range = Max - Min;
-		var Rand = Math.random();
-		return (Min + Math.round(Rand * Range));
-	}
+	
 
 	function viewUserInfo() {
 		//如果未登陆过，则进入登陆页面
 		//userId为用户ID
-		//localStorage.removeItem("userId");
 		var userId = localStorage.userId;
 		if (userId == null) {//未登陆过，则显示登陆页面
 			//$.mobile.changePage("login.html", "pop", false, false);

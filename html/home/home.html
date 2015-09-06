@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
 <script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script type="text/javascript" src="../myjs/changepage.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/position.js"></script>
 
 
@@ -120,15 +120,21 @@
 		parent.switchIframeByClick('wode');
 	}
 	function swipeUp() {
-		addOfferLi();
+		/* 正在查看的是工作列表 */
+		if ($('a[class*="ui-btn-active"]').attr('href') == "#workDiv") {
+			loadWorkList();
+		} else {/* 正在查看的是求职列表 */
+			loadReqWorkList();
+		}
+
 	}
-	function addOfferLi() {
+	function loadWorkList() {
 		//$('#yourLike').html("猜你喜欢....");
 		var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
 		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
-			var newhtml = '<li data-icon="false" onclick="openWork(this)" workid="1"><a href="#" class="ui-btn ui-mini">\
+			var newhtml = '<li data-icon="false" onclick="openWork(this)" workId="1"><a href="#" class="ui-btn ui-mini">\
 				<div style="overflow: hidden;">\
 				<p style="float: left;font-weight:bold;">+title+</p>\
 				<p style="color: black; float: right">+time+</p>\
@@ -151,7 +157,8 @@
 				var html = newhtml.replace('+userimage+', '#').replace(
 						'+username+', '企业用户' + i).replace('+title+',
 						'需要用人' + i + '(江宁)').replace('+time+', '22:2' + i)
-						.replace('+condition+', '学历不限|经验不限|年龄不限');
+						.replace('+condition+',
+								'学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限');
 
 				$('#workList').append(html);
 			}
@@ -159,10 +166,42 @@
 			$('#workList').listview("refresh");
 		}
 	}
+	function loadReqWorkList() {
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
+			var newhtml = '<li data-icon="false" onclick="openResume(this)" resumeId="1"><a\
+				href="#" class="ui-btn ui-mini">\
+			<div style="overflow: hidden;">\
+				<p style="float: left; font-weight: bold;">+title+</p>\
+				<p style="color: black; float: right">+time+</p>\
+			</div>\
+				<p>+condition+</p>\
+				<p >+req+</p>\
+	</a></li>';
 
+			for ( var i = 0; 10 > i; i++) {
+				var html = newhtml.replace('+title+',
+						'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员' + i)
+						.replace('+time+', '22:2' + i).replace('+condition+',
+								'学历：本科&nbsp;|&nbsp;工作经验：3年').replace('+req+',
+								'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁');
+
+				$('#reqworkList').append(html);
+			}
+
+			$('#reqworkList').listview("refresh");
+		}
+	}
 	function openWork(obj) {
-		var workid = obj.workid;
+		var workid = obj.workId;
 		changeSubPage('workDetail', 'homePage', 'workid=' + workid);
+	}
+
+	function openResume(obj) {
+		var resumeId = obj.resumeId;
+		changeSubPage('resumeDetail', 'homePage', 'resumeId=' + resumeId);
 	}
 </script>
 
@@ -216,7 +255,8 @@
 		</div>
 
 		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">今日精选</p>
+		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
+			id="yourLike">今日精选</p>
 		<div class="ui-grid-a">
 			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
 				<a class="ui-bar ui-bar-a">
@@ -244,7 +284,8 @@
 			</div>
 		</div>
 		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">热门企业</p>
+		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
+			id="yourLike">热门企业</p>
 		<div class="ui-grid-a">
 			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
 				<a class="ui-bar ui-bar-a">
@@ -258,7 +299,8 @@
 			</div>
 		</div>
 		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center;font-weight:bold" id="yourLike">猜你喜欢</p>
+		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
+			id="yourLike">猜你喜欢</p>
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
@@ -271,7 +313,7 @@
 
 			<div id="workDiv">
 				<ul data-role="listview" id="workList">
-					<li data-icon="false" onclick="openWork(this)" workid="1"><a
+					<li data-icon="false" onclick="openWork(this)" workId="1"><a
 						href="#" class="ui-btn ui-mini">
 							<div style="overflow: hidden;">
 								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
@@ -279,7 +321,7 @@
 								<p style="color: black; float: right">22:23 PM</p>
 							</div>
 							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
 								<!--要求-->
 								<p style="color: red; float: right">日薪:100-200</p>
 								<!--待遇-->
@@ -294,14 +336,15 @@
 								</p>
 							</div>
 					</a></li>
-					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+					<li data-icon="false" onclick="openWork(this)" workId="1"><a
+						href="#" class="ui-btn ui-mini">
 							<div style="overflow: hidden;">
 								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
 								<!--招聘标题-->
 								<p style="color: black; float: right">22:23 PM</p>
 							</div>
 							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
 								<!--要求-->
 								<p style="color: red; float: right">日薪:100-200</p>
 								<!--待遇-->
@@ -316,14 +359,15 @@
 								</p>
 							</div>
 					</a></li>
-					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+					<li data-icon="false" onclick="openWork(this)" workId="1"><a
+						href="#" class="ui-btn ui-mini">
 							<div style="overflow: hidden;">
 								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
 								<!--招聘标题-->
 								<p style="color: black; float: right">22:23 PM</p>
 							</div>
 							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
 								<!--要求-->
 								<p style="color: red; float: right">日薪:100-200</p>
 								<!--待遇-->
@@ -338,14 +382,15 @@
 								</p>
 							</div>
 					</a></li>
-					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+					<li data-icon="false" onclick="openWork(this)" workId="1"><a
+						href="#" class="ui-btn ui-mini">
 							<div style="overflow: hidden;">
 								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
 								<!--招聘标题-->
 								<p style="color: black; float: right">22:23 PM</p>
 							</div>
 							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
 								<!--要求-->
 								<p style="color: red; float: right">日薪:100-200</p>
 								<!--待遇-->
@@ -360,14 +405,15 @@
 								</p>
 							</div>
 					</a></li>
-					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
+					<li data-icon="false" onclick="openWork(this)" workId="1"><a
+						href="#" class="ui-btn ui-mini">
 							<div style="overflow: hidden;">
 								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
 								<!--招聘标题-->
 								<p style="color: black; float: right">22:23 PM</p>
 							</div>
 							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
+								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
 								<!--要求-->
 								<p style="color: red; float: right">日薪:100-200</p>
 								<!--待遇-->
@@ -387,7 +433,51 @@
 			</div>
 			<div id="reqWorkDiv">
 				<ul data-role="listview" id="reqworkList">
-
+					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
+							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
+					</a></li>
+					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
+							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
+					</a></li>
+					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
+							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
+					</a></li>
+					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
+							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
+					</a></li>
+					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
+						href="#" class="ui-btn ui-mini">
+							<div style="overflow: hidden;">
+								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
+								<p style="color: black; float: right">22:23 PM</p>
+							</div>
+							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
+							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
+					</a></li>
 				</ul>
 			</div>
 		</div>
