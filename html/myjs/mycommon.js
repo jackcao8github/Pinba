@@ -1,3 +1,26 @@
+//校验不可空控件
+/*function checkFormNullable(parentControlId){
+	var checkMsg = '';
+	$("#" + parentControlId + " input[name],#" + parentControlId + " select[name],#" + parentControlId + " textarea[name]").each(function(index,item){
+		if ($(item).val()==''){
+			var controlId=$(item).attr('id');
+			var controlName = $('[for="'+controlId+'"').html();
+			if (controlName!=null)
+				controlName = controlName.replace(':','');
+			
+			if (checkMsg!=''){
+				checkMsg = checkMsg + ',';
+			}
+			checkMsg = checkMsg+controlName;
+		}
+	});
+	if (checkMsg!=''){
+		alert(checkMsg+"不能为空!");
+		return false;
+	}
+	return true;
+}
+*/
 /*json对象转换成字符串*/
 function json2Str(jsonData){
 	var str = '{';
@@ -50,7 +73,24 @@ function ajaxReq(url, data, successCallback, errorCallback, beforeSendCallback,
 		async : true
 	});
 }
+function ajaxSyncReq(url, data, successCallback) {
 
+	var params = '';
+	for ( var o in data) {
+		if (params != '') {
+			params = params + '&'
+		}
+		params = params + o + '=' + data[o];
+	}
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		dataType : "json",
+		url : getContextPath() + '/' + url + '?' + params,
+		async : false,
+		success : successCallback
+	});
+}
 /* 切换子页面 */
 
 /* 页面列表 */

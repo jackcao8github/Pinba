@@ -44,13 +44,38 @@ public abstract class AbstractDAO {
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
-	public List<AbstractBean> getBeans(final Class clazz, Map<String, String> params){
-		return getBeans(clazz,params,false);
+	public List<AbstractBean> getBeans(final Class clazz, Map<String, String> params) {
+		return getBeans(clazz, params, false);
 	}
+
 	public List<AbstractBean> getBeans(final Class clazz, Map<String, String> params, boolean forupdate) {
 		PreparedSqlAndParams sqlAndParams = null;
+		List result = null;
 		try {
-			sqlAndParams = ((AbstractBean)clazz.newInstance()).getBeansSql(params, forupdate);
+			sqlAndParams = ((AbstractBean) clazz.newInstance()).getBeansSql(params, forupdate);
+			JdbcTemplate jt = new JdbcTemplate(getDataSource());
+			result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args, new RowMapper() {
+				@Override
+				public Object mapRow(ResultSet resultset, int i) throws SQLException {
+				
+						AbstractBean bean = null;
+						try {
+							bean = (AbstractBean) clazz.newInstance();
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						int count = resultset.getMetaData().getColumnCount();
+						for (int ii = 1; ii <= count; ii++) {
+							String colName = resultset.getMetaData().getColumnName(ii);
+
+							bean.setAttrValue(colName, resultset.getObject(ii));
+						}
+						return bean;
+					
+				}
+			});
 		} catch (InstantiationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -58,30 +83,6 @@ public abstract class AbstractDAO {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		JdbcTemplate jt = new JdbcTemplate(getDataSource());
-		List result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args, new RowMapper() {
-			@Override
-			public Object mapRow(ResultSet resultset, int i) throws SQLException {
-				try {
-					AbstractBean bean = (AbstractBean)clazz.newInstance();
-					int count = resultset.getMetaData().getColumnCount();
-					for (int ii=1;ii<=count;ii++){
-						String colName = resultset.getMetaData().getColumnName(ii);
-						
-						bean.setAttrValue(colName,resultset.getObject(ii));
-					}
-					return bean;
-				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return null;
-			}
-		});
 		return result;
 	}
 }

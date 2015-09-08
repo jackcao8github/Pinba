@@ -17,6 +17,9 @@
 </style>
 
 <script type="text/javascript">
+$(document).ready(function() {
+	$('#verifyImg').attr('src',getContextPath()+'/verifyImage?width=70&height=21&length=4')
+});
 	function swipeRight() {
 		closeSubPage();
 	}
@@ -124,7 +127,7 @@
 					</div>
 					<a data-mini="true" href="#"
 						style="width: 30%; height: 100%; margin-top: 8px;"><img
-						src="/verifyImage?width=70&height=21&length=4"></img></a>
+						src="" id="verifyImg"></img></a>
 				</div>
 
 				<a href="#" data-role="button" onclick="publish()">发布</a>

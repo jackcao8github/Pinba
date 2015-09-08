@@ -11,6 +11,9 @@ public class CharSpecConsts {
 	public final static long COORDS = 5L;//坐标
 	public final static long URL = 6L;//网址
 	public final static long FIXPHONE = 7L;//固话
+	public final static long COMPANY_SIZE = 8L;//公司规模
+	public final static long COMPANY_INDUSTRY = 9L;//公司行业
+
 	
 	private static Map<Long,String> charMap= new HashMap();
 	static{
@@ -20,7 +23,8 @@ public class CharSpecConsts {
 		charMap.put(ADDRESS, "address");
 		charMap.put(COORDS, "coords");
 		charMap.put(URL, "url");
-		charMap.put(FIXPHONE, "fixphone");
+		charMap.put(COMPANY_SIZE, "companySize");
+		charMap.put(COMPANY_INDUSTRY, "companyIndustry");
 	}
 	
 	public static String getCode(Long charId) throws Exception{

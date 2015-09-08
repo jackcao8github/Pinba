@@ -8,6 +8,7 @@
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../js/jQuery.md5.js" type="text/javascript"></script>
 <style>
 .controlgroup-textinput {
 	    padding-top: .22em;
@@ -22,20 +23,22 @@
 
 	function reg4Private() {
 		var cellphone = $('#ptel').val();
+		var userName = $('#pname').val();
 		var password = $('#ppassword').val();
 		var verifyCode = $('#pmsgverifyCode').val();
-		
-		var userInfo = '{userName:"'+cellphone+'",password:"'+password+'",msgverifyCode:"'+verifyCode+'",cellphone:'+cellphone+'}';
-		
+
 		var userInfo = {};
-		userInfo.userName = cellphone;
-		userInfo.password= password;
+		userInfo.userName = userName;
+		userInfo.password = $.md5(password);;
 		userInfo.msgverifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.userType = "person";
-		
-		ajaxReq('userAction',{method:'newUser',userInfo:json2Str(userInfo)},function (data){
-			if (data.flag=='success'){
+
+		ajaxReq('userAction', {
+			method : 'newUser',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
 				localStorage.userId = data.userId;
 				localStorage.userName = data.userName;
 				localStorage.userToken = data.userToken;
@@ -46,10 +49,12 @@
 				localStorage.points = data.points;
 				localStorage.userAuthState = data.userAuthState;
 				closeSubPage();
-			}else{
+			} else {
 				alert(data.msg);
+				return false;
 			}
 		});
+		return false;
 	}
 	function reg4Company() {
 		var cellphone = $('#tel').val();
@@ -57,21 +62,24 @@
 		var verifyCode = $('#msgverifyCode').val();
 		var companyName = $('#name').val();
 		var companyAddress = $('#address').val();
-		var companySize = $('#address').val();
+		var companySize = $('#size').val();
 		var companyIndustry = $('#type').val();
 
 		var userInfo = {};
 		userInfo.userName = companyName;
-		userInfo.password= password;
+		userInfo.password = password;
 		userInfo.msgverifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.address = companyAddress;
-		userInfo.size = companySize;
-		userInfo.industry = companyIndustry;
+		userInfo.companySize = companySize;
+		userInfo.companyIndustry = companyIndustry;
 		userInfo.userType = "company";
-				
-		ajaxReq('userAction',{method:'newUser',userInfo:json2Str(userInfo)},function (data){
-			if (data.flag=='success'){
+
+		ajaxReq('userAction', {
+			method : 'newUser',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
 				localStorage.userId = data.userId;
 				localStorage.userName = data.userName;
 				localStorage.userToken = data.userToken;
@@ -82,10 +90,11 @@
 				localStorage.points = data.points;
 				localStorage.userAuthState = data.userAuthState;
 				closeSubPage();
-			}else{
+			} else {
 				alert(data.msg);
 			}
 		});
+		return false;
 	}
 
 	function showPContract() {
@@ -110,70 +119,74 @@
 			<div id="tabs" data-role="tabs">
 				<div data-role="navbar">
 					<ul>
-						<li><a href="#jobList" class="ui-btn-active">个人注册</a></li>
-						<li><a href="#reqList">企业注册</a></li>
+						<li><a href="#personReg" class="ui-btn-active">个人注册</a></li>
+						<li><a href="#companyReg">企业注册</a></li>
 					</ul>
 				</div>
-				<div id="jobList" class="list">
-					<label for="ptel">手机号码:</label>
+				<form id="personReg"  onsubmit="return reg4Private()">
+					<label for="pname">昵称:</label> <input type="text" name="pname"
+						id="pname" value="" required="required" placeholder="用于显示，不用于登陆，可修改。"> <label for="ptel">手机号码:</label>
 					<div style="display: inline-flex; width: 100%">
 						<div style="width: 70%; height: 100%;">
-							<input type="tel" name="ptel" id="ptel" value="">
+							<input type="tel" name="ptel" id="ptel" value="" required="required" pattern="[0-9]{11}" title="11位手机号码" placeholder="可用于登陆，一个号码只能注册一次。">
 						</div>
 						<button data-mini="true"
 							style="width: 30%; height: 100%; margin-top: 8px;">发送验证码</button>
 					</div>
 					<label for="pmsgverifyCode">短信验证码:</label> <input type="text"
-						name="pmsgverifyCode" id="pmsgverifyCode" value=""> <label
-						for="ppassword">密码:</label> <input type="password"
-						name="ppassword" id="ppassword" value="" autocomplete="off">
+						name="pmsgverifyCode" id="pmsgverifyCode" value="" required="required" placeholder="输入你手机上收到的6位数字。">
+					<label for="ppassword">密码:</label> <input type="password"
+						name="ppassword" id="ppassword" value="" autocomplete="off"
+						required="required" placeholder="最短6位，最长10位，只可包含数字字母" pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
 
 					<fieldset data-role="controlgroup">
 						<label for="agreeContractP">已阅读并同意用户协议</label><input
-							type="checkbox" name="agreeContractP" id="agreeContractP">
+							type="checkbox" name="agreeContractP" id="agreeContractP"
+							required="required">
 					</fieldset>
-					<a href="#" onclick="showContract()">用户协议</a> <a href="#"
-						data-role="button" onclick="reg4Private()">注册</a>
-				</div>
-				<div id="reqList" class="list" style="display: none;">
+					<a href="#" onclick="showContract()">用户协议</a> <button type="submit"
+						class="ui-btn">注册</button>
+				</form>
+				<form id="companyReg"  onsubmit="return reg4Company()">
 					<label for="tel">手机号码:</label>
 					<div style="display: inline-flex; width: 100%">
 						<div style="width: 70%; height: 100%;">
-							<input type="tel" name="ptel" id="ptel" value="">
+							<input type="tel" name="tel" id="tel" value="" required="required"  pattern="[0-9]{11}" title="11位手机号码" placeholder="可用于登陆，一个号码只能注册一次。">
 						</div>
 						<button data-mini="true"
 							style="width: 30%; height: 100%; margin-top: 8px;">发送验证码</button>
 					</div>
 
 					<label for="msgverifyCode">短信验证码:</label> <input type="text"
-						name="msgverifyCode" id="msgverifyCode" value=""> <label
-						for="name">企业名称:</label> <input type="text" name="name" id="name"
-						value=""> <label for="text-basic">企业地址:</label> <input
-						type="text" name="address" id="address" value=""> <label
-						for="password">密码:</label> <input type="password" name="password"
-						id="password" value="" autocomplete="off"> <label
-						for="size" class="select">企业规模:</label> <select name="size"
-						id="size" data-native-menu="false">     
-						<option>企业规模</option>     
-						<option value="standard">1-50</option>     
+						name="msgverifyCode" id="msgverifyCode" value="" required="required" placeholder="输入你手机上收到的6位数字。">
+					<label for="name">企业名称:</label> <input type="text" name="name"
+						id="name" value="" required="required"> <label for="address">企业地址:</label>
+					<input type="text" name="address" id="address" value=""
+						required="required"> <label for="password">密码:</label> <input
+						type="password" name="password" id="password" value=""
+						autocomplete="off" required="required" placeholder="最短6位，最长10位，只可包含数字字母" pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母"> <label for="size"
+						class="select">企业规模:</label> <select name="size" id="size"
+						data-native-menu="false" required="required">     
+						<option value="standard" selected>1-50</option>     
 						<option value="rush">51-100</option>     
 						<option value="express">101-200</option>     
 						<option value="overnight">200以上</option>
 					</select> <label for="type" class="select">所属行业:</label> <select name="type"
-						id="type" data-native-menu="false">     
-						<option>所属行业</option>     
-						<option value="standard">酒店</option>     
+						id="type" data-native-menu="false" required="required">     
+						<option value="standard" selected>酒店</option>     
 						<option value="rush">会展</option>     
 						<option value="express">婚庆</option>     
 						<option value="overnight">其它</option>
 					</select>
 					<fieldset data-role="controlgroup">
 						         <label for="agreeContract">已阅读并同意 用户协议</label><input
-							type="checkbox" name="agreeContract" id="agreeContract">
+							type="checkbox" name="agreeContract" id="agreeContract"
+							required="required">
 					</fieldset>
-					<a href="#" onclick="showContract()">用户协议</a> <a href="#"
-						data-role="button" onclick="reg4Company()">注册</a>
-				</div>
+					<a href="#" onclick="showContract()">用户协议</a> 
+						<button type="submit"
+						class="ui-btn">注册</button>
+				</form>
 			</div>
 		</div>
 	</div>

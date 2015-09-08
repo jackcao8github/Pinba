@@ -29,13 +29,13 @@ public class UserManagerDAO extends AbstractDAO {
 		// 长度11位表示是手机号
 		if (loginCode.length() == 11) {
 			Map<String, String> params = new HashMap();
-			params.put("CHAR_ID", ""+CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
+			params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
 			params.put("VALUE", loginCode);
 			List result = getBeans(UserCharBean.class, params);
 			if (result != null && result.size() > 0) {
 				UserCharBean charBean = (UserCharBean) result.get(0);
 				params.clear();
-				params.put("USER_ID", ""+charBean.getUserId());
+				params.put("USER_ID", "" + charBean.getUserId());
 				params.put("PASSWORD", password);
 				List result2 = getBeans(UserBean.class, params);
 				if (result2 != null && result2.size() > 0) {
@@ -122,7 +122,7 @@ public class UserManagerDAO extends AbstractDAO {
 		// 新建用户
 		UserBean user = new UserBean();
 		user.setAuthState("no");
-		//user.setUserCode(userJson.getString("userCode"));
+		// user.setUserCode(userJson.getString("userCode"));
 		user.setPassword(userJson.getString("password"));
 		user.setUserCredit(0L);
 		user.setUserLevel("LV1");
@@ -134,36 +134,36 @@ public class UserManagerDAO extends AbstractDAO {
 		// 新建帐户
 		UserAcctBean acctBean = new UserAcctBean();
 		acctBean.setUserId(userId);
-		acctBean.setAcctType(AcctTypeConsts.POINTS);//积分帐户
+		acctBean.setAcctType(AcctTypeConsts.POINTS);// 积分帐户
 		acctBean.setValue(0l);
 		acctBean.setCreateDate(TimeUtil.getLocalTimeString());
-		
+
 		super.insertBean(acctBean);
 		acctBean = new UserAcctBean();
 		acctBean.setUserId(userId);
-		acctBean.setAcctType(AcctTypeConsts.BALANCE);//现金帐户
+		acctBean.setAcctType(AcctTypeConsts.BALANCE);// 现金帐户
 		acctBean.setValue(0l);
 		acctBean.setCreateDate(TimeUtil.getLocalTimeString());
-		
+
 		super.insertBean(acctBean);
-		
+
 		acctBean = new UserAcctBean();
 		acctBean.setUserId(userId);
-		acctBean.setAcctType(AcctTypeConsts.DEPOSIT);//保证金帐户
+		acctBean.setAcctType(AcctTypeConsts.DEPOSIT);// 保证金帐户
 		acctBean.setValue(0l);
 		acctBean.setCreateDate(TimeUtil.getLocalTimeString());
-		
+
 		super.insertBean(acctBean);
-		//新建特征
-		if (userJson.containsKey("cellphone")){
+		// 新建特征
+		if (userJson.containsKey("cellphone")) {
 			Map<String, String> params = new HashMap();
-			params.put("CHAR_ID", ""+CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
+			params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
 			params.put("VALUE", userJson.getString("cellphone"));
 			List result = getBeans(UserCharBean.class, params);
 			if (result != null && result.size() > 0) {
-				throw new Exception("号码:"+userJson.getString("cellphone")+"已注册过!");
+				throw new Exception("号码:" + userJson.getString("cellphone") + "已注册过!");
 			}
-			
+
 			UserCharBean charBean = new UserCharBean();
 			charBean.setCharId(CharSpecConsts.CELLPHONE);
 			charBean.setUserId(userId);
@@ -171,7 +171,7 @@ public class UserManagerDAO extends AbstractDAO {
 			charBean.setValue(userJson.getString("cellphone"));
 			super.insertBean(charBean);
 		}
-		if (userJson.containsKey("email")){
+		if (userJson.containsKey("email")) {
 			UserCharBean charBean = new UserCharBean();
 			charBean.setCharId(CharSpecConsts.EMAIL);
 			charBean.setUserId(userId);
@@ -179,7 +179,7 @@ public class UserManagerDAO extends AbstractDAO {
 			charBean.setValue(userJson.getString("email"));
 			super.insertBean(charBean);
 		}
-		if (userJson.containsKey("address")){
+		if (userJson.containsKey("address")) {
 			UserCharBean charBean = new UserCharBean();
 			charBean.setCharId(CharSpecConsts.ADDRESS);
 			charBean.setUserId(userId);
@@ -187,7 +187,7 @@ public class UserManagerDAO extends AbstractDAO {
 			charBean.setValue(userJson.getString("address"));
 			super.insertBean(charBean);
 		}
-		if (userJson.containsKey("coords")){
+		if (userJson.containsKey("coords")) {
 			UserCharBean charBean = new UserCharBean();
 			charBean.setCharId(CharSpecConsts.COORDS);
 			charBean.setUserId(userId);
@@ -220,7 +220,7 @@ public class UserManagerDAO extends AbstractDAO {
 		user.setUserCode("caojian");
 		user.setPassword("123123");
 		user.setUserCredit(1000L);
-		// user.setUserId(2L);
+	 //user.setUserId(2L);
 		user.setUserLevel("LV1");
 		user.setUserName("caojian");
 		user.setUserType("person");
@@ -230,13 +230,12 @@ public class UserManagerDAO extends AbstractDAO {
 		user.setCreateDate(TimeUtil.getLocalTimeString());
 
 		UserManagerDAO userDAO = (UserManagerDAO) context.getBean("userDAOProxy");
-		for (int i = 30; i > 0; i--) {
-			user.setUserCode("caojian" + i);
-			user.setUserName("caojian" + i);
-			user.setUserId(3006L);
 
-			userDAO.insertBean(user);
-		}
+		user.setUserCode("caojian22");
+		user.setUserName("caojian22" );
+		//user.setUserId(3006L);
+
+		userDAO.insertBean(user);
 
 	}
 }

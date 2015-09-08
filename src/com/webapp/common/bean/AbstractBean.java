@@ -83,7 +83,7 @@ public abstract class AbstractBean {
 			while(it.hasNext()){
 				String keyColName = it.next().toString();
 				
-				AttrValue keyValue = null;
+				AttrValue keyValue = attrValues.get(keyColName);
 				//没设置过主键字段取值
 				if (keyValue==null||keyValue.getNewValue()==null){
 					long newid = seqDAO.getNewId(this.tableName.toString(), keyColName);
