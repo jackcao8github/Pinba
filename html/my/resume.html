@@ -43,7 +43,7 @@ $(document).ready(function() {
 		<div data-role="content">
 			<form method="post" onsubmit="return publish()">
 				<label for="title">简历名称:</label> <input type="text" name="title"
-					id="title" value="" class="required"> <label for="industry"
+					id="title" value="" required="required"> <label for="industry"
 					class="select">期望行业:</label> <select name="industry" id="industry"
 					data-native-menu="false">     
 					<option value="njgulou" selected>销售</option>     
@@ -206,7 +206,7 @@ $(document).ready(function() {
 
 				<label for="selfdesc">自我评价:</label>
 				<textarea cols="40" rows="8" name="selfdesc" id="selfdesc" required="required" placeholder="让用人单位更好了解你"
-								data-mini="true">自我评价</textarea>
+								data-mini="true"></textarea>
 				<label for="verifyCode">验证码:</label>
 				<div style="display: inline-flex; width: 100%">
 					<div style="width: 70%; height: 100%;">
