@@ -14,24 +14,31 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#userName').html(localStorage.userName);
-		$('#sex').html(localStorage.sex);
-		$('#cellphone').html(localStorage.cellphone);
-		$('#email').html(localStorage.email);
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            var userInfo = {};
+            userInfo.userId = cachedUserInfo.userId;
+            ajaxReq('userAction', {
+                method : 'getUserInfo',
+                userInfo : json2Str(userInfo)
+            }, function(data) {
+                if (data.flag == 'success') {//登陆成功后返回主页面
+                	$('#userName').html(data.userName);
+                    $('#cellphone').html(data.cellphone);
+                    $('#email').html(data.email);
+                    $('#address').html(data.address);
+                    $('#size').html(data.size);
+                    $('#industry').html(data.industry);
+                } else {
+                    alert(data.msg);
+                    return false;
+                }
+            });
+        }
+		
 	});
 	function logout() {
-		localStorage.removeItem("userId");
-		localStorage.removeItem("userName");
-		localStorage.removeItem("userToken");
-		localStorage.removeItem("userType");
-		localStorage.removeItem("userCredit");
-		localStorage.removeItem("userLevel");
-		localStorage.removeItem("balance");
-		localStorage.removeItem("points");
-		localStorage.removeItem("userAuthState");
-		localStorage.removeItem("sex");
-		localStorage.removeItem("cellphone");
-		localStorage.removeItem("email");
+		localStorage.removeItem("userInfo");
 
 		closeSubPage();
 	}
@@ -56,10 +63,12 @@
 		<!-- 第一块 -->
 		<div class="firstblock">
 			<ul data-role="listview" data-inset="true" data-mini="true">
-				<li><a href="#">昵称 <span class="ui-li-count" id="userName"></span></a></li>
-				<li><a href="#">性别 <span class="ui-li-count" id="sex"></span></a></li>
+				<li><a href="#">名称 <span class="ui-li-count" id="userName"></span></a></li>
 				<li><a href="#">手机 <span class="ui-li-count" id="cellphone"></span></a></li>
 				<li><a href="#">邮箱 <span class="ui-li-count" id="email"></span></a></li>
+				<li><a href="#">公司地址<span class="ui-li-count" id="address"></span></a></li>
+				<li><a href="#">公司规模<span class="ui-li-count" id="size"></span></a></li>
+				<li><a href="#">公司行业<span class="ui-li-count" id="industry"></span></a></li>
 			</ul>
 
 			<div class="h1"></div>

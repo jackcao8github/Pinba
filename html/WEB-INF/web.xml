@@ -36,4 +36,15 @@
 		<servlet-name>userAction</servlet-name>
 		<url-pattern>/userAction</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>commonAction</servlet-name>
+		<servlet-class>com.webapp.common.servlet.CommonServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>commonAction</servlet-name>
+		<url-pattern>/commonAction</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -26,31 +26,49 @@
 	$(document).bind("pagecreate", pageInit);
 	
 	function pageInit(){
-		var userName = localStorage.userName!=null?localStorage.userName:'未知';
-		var authState = localStorage.userAuthState!=null?localStorage.userAuthState:'未知';
-		var balance = localStorage.balance!=null?localStorage.balance:'未知';
-		var points = localStorage.points!=null?localStorage.points:'未知';
-		var userLevel = localStorage.userLevel!=null?localStorage.userLevel:'未知';
-		
-		
-		$('#userName').html('用户名：'+userName);
-		$('#authSate').html('认证状态：'+authState);
-		$('#balanceValue').html('余额：'+balance);
-		$('#pointsValue').html('积分：'+points);
-		$('#level').html('级别：' + userLevel);
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            var userInfo = {};
+            userInfo.userId = cachedUserInfo.userId;
+            ajaxReq('userAction', {
+                method : 'getUserInfo',
+                userInfo : json2Str(userInfo)
+            }, function(data) {
+                if (data.flag == 'success') {//登陆成功后返回主页面
+                	$('#userName').html('用户名：'+data.userName);
+                    $('#authSate').html('认证状态：'+data.authState);
+                    $('#balanceValue').html('余额：'+data.balance);
+                    $('#pointsValue').html('积分：'+data.points);
+                    $('#level').html('级别：' + data.userLevel);
+                } else {
+                    alert(data.msg);
+                    return false;
+                }
+            });
+        }else{
+        	$('#userName').html('用户名：未知');
+            $('#authSate').html('认证状态：未知');
+            $('#balanceValue').html('余额：未知');
+            $('#pointsValue').html('积分：未知');
+            $('#level').html('级别：未知' );
+        }
 	}
 	
 
 	function viewUserInfo() {
 		//如果未登陆过，则进入登陆页面
 		//userId为用户ID
-		var userId = localStorage.userId;
-		if (userId == null) {//未登陆过，则显示登陆页面
-			//$.mobile.changePage("login.html", "pop", false, false);
+		var userInfo = str2Json(localStorage.userInfo);
+		if (userInfo == null) {//未登陆过，则显示登陆页面
 			changeSubPage('login', 'wodePage');
 		} else {//进入用户信息页面
-			//$.mobile.changePage("userInfo.html", "pop", false, false);
-			changeSubPage('userInfo', 'wodePage');
+			
+			if (userInfo.userType=='private'){//个人用户
+				changeSubPage('privateUserInfo', 'wodePage');
+			}else{//企业用户
+				changeSubPage('companyUserInfo', 'wodePage');
+			}
+			
 		}
 	}
 

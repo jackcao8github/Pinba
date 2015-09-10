@@ -122,6 +122,10 @@ public abstract class AbstractBean {
 	}
 
 	public PreparedSqlAndParams updateSql() {
+		//如果attrValues中数量和keyAttrs数量一致,则可以认为不需要更新任何
+		if (attrValues.size()==keyAttrs.size()){
+			return null;
+		}
 		PreparedSqlAndParams sqlAndParams = new PreparedSqlAndParams();
 		Iterator it = attrValues.entrySet().iterator();
 		

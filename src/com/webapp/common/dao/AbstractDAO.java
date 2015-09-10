@@ -2,7 +2,6 @@ package com.webapp.common.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,30 +24,42 @@ public abstract class AbstractDAO {
 		this.dataSource = dataSource;
 	}
 
-	public Object insertBean(AbstractBean abstractBean) {
+	protected Object insertBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.insertSql();
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 		return abstractBean.getKeyColValue();
 	}
 
-	public void updateBean(AbstractBean abstractBean) {
+	protected void updateBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.updateSql();
+		if (sqlAndParams==null){
+			return ;
+		}
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
-	public void deleteBean(AbstractBean abstractBean) {
+	protected void deleteBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.deleteSql();
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
-	public List<AbstractBean> getBeans(final Class clazz, Map<String, String> params) {
+	protected List<AbstractBean> getBeans(final Class clazz, Map<String, String> params) {
 		return getBeans(clazz, params, false);
 	}
+	protected AbstractBean getBean(final Class clazz, Map<String, String> params) {
+		List beans = getBeans(clazz, params, false);
+		
+		if (beans ==null||beans.size()==0){
+			return null;
+		}else{
+			return (AbstractBean) beans.get(0);
+		}
+	}
 
-	public List<AbstractBean> getBeans(final Class clazz, Map<String, String> params, boolean forupdate) {
+	protected List<AbstractBean> getBeans(final Class clazz, Map<String, String> params, boolean forupdate) {
 		PreparedSqlAndParams sqlAndParams = null;
 		List result = null;
 		try {

@@ -13,98 +13,100 @@
 <script src="../js/BigInt.js" type="text/javascript"></script>
 <script src="../js/RSA.js" type="text/javascript"></script>
 <script src="../js/Barrett.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$('#verifyImg').attr(
+						'src',
+						getContextPath()
+								+ '/verifyImage?width=70&height=21&length=4')
+			});
+
+	function login() {
+		var userName = $('#userName').val();
+		var password = $('#password').val();
+		var verifyCode = $('#verifyCode').val();
+		password = $.md5(password);
+
+		var userInfo = {};
+		        userInfo.loginCode = userName;
+		        userInfo.password = password;
+		        userInfo.verifyCode = verifyCode;
+		
+		ajaxReq('userAction', {
+			method : 'login',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag == 'success') {//登陆成功后返回主页面
+				localStorage.userInfo = json2Str(data);//
+				closeSubPage();
+			} else {
+				alert(data.msg);
+				return false;
+			}
+		});
+		return false;
+	}
+	/* function login() {
+	    var userName = $('#userName').val();
+	    var password = $('#password').val();
+	    var verifyCode = $('#verifyCode').val();
+	    var pwdMD5 = $.md5(password);
+	    //对密码进行加密
+	    ajaxSyncReq('userAction', {
+	        method : 'getRSAPublicKey'
+	    }, function(data) {
+	        if (data.flag == 'success') {
+	            debugger;
+	            setMaxDigits(129);
+	            var key = new RSAKeyPair(data.publicKeyExponent, "",
+	                    data.publicKeyModulus);
+	            password = encryptedString(key, password);
+	            
+	            var userInfo = '{loginCode:"' + userName + '",password:"'
+	                    + password + '",verifyCode:"' + verifyCode + '"}';
+	            ajaxReq('userAction', {
+	                method : 'login',
+	                userInfo : userInfo
+	            }, function(data) {
+	                if (data.flag == 'success') {
+	                    localStorage.userId = data.userId;
+	                    localStorage.userName = data.userName;
+	                    localStorage.userToken = data.userToken;
+	                    localStorage.userType = data.userType;
+	                    localStorage.userCredit = data.userCredit;
+	                    localStorage.userLevel = data.userLevel;
+	                    localStorage.balance = data.balance;
+	                    localStorage.points = data.points;
+	                    localStorage.userAuthState = data.userAuthState;
+	                    closeSubPage();
+	                } else {
+	                    alert(data.msg);
+	                }
+	            });
+	        } else {
+	            alert(data.msg);
+	        }
+	    });
+	} */
+	function swipeRight() {
+		closeSubPage();
+	}
+	function register4Private() {
+		parent.changeSubPage('register4Private', 'wodePage');
+	}
+	function register4Company() {
+		parent.changeSubPage('register4Company', 'wodePage');
+	}
+	function changePass() {
+		parent.changeSubPage('changePass', 'wodePage');
+	}
+</script>
 </head>
 <body>
 	<div data-role="page" id="pagethree">
-		<script type="text/javascript">
-			$(document).ready(function() {
-								$('#verifyImg').attr('src',getContextPath() + '/verifyImage?width=70&height=21&length=4')
-							});
-			
-			
-			
-			function login() {
-				var userName = $('#userName').val();
-				var password = $('#password').val();
-				var verifyCode = $('#verifyCode').val();
-				password = $.md5(password);
 
-				var userInfo = '{loginCode:"' + userName + '",password:"'
-						+ password + '",verifyCode:"' + verifyCode + '"}';
-				ajaxReq('userAction', {
-					method : 'login',
-					userInfo : userInfo
-				}, function(data) {
-					if (data.flag == 'success') {
-						localStorage.userId = data.userId;
-						localStorage.userName = data.userName;
-						localStorage.userToken = data.userToken;
-						localStorage.userType = data.userType;
-						localStorage.userCredit = data.userCredit;
-						localStorage.userLevel = data.userLevel;
-						localStorage.balance = data.balance;
-						localStorage.points = data.points;
-						localStorage.userAuthState = data.userAuthState;
-						closeSubPage();
-					} else {
-						alert(data.msg);
-						return false;
-					}
-				});
-				return false;
-			}
-			/* function login() {
-				var userName = $('#userName').val();
-				var password = $('#password').val();
-				var verifyCode = $('#verifyCode').val();
-				var pwdMD5 = $.md5(password);
-				//对密码进行加密
-				ajaxSyncReq('userAction', {
-					method : 'getRSAPublicKey'
-				}, function(data) {
-					if (data.flag == 'success') {
-						debugger;
-						setMaxDigits(129);
-						var key = new RSAKeyPair(data.publicKeyExponent, "",
-								data.publicKeyModulus);
-						password = encryptedString(key, password);
-						
-						var userInfo = '{loginCode:"' + userName + '",password:"'
-								+ password + '",verifyCode:"' + verifyCode + '"}';
-						ajaxReq('userAction', {
-							method : 'login',
-							userInfo : userInfo
-						}, function(data) {
-							if (data.flag == 'success') {
-								localStorage.userId = data.userId;
-								localStorage.userName = data.userName;
-								localStorage.userToken = data.userToken;
-								localStorage.userType = data.userType;
-								localStorage.userCredit = data.userCredit;
-								localStorage.userLevel = data.userLevel;
-								localStorage.balance = data.balance;
-								localStorage.points = data.points;
-								localStorage.userAuthState = data.userAuthState;
-								closeSubPage();
-							} else {
-								alert(data.msg);
-							}
-						});
-					} else {
-						alert(data.msg);
-					}
-				});
-			} */
-			function swipeRight() {
-				closeSubPage();
-			}
-			function register() {
-				parent.changeSubPage('register', 'wodePage');
-			}
-			function changePass() {
-				parent.changeSubPage('changePass', 'wodePage');
-			}
-		</script>
 		<div data-role="header">
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
@@ -117,8 +119,9 @@
 					name="userName" id="userName" value="" placeholder="用户ID或手机号"
 					required="required"> <label for="password">密码:</label> <input
 					type="password" name="password" id="password" value=""
-					placeholder="密码" required="required" placeholder="最短6位，最长10位，只可包含数字字母" pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">      <label
-					for="password">验证码:</label>
+					placeholder="密码" required="required"
+					placeholder="最短6位，最长10位，只可包含数字字母" pattern="[A-Za-z0-9]{6,10}"
+					title="最短6位，最长10位，只可包含数字字母">      <label for="password">验证码:</label>
 				<div style="display: inline-flex; width: 100%">
 					<div style="width: 70%; height: 100%;">
 						<input type="text" name="verifyCode" id="verifyCode" value=""
@@ -130,7 +133,8 @@
 				</div>
 				<button class="ui-btn" type="submit">登陆</button>
 			</form>
-			<a onclick="register()">注册</a><a style="margin: 10px;"
+			<a onclick="register4Private()">个人注册</a><a style="margin: 10px;"
+				onclick="register4Company()">企业注册</a><a style="margin: 10px;"
 				onclick="changePass()">忘记密码?</a>
 		</div>
 	</div>

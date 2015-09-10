@@ -1,14 +1,9 @@
 package com.webapp.user.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.KeyPair;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,11 +12,11 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.ContextLoaderListener;
 
+import com.webapp.common.servlet.AbstractServlet;
 import com.webapp.common.util.ExceptionUtil;
-import com.webapp.common.util.RSAUtils;
 import com.webapp.user.dao.UserManagerDAO;
 
-public class UserManagerServlet extends HttpServlet {
+public class UserManagerServlet extends AbstractServlet {
 	private UserManagerDAO userDao = null;
 
 	public UserManagerServlet() {
@@ -34,36 +29,10 @@ public class UserManagerServlet extends HttpServlet {
 		userDao = (UserManagerDAO) ContextLoaderListener.getCurrentWebApplicationContext().getBean("userDAOProxy");
 	}
 
-	/* 返回失败提示信息 */
-	protected void returnFailResult(String msg, HttpServletResponse response) {
-		JSONObject retJson = new JSONObject();
-		retJson.put("flag", "fail");
-		retJson.put("msg", msg);
-
-		PrintWriter out = null;
-		try {
-			out = response.getWriter();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		out.write(retJson.toString());
-	}
-
-	/* 返回成功提示信息 */
-	protected void returnSuccessResult(JSONObject retJson, HttpServletResponse response) {
-		PrintWriter out = null;
-		try {
-			retJson.put("flag", "success");
-			out = response.getWriter();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		out.write(retJson.toString());
-	}
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpServletRequest hreq = (HttpServletRequest) request;
-		HttpServletResponse hres = (HttpServletResponse) response;
 		response.setContentType("text/html;charset=utf-8");
 		String method = hreq.getParameter("method");
 
@@ -73,18 +42,24 @@ public class UserManagerServlet extends HttpServlet {
 		}
 		
 		try {
-			if (method.equals("newUser")) {
+			if (method.equals("newUser")) {//新增用户
 				String userInfo = hreq.getParameter("userInfo");
 				JSONObject userJson = JSONObject.fromObject(userInfo);
 				if (StringUtils.isEmpty(userInfo)) {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
-				userDao.newUser(userJson);
-				userJson.put("loginCode", userJson.get("cellphone"));
-				JSONObject retJson = userDao.login(userJson);
+				//新建用户
+				long userId = userDao.newUser(userJson);
+				
+				//立即登陆后返回
+				JSONObject loginInfo = new JSONObject();
+				loginInfo.put("loginCode", userId);
+				loginInfo.put("password", userJson.getString("password"));
+				
+				JSONObject retJson = userDao.login(loginInfo);
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("modUser")) {
+			} else if (method.equals("modUser")) {//修改用户
 				String userInfo = hreq.getParameter("userInfo");
 				JSONObject userJson = JSONObject.fromObject(userInfo);
 				if (StringUtils.isEmpty(userInfo)) {
@@ -96,7 +71,7 @@ public class UserManagerServlet extends HttpServlet {
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "修改成功");
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("login")) {
+			} else if (method.equals("login")) {//登陆
 				String userInfo = hreq.getParameter("userInfo");
 				JSONObject userJson = JSONObject.fromObject(userInfo);
 				if (StringUtils.isEmpty(userInfo)) {
@@ -133,26 +108,38 @@ public class UserManagerServlet extends HttpServlet {
 				userJson.put("password",descrypedPwd);*/
 				JSONObject retJson = userDao.login(userJson);
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("getRSAPublicKey")){
-				KeyPair keyPair = RSAUtils.getKeys();
-				RSAPrivateKey privateKey = (RSAPrivateKey)keyPair.getPrivate();
-				RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+			} else if (method.equals("changePass")){//修改密码
+				String userInfo = hreq.getParameter("userInfo");
+				JSONObject userJson = JSONObject.fromObject(userInfo);
+				if (StringUtils.isEmpty(userInfo)) {
+					returnFailResult("参数userInfo不能为空", response);
+					return;
+				}
+				long userId = userJson.getLong("userId");
+				String msgVerifyCode = userJson.getString("msgVerifyCode");
+				String newpass = userJson.getString("newPassword");
+				//找到用户手机，判断短信验证码
 				
-				//模    
-		        String modulus = publicKey.getModulus().toString();    
-		        //公钥指数    
-		        String public_exponent = publicKey.getPublicExponent().toString();  
-		        //私钥指数    
-		        String private_exponent = privateKey.getPrivateExponent().toString();    
-				
-				request.getSession().setAttribute("__SESSION_PRIVATE_KEY1__", private_exponent);
-				request.getSession().setAttribute("__SESSION_PRIVATE_KEY2__", modulus);
+				userJson.put("userId", userId);
+				userJson.put("password", newpass);
 
-				//返回rsa加密指数和模
+				userDao.modUser(userJson);
 				JSONObject retJson = new JSONObject();
-				retJson.put("publicKeyExponent",publicKey.getPublicExponent().toString());//指数
-				retJson.put("publicKeyModulus", publicKey.getModulus().toString());//模
-				
+				retJson.put("msg", "修改成功");
+				returnSuccessResult(retJson, response);
+			}else if (method.equals("getUserInfo")){//加载用户信息
+				String userInfo = hreq.getParameter("userInfo");
+				JSONObject userJson = JSONObject.fromObject(userInfo);
+				if (StringUtils.isEmpty(userInfo)) {
+					returnFailResult("参数userInfo不能为空", response);
+					return;
+				}
+				long userId = userJson.getLong("userId");
+				String token = userJson.getString("token");
+				//先判断token是否正确，如果不正确则提示重新登陆
+
+				//加载用户信息
+				JSONObject retJson = userDao.getUserInfo(userId);
 				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {

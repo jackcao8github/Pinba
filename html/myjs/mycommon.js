@@ -1,3 +1,5 @@
+document.write('<script type="text/javascript" src="../js/json2.js"');//引入json库
+
 //校验不可空控件
 /*function checkFormNullable(parentControlId){
 	var checkMsg = '';
@@ -23,21 +25,17 @@
 */
 /*json对象转换成字符串*/
 function json2Str(jsonData){
-	var str = '{';
-	var i=0;
-	for ( var o in jsonData) {
-		if (i!=0){
-			str = str + ',';
-		}
-		str = str + o;
-		str = str + ':"';
-		str = str + jsonData[o];
-		str = str + '"';
-		i = i +1 ;
-	}
-	str = str + '}';
-	return str;
+	if (jsonData==null)
+		return null;
+	return JSON.stringify(jsonObj);
 }
+
+function str2Json(str){
+	if (str==null||str.length==0)
+		return null;
+	return JSON.parse(str);
+}
+
 /*取随机数*/
 function GetRandomNum(Min, Max) {
 	var Range = Max - Min;
@@ -108,7 +106,8 @@ var idHtmlMap = {
 	"tobeBusiness" : "my/tobeBusiness.html",
 	"tobeVIPMemeber" : "my/tobeVIPMemeber.html",
 	"login" : "my/login.html",
-	"userInfo" : "my/userInfo.html",
+	"privateUserInfo" : "my/privateUserInfo.html",
+	"companyUserInfo" : "my/companyUserInfo.html",
 	"search" : "home/search.html",
 	"foodMain" : "home/foodMain.html",
 	"workMain" : "home/workMain.html",
@@ -123,7 +122,8 @@ var idHtmlMap = {
 	"subscribeMsg" : "message/subscribeMsg.html",
 	"systemMsg" : "message/systemMsg.html",
 	"searchResult" : "home/searchResult.html",
-	"register" : "my/register.html",
+	"register4Private" : "my/register4Private.html",
+	"register4Company" : "my/register4Company.html",
 	"changePass" : "my/changePass.html",
 	"work" : "publish/work.html",
 	"reqwork" : "publish/reqwork.html",
@@ -137,13 +137,12 @@ var idHtmlMap = {
 /* 显示子页面，隐藏原页面 */
 function changeSubPage(newpageid, oldpageid, params) {
 	if (parent.$('#indexPage').length > 0) {
-		parent.$('#footNavBar').css('display', 'none');
+		parent.$('#footNavBar').hide();
 		// 刷新parent.displayFrameId的高度
 		var newh = parent.window.innerHeight
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
 		parent.$('#' + parent.displayFrameId).css('height', newh + 'px');
-
 	}
 
 	var clientWindowHeight = window.innerHeight
@@ -176,8 +175,7 @@ function changeSubPage(newpageid, oldpageid, params) {
 	}
 	// 如果没有otherpage iframe,则在body里创建一个iframe
 	if ($('#otherPage').length == 0) {
-		$(
-				'<iframe src="#" style="border:0;display: none;width:'
+		$('<iframe src="#" style="border:0;display: none;width:'
 						+ clientWindowWidth + 'px;height:' + clientWindowHeight
 						+ 'px;" id="otherPage"/>').appendTo('body');
 		if (params != null) {
@@ -191,8 +189,7 @@ function changeSubPage(newpageid, oldpageid, params) {
 				newsrc = newsrc + '?' + params;
 			}
 			$('#otherPage').remove();
-			$(
-					'<iframe src="#" style="border:0;display: none;width:'
+			$('<iframe src="#" style="border:0;display: none;width:'
 							+ clientWindowWidth + 'px;height:'
 							+ clientWindowHeight + 'px;" id="otherPage"/>')
 					.appendTo('body');
@@ -200,29 +197,27 @@ function changeSubPage(newpageid, oldpageid, params) {
 		}
 	}
 
-	$('#otherPage').css('display', 'block');
-	$('#' + oldpageid).css('display', 'none');
+	$('#otherPage').show();
+	$('#' + oldpageid).hide();
 }
 
 /* 关闭子页面 */
 function closeSubPage(destpageid) {
 	// 显示上级页面上的footer导航栏，并重新设置当前iframe的高度
 	if (parent.parent.$('#indexPage').length > 0) {
-		parent.parent.$('#footNavBar').css('display', 'block');
+		parent.parent.$('#footNavBar').show();
 
 		var newh = parent.window.innerHeight
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
-		var navbarh = parent.parent.$('#footNavBar').height();
 
-		parent.parent.$('#' + parent.parent.displayFrameId).css('height',
-				newh - navbarh + 'px');
+		parent.parent.$('#' + parent.parent.displayFrameId).css('height',newh + 'px');
 	}
-	parent.$('#otherPage').css('display', 'none');
+	parent.$('#otherPage').hide();
 	if (destpageid == null) {
 		destpageid = parent.$('[data-role="page"]').attr('id');
 	}
-	parent.$('#' + destpageid).css('display', 'block');
+	parent.$('#' + destpageid).show();
 	// 调用上级页面中的页面初始化方法
 	if (parent.pageInit) {
 		parent.pageInit();

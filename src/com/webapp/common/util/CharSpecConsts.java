@@ -1,7 +1,9 @@
 package com.webapp.common.util;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class CharSpecConsts {
 	public final static long CELLPHONE = 1L;//手机
@@ -27,11 +29,31 @@ public class CharSpecConsts {
 		charMap.put(COMPANY_INDUSTRY, "companyIndustry");
 	}
 	
+	public static Map getCharMap(){
+		return charMap;
+	}
+	
 	public static String getCode(Long charId) throws Exception{
 		if (charMap.containsKey(charId)){
 			return charMap.get(charId);
 		}else{
 			throw new Exception("charid="+charId+"未定义");
 		}
+	}
+	
+	public static Long getCharId(String code) throws Exception{
+		if (charMap.containsValue(code)){
+			Iterator it = charMap.entrySet().iterator();
+			while(it.hasNext()){
+				Entry ent = (Entry) it.next();
+				
+				if (code.equals(ent.getValue())){
+					return (Long)ent.getKey();
+				}
+			}
+		}else{
+			throw new Exception("code="+code+"未定义");
+		}
+		return 0L;
 	}
 }
