@@ -115,13 +115,16 @@ public class UserManagerServlet extends AbstractServlet {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
-				long userId = userJson.getLong("userId");
 				String msgVerifyCode = userJson.getString("msgVerifyCode");
 				String newpass = userJson.getString("newPassword");
-				//找到用户手机，判断短信验证码
+				String cellphone = userJson.getString("cellphone");
+				//TODO 找到用户手机，判断短信验证码
 				
-				userJson.put("userId", userId);
+				//修改密码
+				long userId = userDao.getUserIdByCellPhone(cellphone);
+				userJson.clear();
 				userJson.put("password", newpass);
+				userJson.put("userId", userId);
 
 				userDao.modUser(userJson);
 				JSONObject retJson = new JSONObject();
@@ -135,7 +138,7 @@ public class UserManagerServlet extends AbstractServlet {
 					return;
 				}
 				long userId = userJson.getLong("userId");
-				String token = userJson.getString("token");
+				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载用户信息

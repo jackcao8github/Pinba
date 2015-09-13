@@ -17,13 +17,73 @@
 	}
 
 	function openResumeDetail(obj) {
-		var resumeid = obj.resumeid;
-		changeSubPage('resumeDetail', 'myWorkPage', 'resumeid=' + resumeid);
+		var resumeid = $(obj).attr('resumeId');
+		changeSubPage('resumeDetail', 'myWorkPage', 'resumeId=' + resumeid);
 	}
 
 	function openWork(obj) {
-		var workid = obj.workid;
-		changeSubPage('workDetail', 'myWorkPage', 'workid=' + workid);
+		var workId = $(obj).attr('workId');
+		changeSubPage('workDetail', 'myWorkPage', 'workId=' + workId);
+	}
+
+	function getWorkHisList() {
+
+	}
+	function getResumeList() {
+		$('#resumeListUL').html('');
+		var resumeInfo = {};
+        var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            resumeInfo.userId = cachedUserInfo.userId;
+            resumeInfo.userToken = cachedUserInfo.userToken;
+            resumeInfo.page = '1';
+
+            ajaxReq('resumeAction', {
+                method : 'getResumeList',
+                resumeInfo : json2Str(resumeInfo)
+            }, function(data) {
+                if (data.flag != 'fail') {
+                    var lihtmls = '';
+                    for(var i=0;data.length>i;i++){
+                        var resumeobj = data[i];
+                        var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>'+resumeobj.resumeName+'</h3><p>'+resumeobj.resumeType+'</p></a></li>';
+                        lihtmls += lihtml;
+                    }
+                    $('#resumeListUL').append(lihtmls);
+                    $('#resumeListUL').listview("refresh");
+                } else {
+                    alert(data.msg);
+                }
+            });
+        }
+	}
+
+	function getResumeSendHisList() {
+        
+        var resumeInfo = {};
+        var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            resumeInfo.userId = cachedUserInfo.userId;
+            resumeInfo.userToken = cachedUserInfo.userToken;
+            
+            ajaxReq('resumeAction', {
+                method : 'getResumeList',
+                resumeInfo : json2Str(resumeInfo)
+            }, function(data) {
+                if (data.flag != 'fail') {
+                	var lihtmls = '';
+                    for(var i=0;data.length>i;i++){
+                    	var resumeobj = data[i];
+                    	var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>'+resumeobj.resumeName+'</h3><p>'+resumeobj.resumeType+'</p></a></li>';
+                    	lihtmls += lihtml;
+                    }
+                    $('#resumeListUL').append(html);
+                    $('#resumeListUL').listview("refresh");
+                } else {
+                    alert(data.msg);
+                }
+            });
+        }
 	}
 </script>
 </head>
@@ -41,32 +101,20 @@
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#wrokHisList" class="ui-btn-active">工作记录</a></li>
-					<li><a href="#resumeList" id="messageTabLi">简历</a></li>
-					<li><a href="#sendHisList">投递记录</a></li>
+					<li><a href="#wrokHisList" class="ui-btn-active"
+						onclick="getWorkHisList()">工作记录</a></li>
+					<li><a href="#resumeList" id="messageTabLi"
+						onclick="getResumeList()">简历</a></li>
+					<li><a href="#sendHisList" onclick="getResumeSendHisList()">投递记录</a></li>
 				</ul>
 			</div>
 
 			<div id="resumeList">
-				<ul data-role="listview" id="resumeListUL"
-					data-inset="true">
-					<!--兼职简历-->
-					<li><a onclick="openResumeDetail(this)"
-						resumeId="1"> 
-							<h3>兼职简历</h3> <!--简历类型 -->
-							<p>兼职简历1</p> <!-- 简历名称 -->
-</a>
-					<!-- <a href="#delResume" data-rel="popup" data-position-to="window"
-						data-transition="pop">Del Resume</a> --></li>
-					<!--全职简历-->
-					<li><a onclick="openResumeDetail(this)"
-						resumeId="2"> 
-							<h3>全职简历</h3> <!--简历类型 -->
-							<p>全职简历1</p> <!-- 全职简历名称-->
-					</a><!-- <a href="#delResume" data-rel="popup" data-position-to="window"
-						data-transition="pop">Del Resume</a> --></li>
+				<ul data-role="listview" id="resumeListUL">
+					
 				</ul>
-				<a data-role="button" data-mini="true" onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
+				<a data-role="button" data-mini="true"
+					onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
 			</div>
 
 			<div data-role="popup" id="delResume" data-theme="a"
@@ -77,45 +125,69 @@
 				<p>确定要删除这个简历吗?</p>
 				    <a onclick="delResume()" data-rel="back"
 					class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">确定</a>
-					<a data-rel="back"
+				<a data-rel="back"
 					class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">取消</a>
 			</div>
 
 			<div id="wrokHisList">
 				<ul data-role="listview">
-					<li data-role="list-divider">当前工作<span class="ui-li-count">xx酒店服务员</span></li>
+					<li data-role="list-divider">当前工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+                        style="padding-top: 0px; padding-bottom: 0px;"> <img
+                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+                            <h2>工作名称:xx酒店服务员</h2> <!-- 用人单位-->
+                            <p>工作单位:臻洪</p> <!-- 兼职名称 -->
+                            <p>工作时间:2015-10-1 8:00</p>
+                            <p>工作地点:江宁银城皇冠</p>
+                            <p>工作薪酬:100/天</p>
+                    </a></li>
 					<li data-icon="false">
 						<fieldset class="ui-grid-a">
 							<div class="ui-block-a">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a ui-mini">签到</button>
+								<button type="submit"
+									class="ui-btn ui-corner-all ui-btn-a ui-mini">签到</button>
 							</div>
 							<div class="ui-block-b">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a ui-mini">签退</button>
+								<button type="submit"
+									class="ui-btn ui-corner-all ui-btn-a ui-mini">签退</button>
 							</div>
 						</fieldset>
 					</li>
-
-					<li data-role="list-divider">已完成工作<span class="ui-li-count">2</span></li>
-					<li data-icon="false"><a onclick="openWork(this)" workid="1"
+					<li data-role="list-divider">预约工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
+							<h2>预约工作:临时工</h2> <!-- 用人单位-->
+							<p>预约单位:臻洪</p> <!-- 兼职名称 -->
+							<p>预约时间:2015-10-1 8:00</p>
+							<p>预约地点:江宁银城皇冠</p>
+							<p>预约薪酬:100/天</p>
+					</a></li>
+					<li data-role="list-divider">已完成工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>工作名称:临时工</h2>
+							<p>用人单位:zh</p> <!-- 兼职名称 -->
+							<p>签到时间:2015-9-1 8:00</p>
+							<p>签退时间:2015-9-1 18:00</p>
+							<p>酬金:100/天</p>
 					</a></li>
 
-					<li data-icon="false"><a onclick="openWork(this)" workid="12"
+					<li data-icon="false"><a onclick="openWork(this)" workId="12"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
+							<h2>工作名称:临时工</h2>
+							<p>用人单位:zh</p>
+							<p>签到时间:2015-9-11 8:00</p>
+							<p>签退时间:2015-9-11 18:00</p>
+							<p>酬金:10*10/小时</p>
 					</a></li>
 				</ul>
 			</div>
 			<div id="sendHisList">
 				<ul data-role="listview">
-					<li data-icon="false"><a onclick="openWork(this)" workid="2"
+					<li data-icon="false"><a onclick="openWork(this)" workId="2"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
 							<h2>臻洪</h2> <!-- 用人单位-->

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../mycss/photoswipe.css" />
+<link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
+<script src="../js/jquery-1.7.1.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
+<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
+<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript">
+	function swipeRight() {
+		closeSubPage();
+	}
+	var workId = 0;
+	$(document).ready(function() {
+		//为关注按钮增加响应事件
+		$('#favBtn').bind('click', function() {
+			var css = $(this).find('i').attr('class');
+			if (css.indexOf('fa-star-o') > 0) {
+				$(this).find('i').attr('class', 'fa fa-star fa-2x');
+			} else {
+				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
+			}
+		});
+		//为分享按钮增加响应事件
+		$('#shareBtn').bind('click', function() {
+
+		});
+		//为购买按钮增加响应事件
+		$('#buyBtn').bind('click', function() {
+
+		});
+		//为加入购物车按钮增加响应事件
+		$('#shopcartBtn').bind('click', function() {
+
+		});
+
+		workId = getQueryString('workId');
+		if (workId > 0) {
+			$('#title').html('修改求职');
+			pageInit();
+		}
+	});
+	function pageInit(){
+		var workInfo = {};
+        if (workId > 0) {
+            workInfo.workId = workId;
+        }
+        var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            workInfo.userToken = cachedUserInfo.userToken;
+
+            ajaxReq('workAction', {
+                method : 'getWorkInfo',
+                workInfo : json2Str(workInfo)
+            }, function(data) {
+                if (data.flag == 'success') {
+                    bindData(data);
+                } else {
+                    alert(data.msg);
+                    return false;
+                }
+            });
+        }
+	}
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var value = jsonData[o];
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				ctrl.html(value);
+			}else if (o=='resumeId'){
+				var resumeHtml = getContextPath() + '/my/resumeDetail.html?mode=intergration&resumeId='+value;
+				$('#resumeFrame').attr('src',resumeHtml);
+			}
+		}
+	}
+	
+	function resizeIFrameHeight(obj){
+		 var iframe = document.getElementById(obj.id);
+		 iframe.height = iframe.contentDocument.body.scrollHeight+100;
+	}
+	function modReqWork() {
+		changeSubPage('reqwork', 'workdetailPage','workId='+workId);
+	}
+</script>
+
+
+<style type="text/css">
+li {
+	padding: 0em 1em
+}
+</style>
+
+</head>
+<body>
+	<div data-role="page" id="workdetailPage">
+		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
+		<!-- 返回按钮 -->
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1 id="workName">求职详情</h1>
+			<a onclick="modReqWork()" id="modBtn"
+                class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改求职</a>
+		</div>
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider"><span>基本信息</span><span
+				class="ui-li-count">2人关注</span></li>
+			<li data-icon="false" style="padding: 0em 1em">
+				<div style="overflow: hidden">
+                    <div style="float: left; width: 30%; color: #a3a3a3">
+                        <p>求职内容:</p>
+                    </div>
+                    <div style="float: left; width: 70%">
+                        <p id="content"></p>
+                    </div>
+                </div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>发布时间:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p id="createDate"></p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>截止时间:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p id="expDate"></p>
+					</div>
+				</div>
+			</li>
+			
+			
+			<li data-role="list-divider">求职简历</li>
+			<li><iframe src="" id="resumeFrame" style="width:100%;padding:0" scrolling="no"  onload="resizeIFrameHeight(this)"></iframe></li>
+			<li data-role="list-divider">该用户其它求职<span class="ui-li-count">2</span></li>
+		</ul>
+		
+
+		<div data-role="footer" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<div data-role="navbar" data-grid="b">
+				<ul style="text-align: center; padding: 5px 0">
+					<!-- 关注 -->
+					<li id="favBtn" style="width: 20%"><a class="ui-btn">关注</a></li>
+					<!-- 分享 -->
+					<li id="shareBtn" style="width: 20%"><a class="ui-btn">咨询</a></li>
+					<!-- 联系求职者 -->
+					<li id="buyBtn" style="width: 60%;"><a data-role="button"
+						style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">联系求职者</a></li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

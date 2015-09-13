@@ -36,7 +36,7 @@
             }, function(data) {
                 if (data.flag == 'success') {//登陆成功后返回主页面
                 	$('#userName').html('用户名：'+data.userName);
-                    $('#authSate').html('认证状态：'+data.authState);
+                    $('#authSate').html('认证状态：'+data.userAuthState);
                     $('#balanceValue').html('余额：'+data.balance);
                     $('#pointsValue').html('积分：'+data.points);
                     $('#level').html('级别：' + data.userLevel);
@@ -125,7 +125,7 @@
 				<div class="item" id="myMoneyBag" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的钱包</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
-						class="fr hint">余额/保证金/红包/优惠券/积分</span>
+						class="fr hint">余额/保证金/积分</span>
 				</div>
 			</div>
 
@@ -136,7 +136,7 @@
 				<div class="item" id="myPublish" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的发布</span>
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
-						class="fr hint">工作/商品/活动</span>
+						class="fr hint">工作/求职</span>
 				</div>
 
 				<div class="h1"></div>

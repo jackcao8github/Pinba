@@ -1,7 +1,13 @@
 package com.webapp.common.bean;
 
+import java.io.Serializable;
+
 //bean属性取值
-public class AttrValue {
+public class AttrValue implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5317771470962918352L;
 	//初始值
 	private Object orgValue = null;
 	//修改后值

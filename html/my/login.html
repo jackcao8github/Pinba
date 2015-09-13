@@ -30,10 +30,10 @@
 		password = $.md5(password);
 
 		var userInfo = {};
-		        userInfo.loginCode = userName;
-		        userInfo.password = password;
-		        userInfo.verifyCode = verifyCode;
-		
+		userInfo.loginCode = userName;
+		userInfo.password = password;
+		userInfo.verifyCode = verifyCode;
+
 		ajaxReq('userAction', {
 			method : 'login',
 			userInfo : json2Str(userInfo)
@@ -105,7 +105,7 @@
 </script>
 </head>
 <body>
-	<div data-role="page" id="pagethree">
+	<div data-role="page" id="loginPage">
 
 		<div data-role="header">
 			<a href="#" data-rel="back"
@@ -115,21 +115,29 @@
 		</div>
 		<div data-role="content">
 			<form onsubmit="return login()">
-				<label for="userName">用户名:</label> <input type="text"
-					name="userName" id="userName" value="" placeholder="用户ID或手机号"
-					required="required"> <label for="password">密码:</label> <input
-					type="password" name="password" id="password" value=""
-					placeholder="密码" required="required"
-					placeholder="最短6位，最长10位，只可包含数字字母" pattern="[A-Za-z0-9]{6,10}"
-					title="最短6位，最长10位，只可包含数字字母">      <label for="password">验证码:</label>
-				<div style="display: inline-flex; width: 100%">
-					<div style="width: 70%; height: 100%;">
-						<input type="text" name="verifyCode" id="verifyCode" value=""
-							placeholder="验证码" required="required">
+				<div data-role="fieldcontain">
+					<label for="userName">用户名:</label> <input type="text"
+						name="userName" id="userName" value="" placeholder="用户ID或手机号"
+						required="required">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="password">密码:</label> <input type="password"
+						name="password" id="password" value="" placeholder="密码"
+						required="required" placeholder="最短6位，最长10位，只可包含数字字母"
+						pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
+				</div>
+				  
+				<div data-role="fieldcontain">
+					   <label for="password">验证码:</label>
+					<div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required="required">
+						</div>
+						<a data-mini="true" href="#"
+							style="width: 30%; height: 100%; margin-top: 8px;"><img
+							id="verifyImg" src=""></img></a>
 					</div>
-					<a data-mini="true" href="#"
-						style="width: 30%; height: 100%; margin-top: 8px;"><img
-						id="verifyImg" src=""></img></a>
 				</div>
 				<button class="ui-btn" type="submit">登陆</button>
 			</form>

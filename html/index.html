@@ -42,16 +42,16 @@
 			
 			clientWindowHeight = clientWindowHeight;
 		}
-		
-		ifr.style.height = clientWindowHeight + 'px';
+		var footHeight = $('#footNavBar').css('height');
+		ifr.style.height = clientWindowHeight-parseInt(footHeight)-10 + 'px';
 	}
 </script>
 
 </head>
 <style type="text/css">
 </style>
-<body onmousewheel="return false;"><!-- return false是为了禁止上下滚动 -->
-	<div data-role="page" id="indexPage" data-dom-cache="true">
+<body><!--  onmousewheel="return false;"return false是为了禁止上下滚动 -->
+	<div data-role="page" id="indexPage">
 		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
 			style="width:100%;" scrolling="auto" frameborder="0"
 			onload="resizeIFrameHeight(this)"></iframe>

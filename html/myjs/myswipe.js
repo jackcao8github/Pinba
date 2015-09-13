@@ -79,7 +79,7 @@ function swipeOver(ev) {
 		distanceY = startY-endY;
 	}
 	console.log("touchend,endX=" + endX + "endY=" + endY);
-	if (distanceX>50){//水平滑动距离
+	if (distanceX>100){//水平滑动距离
 		//滑动结束时的业务处理回调
 		//myTouchEnd(ev);
 		switch (direction) {

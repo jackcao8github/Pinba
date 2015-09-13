@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.webapp.common.bean.AbstractBean;
 import com.webapp.common.dao.AbstractDAO;
+import com.webapp.common.dao.CharSpecDAO;
 import com.webapp.common.util.AcctTypeConsts;
 import com.webapp.common.util.CharSpecConsts;
 import com.webapp.common.util.MD5Util;
@@ -19,6 +20,8 @@ import com.webapp.common.util.TimeUtil;
 import com.webapp.user.bean.UserAcctBean;
 import com.webapp.user.bean.UserBean;
 import com.webapp.user.bean.UserCharBean;
+import com.webapp.user.bean.UserResumeBean;
+import com.webapp.user.bean.UserResumeCharBean;
 
 public class UserManagerDAO extends AbstractDAO {
 	public JSONObject login(JSONObject userJson) throws Exception {
@@ -28,24 +31,24 @@ public class UserManagerDAO extends AbstractDAO {
 
 		UserBean userBean = null;
 		// loginCode先当作userId来登陆，然后再当作手机号来登陆
-		Map<String, String> params = new HashMap();
+		Map<String, Object> params = new HashMap();
 		params.put("USER_ID", loginCode);
 		userBean = (UserBean) getBean(UserBean.class, params);
-		if (userBean != null ) {
-			if (!password.equals(userBean.getPassword())){
+		if (userBean != null) {
+			if (!password.equals(userBean.getPassword())) {
 				throw new Exception("密码不正确!");
 			}
-		}else{
+		} else {
 			params.clear();
 			params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
 			params.put("VALUE", loginCode);
 			UserCharBean charBean = (UserCharBean) getBean(UserCharBean.class, params);
-			if ( charBean != null ) {
+			if (charBean != null) {
 				params.clear();
 				params.put("USER_ID", "" + charBean.getUserId());
 				params.put("PASSWORD", password);
 				userBean = (UserBean) getBean(UserBean.class, params);
-				if (userBean == null ) {
+				if (userBean == null) {
 					throw new Exception("密码不正确!");
 				}
 			} else {
@@ -62,6 +65,14 @@ public class UserManagerDAO extends AbstractDAO {
 		String newToken = MD5Util.MD5(tokenSrc.toString());
 		retJson.put("userToken", newToken);
 
+		// 返回用户手机
+		params.clear();
+		params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
+		params.put("VALUE", loginCode);
+		UserCharBean charBean = (UserCharBean) getBean(UserCharBean.class, params);
+		if (charBean != null) {
+			retJson.put("cellphone", charBean.getValue());
+		}
 		// 更新user表的token
 		userBean.setToken(newToken);
 		super.updateBean(userBean);
@@ -71,13 +82,13 @@ public class UserManagerDAO extends AbstractDAO {
 
 	/* 新创建一个用户 */
 	public long newUser(JSONObject userJson) throws Exception {
-		//判断手机号是否用过
+		// 判断手机号是否用过
 		if (userJson.containsKey("cellphone")) {
-			Map<String, String> params = new HashMap();
+			Map<String, Object> params = new HashMap();
 			params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
 			params.put("VALUE", userJson.getString("cellphone"));
-			List result = getBeans(UserCharBean.class, params);
-			if (result != null && result.size() > 0) {
+			UserCharBean charBean = (UserCharBean) getBean(UserCharBean.class, params);
+			if (charBean != null) {
 				throw new Exception("号码:" + userJson.getString("cellphone") + "已注册过!");
 			}
 		}
@@ -116,69 +127,69 @@ public class UserManagerDAO extends AbstractDAO {
 		acctBean.setCreateDate(TimeUtil.getLocalTimeString());
 
 		super.insertBean(acctBean);
-		
+
 		// 新建特征
 		Set<String> keySet = userJson.keySet();
-		for (String key:keySet){
+		for (String key : keySet) {
 			long charId = CharSpecConsts.getCharId(key);
-			if (charId>0){
-					UserCharBean newbean = new UserCharBean();
-					newbean.setUserId(userId);
-					newbean.setCharId(charId);
-					newbean.setValue(userJson.getString(key));
-					
-					super.insertBean(newbean);
+			if (charId > 0) {
+				UserCharBean newbean = new UserCharBean();
+				newbean.setUserId(userId);
+				newbean.setCharId(charId);
+				newbean.setValue(userJson.getString(key));
+
+				super.insertBean(newbean);
 			}
 		}
-		
-		
+
 		// 赠送积分
-		
+
 		return userId;
 	}
+
 	/* 更新一个用户 */
 	public void modUser(JSONObject userJson) throws Exception {
-		//更新基本信息
+		// 更新基本信息
 		UserBean user = new UserBean();
 		user.setUserId(userJson.getLong("userId"));// 修改操作时必须有userId
 
-		if (userJson.containsKey("authState")){
+		if (userJson.containsKey("authState")) {
 			user.setAuthState(userJson.getString("authState"));
 		}
-		if (userJson.containsKey("userCode")){
+		if (userJson.containsKey("userCode")) {
 			user.setUserCode(userJson.getString("userCode"));
 		}
-		if (userJson.containsKey("password")){
+		if (userJson.containsKey("password")) {
 			user.setPassword(userJson.getString("password"));
 		}
-		if (userJson.containsKey("userName")){
+		if (userJson.containsKey("userName")) {
 			user.setUserName(userJson.getString("userName"));
 		}
-		if (userJson.containsKey("userType")){
+		if (userJson.containsKey("userType")) {
 			user.setUserType(userJson.getString("userType"));
 		}
 		updateBean(user);
-		
-		//更新user char
-		Set<String> keySet = userJson.keySet();
-		for (String key:keySet){
-			long charId = CharSpecConsts.getCharId(key);
-			if (charId>0){
-				Map<String,String> params = new HashMap();
-				params.put("USER_ID", userJson.getString("userId"));
-				params.put("CHAR_ID", ""+charId);
 
-				UserCharBean bean = (UserCharBean) super.getBean(UserCharBean.class,params);
-				if (bean!=null){
+		// 更新user char
+		Set<String> keySet = userJson.keySet();
+		for (String key : keySet) {
+			long charId = CharSpecConsts.getCharId(key);
+			if (charId > 0) {
+				Map<String, Object> params = new HashMap();
+				params.put("USER_ID", userJson.getString("userId"));
+				params.put("CHAR_ID", "" + charId);
+
+				UserCharBean bean = (UserCharBean) super.getBean(UserCharBean.class, params);
+				if (bean != null) {
 					bean.setValue(userJson.getString(key));
-					
+
 					updateBean(bean);
-				}else{
+				} else {
 					UserCharBean newbean = new UserCharBean();
 					newbean.setUserId(userJson.getLong("userId"));
 					newbean.setCharId(charId);
 					newbean.setValue(userJson.getString(key));
-					
+
 					super.insertBean(newbean);
 				}
 			}
@@ -193,7 +204,7 @@ public class UserManagerDAO extends AbstractDAO {
 		user.setUserCode("caojian");
 		user.setPassword("123123");
 		user.setUserCredit(1000L);
-	 //user.setUserId(2L);
+		// user.setUserId(2L);
 		user.setUserLevel("LV1");
 		user.setUserName("caojian");
 		user.setUserType("person");
@@ -205,23 +216,38 @@ public class UserManagerDAO extends AbstractDAO {
 		UserManagerDAO userDAO = (UserManagerDAO) context.getBean("userDAOProxy");
 
 		user.setUserCode("caojian22");
-		user.setUserName("caojian22" );
-		//user.setUserId(3006L);
+		user.setUserName("caojian22");
+		// user.setUserId(3006L);
 
 		userDAO.insertBean(user);
 
 	}
-	
-	public JSONObject getUserInfo(long userId) throws Exception{
-		Map<String, String> params = new HashMap();
-		params.put("USER_ID", ""+userId);
-		
-		UserBean userBean = (UserBean) getBean(UserBean.class, params);
-		if (userBean == null ) {
-			throw new Exception("参数userId"+userId+"不正确!");
+
+	/* 根据手机号码加载用户信息 */
+	public long getUserIdByCellPhone(String cellphone) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("CHAR_ID", "" + CharSpecConsts.CELLPHONE);// CHAR_ID=1表示手机
+		params.put("VALUE", cellphone);
+		UserCharBean charBean = (UserCharBean) getBean(UserCharBean.class, params);
+		if (charBean == null) {
+			throw new Exception("号码:" + cellphone + "未注册过!");
 		}
-		
-		//返回用户基本信息
+
+		long userId = charBean.getUserId();
+
+		return userId;
+	}
+
+	public JSONObject getUserInfo(long userId) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+
+		UserBean userBean = (UserBean) getBean(UserBean.class, params);
+		if (userBean == null) {
+			throw new Exception("参数userId" + userId + "不正确!");
+		}
+
+		// 返回用户基本信息
 		JSONObject retJson = new JSONObject();
 		retJson.put("userId", userBean.getUserId());
 		retJson.put("userCode", userBean.getUserCode());
@@ -233,7 +259,7 @@ public class UserManagerDAO extends AbstractDAO {
 		retJson.put("balance", "0");
 		retJson.put("points", "0");
 
-		//返回用户帐户信息
+		// 返回用户帐户信息
 		params.clear();
 		params.put("USER_ID", "" + userBean.getUserId());
 		List<AbstractBean> result = getBeans(UserAcctBean.class, params);
@@ -251,7 +277,7 @@ public class UserManagerDAO extends AbstractDAO {
 			}
 		}
 
-		//返回用户特征信息
+		// 返回用户特征信息
 		params.clear();
 		params.put("USER_ID", "" + userBean.getUserId());
 		result.clear();

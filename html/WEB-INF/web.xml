@@ -26,16 +26,7 @@
 		<url-pattern>/verifyImage</url-pattern>
 	</servlet-mapping>
 	
-	<servlet>
-		<servlet-name>userAction</servlet-name>
-		<servlet-class>com.webapp.user.servlet.UserManagerServlet</servlet-class>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
 	
-	<servlet-mapping>
-		<servlet-name>userAction</servlet-name>
-		<url-pattern>/userAction</url-pattern>
-	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>commonAction</servlet-name>
@@ -47,4 +38,51 @@
 		<servlet-name>commonAction</servlet-name>
 		<url-pattern>/commonAction</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+        <servlet-name>userAction</servlet-name>
+        <servlet-class>com.webapp.user.servlet.UserManagerServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>userAction</servlet-name>
+        <url-pattern>/userAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>resumeAction</servlet-name>
+        <servlet-class>com.webapp.user.servlet.ResumeManagerServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>resumeAction</servlet-name>
+        <url-pattern>/resumeAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>workAction</servlet-name>
+        <servlet-class>com.webapp.work.servlet.WorkManagerServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>workAction</servlet-name>
+        <url-pattern>/workAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>pageServlet</servlet-name>
+        <servlet-class>com.webapp.common.servlet.PageServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+   <!--  <servlet-mapping>
+        <servlet-name>pageServlet</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping> -->
+    <listener>
+        <listener-class>com.webapp.common.servlet.CharSpecValueJSGenerator</listener-class>
+    </listener>
 </web-app>

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../mycss/photoswipe.css" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<script src="../js/jquery-1.7.1.min.js"></script>
+<script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
@@ -16,26 +16,75 @@
 	function swipeRight() {
 		closeSubPage();
 	}
+	var resumeId = 0;
 	$(document).ready(function() {
-		//如果不是简历所有者，需要删除修改简历按钮
-		var resumeUserId = $('#resumeUserId').val();
-		if (localStorage.userId == resumeUserId) {
+		var mode = getQueryString('mode');
+		if (mode=='intergration'){//表示此页面被嵌入到其它页面里,header和footer要去掉
+			$('#header').remove();
 			$('#footer').remove();
-		}else{
-			$('#modBtn').remove();
 		}
+		pageInit();
 	});
-	/* 删除简历 */
-	function delResume() {
-		alert('建设中');
+	
+	function pageInit(){
+		resumeId = getQueryString('resumeId');
+        if ( resumeId == null ) {
+            alert('参数reusmeId为空!');
+            return;
+        }
+        var resumeInfo = {};
+        if (resumeId > 0) {
+            resumeInfo.resumeId = resumeId;
+        }
+        var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            resumeInfo.userToken = cachedUserInfo.userToken;
+
+            ajaxReq('resumeAction', {
+                method : 'getResumeInfo',
+                resumeInfo : json2Str(resumeInfo)
+            }, function(data) {
+                if (data.flag == 'success') {
+                    bindData(data);
+
+                    //如果不是简历所有者，需要删除修改简历按钮
+                    var resumeUserId = data.userId;
+                    if (cachedUserInfo.userId == resumeUserId) {
+                        $('#footer').remove();
+                    } else {
+                        $('#modBtn').remove();
+                    }
+                } else {
+                    alert(data.msg);
+                    return false;
+                }
+            });
+        }
 	}
 	/* 修改简历 */
 	function modResume() {
-		alert('建设中');
+		changeSubPage('resume','workdetailPage','resumeId='+resumeId);
 	}
 	/* 增加关注 */
 	function addFocus() {
 		alert('建设中');
+	}
+
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				//处理下拉框采集的数据
+				var realValue = jsonData[o];
+				var displayValue = getDisplayEnumValue(o,realValue);
+				if (displayValue==realValue){//没有显示值则用realValue显示
+					ctrl.html(realValue);
+				}else{
+					ctrl.html(displayValue);
+				}
+			}
+		}
 	}
 </script>
 
@@ -52,17 +101,16 @@ li {
 		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
 		<!-- 返回按钮 -->
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false">
+			data-tap-toggle="false" id="header">
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
-			<h1>兼职简历1</h1>
+			<h1 id="resumeType">兼职简历</h1>
 
 			<a onclick="modResume()" id="modBtn"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改简历</a>
 		</div>
-		<input type="hidden" value="" id="resumeUserId">
-		<ul data-role="listview" data-inset="true">
+		<ul data-role="listview">
 			<li data-role="list-divider">基本信息</li>
 			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
@@ -70,7 +118,7 @@ li {
 						<p>姓名:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>张三/李4</p>
+						<p id="realName"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -78,7 +126,7 @@ li {
 						<p>性别:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>男/女</p>
+						<p id="sex"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -86,7 +134,7 @@ li {
 						<p>工作经验:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>3年</p>
+						<p id="experience"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -94,7 +142,7 @@ li {
 						<p>学历:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>本科</p>
+						<p id="degree"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -102,23 +150,16 @@ li {
 						<p>期望区域:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>江宁</p>
+						<p id="expectWorkArea"></p>
 					</div>
 				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>期望行业:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p>酒店/餐饮</p>
-					</div>
-				</div>
+				
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>期望职位:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>不限</p>
+						<p id="expectPost"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -126,7 +167,7 @@ li {
 						<p>手机:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>13913923321</p>
+						<p id="cellphone"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -134,7 +175,7 @@ li {
 						<p>邮箱:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>xx@xx.com</p>
+						<p id="email"></p>
 					</div>
 				</div>
 			</li>
@@ -145,7 +186,7 @@ li {
 						<p>日薪:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>200元/面议</p>
+						<p id="daySallary"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -153,7 +194,7 @@ li {
 						<p>工资当天结算:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>是</p>
+						<p id="dayCharge"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -161,7 +202,7 @@ li {
 						<p>提供食宿:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>是</p>
+						<p id="foodAndLodging"></p>
 					</div>
 				</div>
 			</li>
@@ -192,33 +233,22 @@ li {
 			</li>
 			<li data-role="list-divider">自我评价</li>
 			<li data-icon="false" style="padding: 0em 1em">
-				<p style="white-space: pre-line;">本科期间，本人为学校社团负责人，负责协调各部门活动，以及学生与外教之间的沟通，经过几年的锻炼，本人的协调组织能力得到很大提高。
-					研究生期间，担任本班班长，负责协调班级活动，以及与学校有关部门和老师进行沟通联系，这一经历，使得自己的社交能力有了很大提高。</p>
+				<p style="white-space: pre-line;" id="selfreview"></p>
 			</li>
 		</ul>
 
-		<div data-role="popup" id="delResume" data-theme="a"
-			data-overlay-theme="b" class="ui-content"
-			style="max-width: 340px; padding-bottom: 2em;">
-			    
-			<h3>删除这个简历?</h3>
-			<p>确定要删除这个简历吗?</p>
-			    <a onclick="delResume()" data-rel="back"
-				class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">确定</a>
-			<a data-rel="back"
-				class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">取消</a>
-		</div>
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<fieldset class="ui-grid-a">
 				<div class="ui-block-a">
-					<a id="focusBtn" style="width:80%;text-align:left" onclick="addFocus()"
-						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-heart">90</a>
+					<a id="focusBtn" style="width: 80%; text-align: left"
+						onclick="addFocus()"
+						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-heart" id="focusNumber"></a>
 				</div>
 				<div class="ui-block-b">
-					<a id="contactBtn" style="width:80%;text-align:left"
-						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-phone">13913913913</a>
+					<a id="contactBtn" style="width: 80%; text-align: left"
+						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-phone" id="cellphone"></a>
 				</div>
 			</fieldset>
 		</div>

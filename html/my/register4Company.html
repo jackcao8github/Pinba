@@ -9,6 +9,7 @@
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script src="../js/jQuery.md5.js" type="text/javascript"></script>
+
 <style>
 .controlgroup-textinput {
 	    padding-top: .22em;
@@ -31,7 +32,7 @@
 
 		var userInfo = {};
 		userInfo.userName = companyName;
-		userInfo.password = password;
+		userInfo.password = $.md5(password);
 		userInfo.msgverifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.address = companyAddress;
@@ -44,8 +45,8 @@
 			userInfo : json2Str(userInfo)
 		}, function(data) {
 			if (data.flag == 'success') {
-				//注册成功，转向主页面
-				
+				localStorage.userInfo = json2Str(data);//
+                //注册成功，转向主页面
 				closeSubPage();
 			} else {
 				alert(data.msg);
@@ -114,7 +115,7 @@
                                 placeholder="可用于登陆，一个号码只能注册一次。">
                         </div>
                         <a data-mini="true" onclick="sendTelVerifyCode(this)"
-                            class="ui-btn" id="sendVerifyBtn" for="ptel"
+                            class="ui-btn" id="sendVerifyBtn" for="tel"
                             style="width: 30%; height: 100%; margin-top: 5px;">发送验证码</a>
                     </div>
 				</div>

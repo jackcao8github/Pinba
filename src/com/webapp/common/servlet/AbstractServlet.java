@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.webapp.common.util.VerifyImage;
@@ -61,5 +62,19 @@ public class AbstractServlet extends HttpServlet
 			e.printStackTrace();
 		}
 		out.write(retJson.toString());
+	}
+	
+	/* 返回成功提示信息 */
+	protected void returnSuccessResult(JSONArray retJsonArray, HttpServletResponse response) {
+		PrintWriter out = null;
+		try {
+			out = response.getWriter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (retJsonArray==null){
+			returnFailResult("没有加载到数据",response);
+		}
+		out.write(retJsonArray.toString());
 	}
 }

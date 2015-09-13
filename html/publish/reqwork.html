@@ -5,134 +5,173 @@
 <meta name="viewport" content="width=device-width" />
 <script src="../js/jquery-1.11.3.js"></script>
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
-.controlgroup-textinput {
-	    padding-top: .22em;
-	    padding-bottom: .22em;
-}
 </style>
 
 <script type="text/javascript">
-$(document).ready(function() {
-	$('#verifyImg').attr('src',getContextPath()+'/verifyImage?width=70&height=21&length=4')
-});
-	function swipeRight() {
-		closeSubPage();
-	}
+var workId = 0;
+var workType = 'reqPartTime';
+    $(document).ready(
+            function() {
+                $('#verifyImg').attr(
+                        'src',
+                        getContextPath()
+                                + '/verifyImage?width=70&height=21&length=4');
+              //初始化下拉框控件
+                $('select').each(function(index,item){
+                    fillOptions(item.id);
+                });
+                
+                workType = getQueryString('workType');
+                if (workType==null){
+                    workType = 'reqPartTime';
+                }
+                workId = getQueryString('workId');
+                if (workId > 0) {
+                    $('#title').html('修改求职');
+                    var workInfo = {};
+                    if (workId > 0) {
+                        workInfo.workId = workId;
+                    }
+                    var cachedUserInfo = str2Json(localStorage.userInfo);
+                    if (cachedUserInfo != null) {
+                        workInfo.userToken = cachedUserInfo.userToken;
 
-	function publish() {
-		alert("developing...");
-		closeSubPage();
-	}
+                        ajaxReq('workAction', {
+                            method : 'getWorkInfo',
+                            workInfo : json2Str(workInfo)
+                        }, function(data) {
+                            if (data.flag == 'success') {
+                                bindData(data);
+                            } else {
+                                alert(data.msg);
+                                return false;
+                            }
+                        });
+                    }
+                }
+            });
+    function swipeRight() {
+        closeSubPage();
+    }
+    //绑定数据到控件
+    function bindData(jsonData) {
+        for ( var o in jsonData) {
+            var value = jsonData[o];
+            var ctrl = $('#' + o);
+            if (ctrl.length > 0) {
+            	if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
+                    selectOptions(o,value); 
+                }if (o=='selfreview'){
+                    ctrl.html(value);
+                }else{
+                    ctrl.val(value);
+                }
+            }
+        }
+    }
+    function publish() {
+        var workInfo = {};
+        var method = 'newWork';
+        if (workId > 0) {
+            workInfo.workId = workId;
+            method = 'modWork';
+        }
+        var cachedUserInfo = str2Json(localStorage.userInfo);
+        if (cachedUserInfo != null) {
+            workInfo.userId = cachedUserInfo.userId;
+            workInfo.workName = $('#workName').val();
+            workInfo.content = $('#content').val();
+            workInfo.workType = workType;
+            workInfo.expDate = $('#expDate').val();
+            workInfo.effDate = $('#effDate').val();
+            workInfo.resumeId = $('#resumeId').val();
+            workInfo.verifyCode = $('#verifyCode').val();
+
+            ajaxReq('workAction', {
+                method : method,
+                workInfo : json2Str(workInfo)
+            }, function(data) {
+                if (data.flag == 'success') {
+                    alert(data.msg);
+                    closeSubPage();
+                } else {
+                    alert(data.msg);
+                    return false;
+                }
+            });
+        }
+        return false;
+    }
+    
+    function pub(){
+        $('#pubBtn').click();
+    }
 </script>
 </head>
 <body>
-	<div id="messagePage" data-role="page">
-		<div data-role="header" id="header">
+    <div id="workPage" data-role="page">
+        <div data-role="header" id="header">
 
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-				onclick="closeSubPage();return false;">Back</a>
-			<h1>发布求职</h1>
+            <a href="#" data-rel="back"
+                class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+                onclick="closeSubPage();return false;">Back</a>
+            <h1 id="title">发布求职</h1>
 
-		</div>
-		<div data-role="content">
-			<form method="post" action="">
-				<label for="title">标题:</label> <input type="text" name="title"
-					id="title" value="" class="required">
-					
-					<label
-					for="resumeList" class="select">简历列表:</label> <select name="resumeList" id="resumeList"
-					data-native-menu="false">     
-					<option>简历列表</option>     
-					<option value="njgulou">简历1</option>     
-					<option value="njqinhuai">简历2</option>     
-				
-				</select>
-					
-					<label
-					for="industry" class="select">期望行业:</label> <select name="industry" id="industry"
-					data-native-menu="false">     
-					<option>行业</option>     
-					<option value="njgulou">销售</option>     
-					<option value="njqinhuai">餐饮、酒店</option>     
-					<option value="njbaixia">美容美发</option>     
-					<option value="njqixia">零售、百货</option>
-					<option value="njjianye">技工、工人</option>
-					<option value="njyuhua">人事、行政</option>
-					<option value="njjiangning">客服</option>
-					
-					<option value="njjiangning">教育、培训</option>
-					<option value="njjiangning">家政、安保</option>
-					<option value="njjiangning">保险</option>
-					<option value="njjiangning">账务、审计</option>
-					<option value="njjiangning">实习生</option>
-				
-				</select>
-					
-					<label
-					for="post" class="select">期望职位:</label> <select name="post" id="post"
-					data-native-menu="false">     
-					<option>职位</option>     
-					<option value="njgulou">学生兼职</option>     
-					<option value="njqinhuai">小时工</option>     
-					<option value="njbaixia">实习生</option>     
-					<option value="njqixia">促销</option>
-					<option value="njjianye">家教</option>
-					<option value="njyuhua">传单派发</option>
-					<option value="njjiangning">模特</option>
-					
-				</select>
-					
-					<label
-					for="area" class="select">期望区域:</label> <select name="area" id="area"
-					data-native-menu="false">     
-					<option>区域</option>     
-					<option value="njgulou">鼓楼</option>     
-					<option value="njqinhuai">秦淮</option>     
-					<option value="njbaixia">白下</option>     
-					<option value="njqixia">栖霞</option>
-					<option value="njjianye">建邺</option>
-					<option value="njyuhua">雨花</option>
-					<option value="njjiangning">江宁</option>
-					<option value="njpukou">浦口</option>
-					<option value="njdachang">大厂</option>
-					<option value="njliuhe">六合</option>
-					<option value="njgaochun">高淳</option>
-					<option value="njlishui">溧水</option>
-				</select> <label for="dayRate">期望日薪:</label><input type="range" name="dayRate"
-					id="dayRate" value="100" min="0" max="1000">
-				<label
-					for="showMoney">期望工资当天结算:</label> <select name=""
-					showMoney""
-					id="" showMoney"" data-role="slider"
-					data-mini="true">     
-					<option value="off">No</option>     
-					<option value="on" selected="">Yes</option>
-				</select> <label for="foodAndBed">期望提供食宿:</label><select name="foodAndBed"
-					id="foodAndBed" data-role="slider" data-mini="true">     
-					<option value="off">No</option>     
-					<option value="on" selected="">Yes</option>
-				</select> <label for="endDate">失效时间:</label> <input type="date"
-					name="endDate" id="endDate" value=""> <label
-					for="verifyCode">验证码:</label>
-				<div style="display: inline-flex; width: 100%">
-					<div style="width: 70%; height: 100%;">
-						<input type="text" name="verifyCode" id="verifyCode" value=""
-							placeholder="验证码">
-					</div>
-					<a data-mini="true" href="#"
-						style="width: 30%; height: 100%; margin-top: 8px;"><img
-						src="" id="verifyImg"></img></a>
-				</div>
+        </div>
+        <div data-role="content" class="ui-mini">
+            <form method="post" action="" onsubmit="return publish()">
+                <div data-role="fieldcontain">
+                    <label for="workName">标题:</label> <input type="text"
+                        name="workName" id="workName" value="" required="required"
+                        placeholder="工作简介">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="content">工作内容:</label>
+                    <textarea cols="40" rows="8" name="content" id="content"
+                        data-mini="true" required="required" placeholder="工作详细内容">工作内容</textarea>
+                </div>
 
-				<a href="#" data-role="button" onclick="publish()">发布</a>
-			</form>
-		</div>
-	</div>
+
+                <div data-role="fieldcontain">
+                    <label for="resumeId" class="select">求职简历:</label> <select
+                        name="resumeId" id="resumeId" data-native-menu="false">
+                        <option value="41" selected>酒店临时工简历</option>
+                        <option value="41">服务员简历</option>
+                        <option value="41">派单员</option>
+                    </select>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <label for="effDate">生效时间:</label> <input type="date"
+                        name="effDate" id="effDate" value="" required="required">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="expDate">失效时间:</label> <input type="date"
+                        name="expDate" id="expDate" value="" required="required">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="verifyCode">验证码:</label>
+                    <div style="display: inline-flex; width: 100%">
+                        <div style="width: 70%; height: 100%;">
+                            <input type="text" name="verifyCode" id="verifyCode" value=""
+                                placeholder="验证码" required="required">
+                        </div>
+                        <a data-mini="true" href="#"
+                            style="width: 30%; height: 100%; margin-top: 8px;"><img
+                            src="" id="verifyImg"></img></a>
+                    </div>
+                </div>
+                <button type="submit" class="ui-btn" onclick="" style="display:none" id="pubBtn">发布</button>
+            </form>
+        </div>
+        <div data-role="footer" data-position="fixed" data-fullscreen="false"
+            data-tap-toggle="false">
+            <a data-role="button" class="ui-btn ui-corner-all" style="width:100%;color:red"  onclick="pub()">发布</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -3,221 +3,350 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width" />
-<script src="../js/jquery-1.11.3.js"></script>
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
-.controlgroup-textinput {
-	    padding-top: .22em;
-	    padding-bottom: .22em;
-}
 </style>
 
 <script type="text/javascript">
-$(document).ready(function() {
-	$('#verifyImg').attr('src',getContextPath() + '/verifyImage?width=70&height=21&length=4')
-});
+	var resumeId = 0;
+	$(document).ready(
+			function() {
+				$('#verifyImg').attr(
+						'src',
+						getContextPath()
+								+ '/verifyImage?width=70&height=21&length=4');
+				
+				//初始化下拉框控件
+                $('select').each(function(index,item){
+                    fillOptions(item.id);
+                });
+				
+				resumeId = getQueryString('resumeId');
+				if (resumeId > 0) {
+					$('#title').html('修改简历');
+					var resumeInfo = {};
+					if (resumeId > 0) {
+						resumeInfo.resumeId = resumeId;
+					}
+					var cachedUserInfo = str2Json(localStorage.userInfo);
+					if (cachedUserInfo != null) {
+						resumeInfo.userToken = cachedUserInfo.userToken;
+
+						ajaxReq('resumeAction', {
+							method : 'getResumeInfo',
+							resumeInfo : json2Str(resumeInfo)
+						}, function(data) {
+							if (data.flag == 'success') {
+								bindData(data);
+							} else {
+								alert(data.msg);
+								return false;
+							}
+						});
+					}
+				}
+			});
+
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var value = jsonData[o];
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
+					selectOptions(o,value);	
+				}
+				else if (o=='selfreview'){
+					ctrl.html(value);
+				}else{
+					ctrl.val(value);
+				}
+			}
+		}
+	}
 	function swipeRight() {
 		closeSubPage();
 	}
 
 	function publish() {
-		alert("developing...");
-		closeSubPage();
+		var resumeInfo = {};
+		var method = 'newResume';
+		if (resumeId > 0) {
+			resumeInfo.resumeId = resumeId;
+			method = 'modResume';
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			resumeInfo.userId = cachedUserInfo.userId;
+			resumeInfo.resumeName = $('#resumeName').val();
+			resumeInfo.realName = $('#realName').val();
+			resumeInfo.sex = $('#sex').val();
+			resumeInfo.resumeType = $('#resumeType').val();
+			resumeInfo.expectIndustry = $('#expectIndustry').val();
+			
+			var expectPostStr = '';
+			var postArr = $('#expectPost').val();
+			$(postArr).each(function(inx,item){
+				if (expectPostStr!=''){
+					expectPostStr += ',';
+				}
+				expectPostStr += item;
+			});
+			resumeInfo.expectPost = expectPostStr;
+			
+			var expectWorkAreaStr = '';
+            var areaArr= $('#expectWorkArea').val();
+            $(areaArr).each(function(ind,item){
+                if (expectWorkAreaStr!=''){
+                	expectWorkAreaStr += ',';
+                }
+                expectWorkAreaStr += item;
+            });
+			resumeInfo.expectWorkArea = expectWorkAreaStr;
+			resumeInfo.daySallary = $('#daySallary').val();
+			resumeInfo.dayCharge = $('#dayCharge').val();
+			resumeInfo.foodAndLodging = $('#foodAndLodging').val();
+			resumeInfo.expectIndustry = $('#expectIndustry').val();
+			resumeInfo.degree = $('#degree').val();
+			resumeInfo.experience = $('#experience').val();
+			resumeInfo.selfreview = $('#selfreview').val();
+			resumeInfo.cellphone = $('#cellphone').val();
+			resumeInfo.email = $('#email').val();
+			resumeInfo.verifyCode = $('#verifyCode').val();
+
+			ajaxReq('resumeAction', {
+				method : method,
+				resumeInfo : json2Str(resumeInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					alert(data.msg);
+					closeSubPage();
+				} else {
+					alert(data.msg);
+					return false;
+				}
+			});
+		}
+		return false;
 	}
 </script>
 </head>
 <body>
-	<div id="messagePage" data-role="page">
+	<div id="resumePage" data-role="page">
 		<div data-role="header" id="header">
-
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
-			<h1>增加求职简历</h1>
-
+			<h1 id="title">增加求职简历</h1>
 		</div>
-		<div data-role="content">
-			<form method="post" onsubmit="return publish()">
-				<label for="title">简历名称:</label> <input type="text" name="title"
-					id="title" value="" required="required"> <label for="industry"
-					class="select">期望行业:</label> <select name="industry" id="industry"
-					data-native-menu="false">     
-					<option value="njgulou" selected>销售</option>     
-					<option value="njqinhuai">餐饮、酒店</option>     
-					<option value="njbaixia">美容美发</option>     
-					<option value="njqixia">零售、百货</option>
-					<option value="njjianye">技工、工人</option>
-					<option value="njyuhua">人事、行政</option>
-					<option value="njjiangning">客服</option>
-
-					<option value="njjiangning">教育、培训</option>
-					<option value="njjiangning">家政、安保</option>
-					<option value="njjiangning">保险</option>
-					<option value="njjiangning">账务、审计</option>
-					<option value="njjiangning">实习生</option>
-
-				</select> <label for="post" class="select">期望职位:</label> <select name="post"
-					id="post" data-native-menu="false">     
-					<option value="njgulou" selected>学生兼职</option>     
-					<option value="njqinhuai">小时工</option>     
-					<option value="njbaixia">实习生</option>     
-					<option value="njqixia">促销</option>
-					<option value="njjianye">家教</option>
-					<option value="njyuhua">传单派发</option>
-					<option value="njjiangning">模特</option>
-
-				</select> <label for="area" class="select">期望区域:</label> <select name="area"
-					id="area" data-native-menu="false">     
-					<option value="njgulou" selected>鼓楼</option>     
-					<option value="njqinhuai">秦淮</option>     
-					<option value="njbaixia">白下</option>     
-					<option value="njqixia">栖霞</option>
-					<option value="njjianye">建邺</option>
-					<option value="njyuhua">雨花</option>
-					<option value="njjiangning">江宁</option>
-					<option value="njpukou">浦口</option>
-					<option value="njdachang">大厂</option>
-					<option value="njliuhe">六合</option>
-					<option value="njgaochun">高淳</option>
-					<option value="njlishui">溧水</option>
-				</select> <label for="dayRate">期望日薪:</label><input type="range"
-					name="dayRate" id="dayRate" value="100" min="0" max="1000">
-				<label for="showMoney">期望工资当天结算:</label> <select name=""
-					showMoney""
-					id="" showMoney"" data-role="slider"
-					data-mini="true">     
-					<option value="off">No</option>     
-					<option value="on" selected="">Yes</option>
-				</select> <label for="foodAndBed">期望提供食宿:</label><select name="foodAndBed"
-					id="foodAndBed" data-role="slider" data-mini="true">     
-					<option value="off">No</option>     
-					<option value="on" selected="">Yes</option>
-				</select>
-
-				<fieldset data-role="controlgroup">
-					<legend>学历:</legend>
-					<input type="radio" value="gaozhong" id="gaozhong" name="degree"><label
-						for="gaozhong">高中</label><input type="radio" value="zhuangke"
-						id="zhuangke" name="degree"><label for="zhuangke">专科</label><input
-						type="radio" value="bengke" id="bengke" name="degree" checked><label
-						for="bengke">本科</label><input type="radio" id="suoshi"
-						name="degree" value="suoshi"><label for="suoshi">硕士</label>
-				</fieldset>
-
-				<fieldset data-role="controlgroup">
-					<legend>工作经验:</legend>
-					<input type="radio" name="experience" id="1year" value="1year" checked><label
-						for="1year">1年</label><input type="radio" name="experience"
-						id="2year" value="2year"><label for="2year">2年</label><input
-						type="radio" name="experience" id="3year" value="3year"><label
-						for="3year">3年</label>
-				</fieldset>
-
-				<label for="eduListUL">教育经历:</label>
-				<ul data-role="listview" id="eduListUL" data-inset="true">
-					<li data-icon="false">
-						<h2>2015/1~2015/8</h2>
-						<div>
-							<label for="beginDate">开始时间:</label> <input type="date"
-								name="beginDate" id="beginDate" value="" class="required">
-							<label for="endDate">结束时间:</label> <input type="date"
-								name="endDate" id="endDate" value="" class="required"> <label
-								for="school">学校:</label> <input type="text" name="school"
-								id="school" value="" class="required"> <label
-								for="major">专业:</label> <input type="text" name="major"
-								id="major" value="" class="required">
-
-						</div>
-						<div class="ui-grid-a">
-							<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-								<a href="#"
-									class="ui-btn  ui-btn-inline ui-corner-all ui-icon-delete ui-btn-icon-notext ui-mini">删除</a>
-							</div>
-							<div class="ui-block-b" style="text-align: center;" id="workDiv">
-								<a href="#"
-									class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext ui-mini">增加</a>
-							</div>
-						</div>
-					</li>
-				</ul>
-
-
-				<label for="workHisListUL">工作经历:</label>
-				<ul data-role="listview" id="workHisListUL" data-inset="true">
-					<li data-icon="false">
-						<h2>2015/1~2015/8</h2>
-						<div>
-							<label for="beginDate">开始时间:</label> <input type="date"
-								name="beginDate" id="beginDate" value="" class="required">
-							<label for="endDate">结束时间:</label> <input type="date"
-								name="endDate" id="endDate" value="" class="required"> <label
-								for="company">公司:</label> <input type="text" name="company"
-								id="company" value="" class="required"> <label
-								for="industry" class="select">行业:</label> <select
-								name="industry" id="industry" data-native-menu="false">
-								    
-								<option>行业</option>     
-								<option value="njgulou">销售</option>     
-								<option value="njqinhuai">餐饮、酒店</option>     
-								<option value="njbaixia">美容美发</option>     
-								<option value="njqixia">零售、百货</option>
-								<option value="njjianye">技工、工人</option>
-								<option value="njyuhua">人事、行政</option>
-								<option value="njjiangning">客服</option>
-
-								<option value="njjiangning">教育、培训</option>
-								<option value="njjiangning">家政、安保</option>
-								<option value="njjiangning">保险</option>
-								<option value="njjiangning">账务、审计</option>
-								<option value="njjiangning">实习生</option>
-
-							</select> <label for="post" class="select">职位:</label> <select name="post"
-								id="post" data-native-menu="false">     
-								<option>职位</option>     
-								<option value="njgulou">学生兼职</option>     
-								<option value="njqinhuai">小时工</option>     
-								<option value="njbaixia">实习生</option>     
-								<option value="njqixia">促销</option>
-								<option value="njjianye">家教</option>
-								<option value="njyuhua">传单派发</option>
-								<option value="njjiangning">模特</option>
-
-							</select> <label for="workContent">工作内容:</label>
-							<textarea cols="40" rows="8" name="workContent" id="workContent"
-								data-mini="true">工作内容</textarea>
-						</div>
-						<div class="ui-grid-a">
-							<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-								<a href="#"
-									class="ui-btn  ui-btn-inline ui-corner-all ui-icon-delete ui-btn-icon-notext ui-mini">删除</a>
-							</div>
-							<div class="ui-block-b" style="text-align: center;" id="workDiv">
-								<a href="#"
-									class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext ui-mini">增加</a>
-							</div>
-						</div>
-					</li>
-
-				</ul>
-
-				<label for="selfdesc">自我评价:</label>
-				<textarea cols="40" rows="8" name="selfdesc" id="selfdesc" required="required" placeholder="让用人单位更好了解你"
-								data-mini="true"></textarea>
-				<label for="verifyCode">验证码:</label>
-				<div style="display: inline-flex; width: 100%">
-					<div style="width: 70%; height: 100%;">
-						<input type="text" name="verifyCode" id="verifyCode" value=""
-							placeholder="验证码" required="required" >
-					</div>
-					<a data-mini="true" href="#"
-						style="width: 30%; height: 100%; margin-top: 8px;"><img id="verifyImg"
-						src=""></img></a>
+		<div data-role="content" class="ui-mini">
+			<form method="post" onsubmit="return publish()" action="">
+				<div data-role="fieldcontain">
+					<label for="resumeName">简历名称:</label> <input type="text"
+						name="resumeName" id="resumeName" value="" required="required">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="realName">真实姓名:</label> <input type="text" name="realName"
+						id="realName" value="" required="required">
+				</div>
+				<div data-role="fieldcontain">
+                    <label for="cellphone">联系手机:</label> <input type="text" name="cellphone"
+                        id="cellphone" value="" required="required">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="email">联系邮箱:</label> <input type="text" name="email"
+                        id="email" value="" required="required">
+                </div>
+				<div data-role="fieldcontain">
+					<label for="sex" class="select">性别:</label> <select name="sex"
+						id="sex" data-native-menu="false">
+						<option value="male" selected>男</option>
+						<option value="female">女</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="resumeType" class="select">简历类型:</label> <select
+						name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+
+						<option value="partTime" selected>兼职</option>
+						<option value="fullTime">全职</option>+END+
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="expectPost" class="select">期望职位:</label> <select name="expectPost" multiple="multiple"
+						id="expectPost" data-native-menu="false">
+						<option value="xuesheng" selected>学生兼职</option>
+						<option value="xiaoshigong">小时工</option>
+						<option value="shixisheng">实习生</option>
+						<option value="chuxiao">促销</option>
+						<option value="jiajiao">家教</option>
+						<option value="chuangdan">传单派发</option>
+						<option value="mote">模特</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="expectWorkArea" class="select">期望区域:</label> <select name="expectWorkArea" multiple="multiple"
+						id="expectWorkArea" data-native-menu="false">
+						<option value="njgulou" selected>鼓楼</option>
+						<option value="njqinhuai">秦淮</option>
+						<option value="njbaixia">白下</option>
+						<option value="njqixia">栖霞</option>
+						<option value="njjianye">建邺</option>
+						<option value="njyuhua">雨花</option>
+						<option value="njjiangning">江宁</option>
+						<option value="njpukou">浦口</option>
+						<option value="njdachang">大厂</option>
+						<option value="njliuhe">六合</option>
+						<option value="njgaochun">高淳</option>
+						<option value="njlishui">溧水</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="daySallary">期望日薪:</label><input type="range"
+						name="daySallary" id="daySallary" value="100" min="0" max="1000">
 				</div>
 
+				<div data-role="fieldcontain">
+					<label for="dayCharge">期望工资当天结算:</label> <select name="dayCharge"
+						id="dayCharge" data-native-menu="false">
+						<option value="no">No</option>
+						<option value="yes" selected="">Yes</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for=foodAndLodging>期望提供食宿:</label><select
+						name="foodAndLodging" id="foodAndLodging" data-native-menu="false">
+						<option value="no">No</option>
+						<option value="yes" selected="">Yes</option>
+					</select>
+				</div>
+
+
+				<div data-role="fieldcontain">
+					<label for="degree" class="select">学历:</label> <select
+						name="degree" id="degree" data-native-menu="false">
+						<option value="gaozhong" selected>高中</option>
+						<option value="bengke">本科</option>
+						<option value="suoshi">硕士</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="experience" class="select">工作经验(年):</label> <input
+						type="text" name="experience" id="experience" value="0"
+						required="required" placeholder="工作经验(年)" pattern="[0-9]{1,2}"
+						title="必须是整数">
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="eduListUL">教育经历:</label>
+					<ul data-role="listview" id="eduListUL" data-inset="true">
+						<li data-icon="false">
+							<h2>2015/1~2015/8</h2>
+							<div>
+								<label for="beginDate">开始时间:</label> <input type="date"
+									name="beginDate" id="beginDate" value="" class="required">
+								<label for="endDate">结束时间:</label> <input type="date"
+									name="endDate" id="endDate" value="" class="required">
+								<label for="school">学校:</label> <input type="text" name="school"
+									id="school" value="" class="required"> <label
+									for="major">专业:</label> <input type="text" name="major"
+									id="major" value="" class="required">
+
+							</div>
+							<div class="ui-grid-a">
+								<div class="ui-block-a" style="text-align: center;" id="foodDiv">
+									<a href="#"
+										class="ui-btn  ui-btn-inline ui-corner-all ui-icon-delete ui-btn-icon-notext ui-mini">删除</a>
+								</div>
+								<div class="ui-block-b" style="text-align: center;" id="workDiv">
+									<a href="#"
+										class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext ui-mini">增加</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+
+				</div>
+				<div data-role="fieldcontain">
+					<label for="workHisListUL">工作经历:</label>
+					<ul data-role="listview" id="workHisListUL" data-inset="true">
+						<li data-icon="false">
+							<h2>2015/1~2015/8</h2>
+							<div>
+								<label for="beginDate">开始时间:</label> <input type="date"
+									name="beginDate" id="beginDate" value="" class="required">
+								<label for="endDate">结束时间:</label> <input type="date"
+									name="endDate" id="endDate" value="" class="required">
+								<label for="company">公司:</label> <input type="text"
+									name="company" id="company" value="" class="required">
+								<label for="industry" class="select">行业:</label> <select
+									name="industry" id="industry" data-native-menu="false">
+									<option>行业</option>
+									<option value="njgulou">销售</option>
+									<option value="njqinhuai">餐饮、酒店</option>
+									<option value="njbaixia">美容美发</option>
+									<option value="njqixia">零售、百货</option>
+									<option value="njjianye">技工、工人</option>
+									<option value="njyuhua">人事、行政</option>
+									<option value="njjiangning">客服</option>
+
+									<option value="njjiangning">教育、培训</option>
+									<option value="njjiangning">家政、安保</option>
+									<option value="njjiangning">保险</option>
+									<option value="njjiangning">账务、审计</option>
+									<option value="njjiangning">实习生</option>
+
+								</select> <label for="post" class="select">职位:</label> <select
+									name="post" id="post" data-native-menu="false">
+									<option>职位</option>
+									<option value="njgulou">学生兼职</option>
+									<option value="njqinhuai">小时工</option>
+									<option value="njbaixia">实习生</option>
+									<option value="njqixia">促销</option>
+									<option value="njjianye">家教</option>
+									<option value="njyuhua">传单派发</option>
+									<option value="njjiangning">模特</option>
+
+								</select> <label for="workContent">工作内容:</label>
+								<textarea cols="40" rows="8" name="workContent" id="workContent"
+									data-mini="true">工作内容</textarea>
+							</div>
+							<div class="ui-grid-a">
+								<div class="ui-block-a" style="text-align: center;" id="foodDiv">
+									<a href="#"
+										class="ui-btn  ui-btn-inline ui-corner-all ui-icon-delete ui-btn-icon-notext ui-mini">删除</a>
+								</div>
+								<div class="ui-block-b" style="text-align: center;" id="workDiv">
+									<a href="#"
+										class="ui-btn ui-btn-inline ui-corner-all ui-icon-plus ui-btn-icon-notext ui-mini">增加</a>
+								</div>
+							</div>
+						</li>
+
+					</ul>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="selfreview">自我评价:</label>
+					<textarea cols="40" rows="8" name="selfreview" id="selfreview"
+						required="required" placeholder="让用人单位更好了解你" data-mini="true"></textarea>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="verifyCode">验证码:</label>
+					<div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required="required">
+						</div>
+						<a data-mini="true" href="#"
+							style="width: 30%; height: 100%; margin-top: 8px;"><img
+							id="verifyImg" src=""></img></a>
+					</div>
+				</div>
 				<button type="submit" class="ui-btn">提交</button>
 			</form>
 		</div>

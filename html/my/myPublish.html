@@ -11,33 +11,86 @@
 
 
 <style>
-.msgStatus {
-	background: #26c281;
-	border-radius: 50%;
-	width: 9px;
-	height: 9px;
-	position: absolute;
-	top: 31px;
-	right: 17px;
-}
 
-.msgStatus.active {
-	background: #26c281;
-}
-
-.msgStatus.inactive {
-	background: #eaeef0;
-}
 </style>
 
 <script type="text/javascript">
+$(document).ready(
+        function() {
+        	getWorkList();
+        });
 function swipeRight(){
 	closeSubPage();
 }
-function openWork(obj) {
-	var workid = obj.workid;
-	changeSubPage('workDetail', 'myPubPage', 'workid=' + workid);
-}	
+function openWorkDetail(obj) {
+	var workId = $(obj).attr('workId');
+	changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
+}
+
+function openReqWorkDetail(obj){
+	var workId = $(obj).attr('workId');
+    changeSubPage('reqWorkDetail', 'myPubPage', 'workId=' + workId);
+}
+
+function getWorkList() {
+    $('#workListUL').html('');
+    var workInfo = {};
+    var cachedUserInfo = str2Json(localStorage.userInfo);
+    if (cachedUserInfo != null) {
+        workInfo.userId = cachedUserInfo.userId;
+        workInfo.userToken = cachedUserInfo.userToken;
+        workInfo.page = '1';
+        workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+
+        ajaxReq('workAction', {
+            method : 'getWorkList',
+            workInfo : json2Str(workInfo)
+        }, function(data) {
+            if (data.flag != 'fail') {
+                var lihtmls = '';
+                for(var i=0;data.length>i;i++){
+                    var workObj = data[i];
+                    var lihtml = '<li><a onclick="openWorkDetail(this)" workId="'+workObj.workId+'"><h3>'+workObj.workName+'</h3><p>'+workObj.workType+'</p><p>发布时间:'+workObj.createDate+',失效时间:'+workObj.expDate+'</p></a></li>';
+                    lihtmls += lihtml;
+                }
+                $('#workListUL').append(lihtmls);
+                $('#workListUL').listview("refresh");
+            } else {
+                alert(data.msg);
+            }
+        });
+    }
+}
+
+function getReqWorkList() {
+    $('#reqWorkListUL').html('');
+    var workInfo = {};
+    var cachedUserInfo = str2Json(localStorage.userInfo);
+    if (cachedUserInfo != null) {
+        workInfo.userId = cachedUserInfo.userId;
+        workInfo.userToken = cachedUserInfo.userToken;
+        workInfo.page = '1';
+        workInfo.workType = 'reqPartTime,reqFullTime';//兼职/全职类求职
+
+        ajaxReq('workAction', {
+            method : 'getWorkList',
+            workInfo : json2Str(workInfo)
+        }, function(data) {
+            if (data.flag != 'fail') {
+                var lihtmls = '';
+                for(var i=0;data.length>i;i++){
+                    var workObj = data[i];
+                    var lihtml = '<li><a onclick="openReqWorkDetail(this)" workId="'+workObj.workId+'"><h3>'+workObj.workName+'</h3><p>'+workObj.workType+'</p><p>发布时间:'+workObj.createDate+',失效时间:'+workObj.expDate+'</p></a></li>';
+                    lihtmls += lihtml;
+                }
+                $('#reqWorkListUL').append(lihtmls);
+                $('#reqWorkListUL').listview("refresh");
+            } else {
+                alert(data.msg);
+            }
+        });
+    }
+}
 </script>
 </head>
 <body>
@@ -54,7 +107,7 @@ function openWork(obj) {
 				<ul>
 					<li><a href="#workList" class="ui-btn-active"
 						id="">招聘</a></li>
-					<li><a href="#reqworkList">求职</a></li>
+					<li><a href="#reqworkList" onclick="getReqWorkList()">求职</a></li>
 					<!-- <li><a href="#messageList"
 						id="messageTabLi">商品</a></li>
 					<li><a href="#friendList">拼活动</a></li> -->
@@ -81,7 +134,7 @@ function openWork(obj) {
 				</ul>
 			</div>
 			<div id="reqworkList">
-				<ul data-role="listview">
+				<ul data-role="listview" id="reqWorkListUL">
 					<li data-icon="false"><a onclick="openWork(this)" workid="1"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">

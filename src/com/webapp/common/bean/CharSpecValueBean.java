@@ -34,6 +34,12 @@ public class CharSpecValueBean extends AbstractBean{
 	public void setRealValue(String userName) {
 		setAttrValue("REAL_VALUE",userName);
 	}
+	public String getSelected() {
+		return DataTypeTrans.transToString(getAttrValue("SELECTED"));
+	}
+	public void setSelected(String userName) {
+		setAttrValue("SELECTED",userName);
+	}
 	
 	
 	public String getCreateDate() {

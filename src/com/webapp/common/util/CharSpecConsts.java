@@ -36,9 +36,8 @@ public class CharSpecConsts {
 	public static String getCode(Long charId) throws Exception{
 		if (charMap.containsKey(charId)){
 			return charMap.get(charId);
-		}else{
-			throw new Exception("charid="+charId+"未定义");
 		}
+		return "";
 	}
 	
 	public static Long getCharId(String code) throws Exception{
@@ -51,8 +50,6 @@ public class CharSpecConsts {
 					return (Long)ent.getKey();
 				}
 			}
-		}else{
-			throw new Exception("code="+code+"未定义");
 		}
 		return 0L;
 	}

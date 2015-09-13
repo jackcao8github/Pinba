@@ -2,6 +2,7 @@ package com.webapp.common.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public abstract class AbstractDAO {
 	protected void updateBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.updateSql();
-		if (sqlAndParams==null){
-			return ;
+		if (sqlAndParams == null) {
+			return;
 		}
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
@@ -46,20 +47,23 @@ public abstract class AbstractDAO {
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
-	protected List<AbstractBean> getBeans(final Class clazz, Map<String, String> params) {
+	protected List<AbstractBean> getBeans(final Class clazz, Map<String, Object> params) {
 		return getBeans(clazz, params, false);
 	}
-	protected AbstractBean getBean(final Class clazz, Map<String, String> params) {
+
+	protected AbstractBean getBean(final Class clazz, Map<String, Object> params) {
 		List beans = getBeans(clazz, params, false);
-		
-		if (beans ==null||beans.size()==0){
+
+		if (beans == null || beans.size() == 0) {
 			return null;
-		}else{
+		} else {
 			return (AbstractBean) beans.get(0);
 		}
 	}
 
-	protected List<AbstractBean> getBeans(final Class clazz, Map<String, String> params, boolean forupdate) {
+	private Map<Class, AbstractBean> cachedBeans = new HashMap();
+
+	protected List<AbstractBean> getBeans(final Class clazz, Map<String, Object> params, boolean forupdate) {
 		PreparedSqlAndParams sqlAndParams = null;
 		List result = null;
 		try {
@@ -68,23 +72,35 @@ public abstract class AbstractDAO {
 			result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args, new RowMapper() {
 				@Override
 				public Object mapRow(ResultSet resultset, int i) throws SQLException {
-				
-						AbstractBean bean = null;
-						try {
-							bean = (AbstractBean) clazz.newInstance();
-						} catch (InstantiationException e) {
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
+					AbstractBean bean = null;
+					try {
+						//深拷贝生成新对象，提高效率
+						if (cachedBeans.containsKey(clazz)) {
+							AbstractBean cachedBean = cachedBeans.get(clazz);
+							bean = cachedBean.deepCopy();
+						} else {
+							AbstractBean newbean = (AbstractBean) clazz.newInstance();
+							cachedBeans.put(clazz, newbean);
+
+							bean = (AbstractBean) newbean.deepCopy();
 						}
 						int count = resultset.getMetaData().getColumnCount();
 						for (int ii = 1; ii <= count; ii++) {
 							String colName = resultset.getMetaData().getColumnName(ii);
 
-							bean.setAttrValue(colName, resultset.getObject(ii));
+							bean.setAttrValue(colName.toUpperCase(), resultset.getObject(ii));
 						}
-						return bean;
-					
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					return bean;
 				}
 			});
 		} catch (InstantiationException e1) {

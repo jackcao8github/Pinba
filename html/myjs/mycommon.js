@@ -1,48 +1,61 @@
-document.write('<script type="text/javascript" src="../js/json2.js"');//引入json库
-
-//校验不可空控件
-/*function checkFormNullable(parentControlId){
-	var checkMsg = '';
-	$("#" + parentControlId + " input[name],#" + parentControlId + " select[name],#" + parentControlId + " textarea[name]").each(function(index,item){
-		if ($(item).val()==''){
-			var controlId=$(item).attr('id');
-			var controlName = $('[for="'+controlId+'"').html();
-			if (controlName!=null)
-				controlName = controlName.replace(':','');
-			
-			if (checkMsg!=''){
-				checkMsg = checkMsg + ',';
-			}
-			checkMsg = checkMsg+controlName;
+document.write('<script type="text/javascript" src="../js/json2.js"></script>');// 引入json库
+document.write('<script type="text/javascript" src="../myjs/charspecvalue.js"></script>');// 引入json库
+// 取url带入的所有页面参数
+function getRequest() {
+	var url = location.search; // 获取url中"?"符后的字串
+	var theRequest = new Object();
+	if (url.indexOf("?") != -1) {
+		var str = url.substr(1);
+		strs = str.split("&");
+		for ( var i = 0; i < strs.length; i++) {
+			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
 		}
-	});
-	if (checkMsg!=''){
-		alert(checkMsg+"不能为空!");
-		return false;
 	}
-	return true;
-}
-*/
-/*json对象转换成字符串*/
-function json2Str(jsonData){
-	if (jsonData==null)
-		return null;
-	return JSON.stringify(jsonObj);
+	return theRequest;
 }
 
-function str2Json(str){
-	if (str==null||str.length==0)
+//取url带入的指定名称的页面参数
+function getQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null)
+		return unescape(r[2]);
+	return null;
+}
+
+// 校验不可空控件
+/*
+ * function checkFormNullable(parentControlId){ var checkMsg = ''; $("#" +
+ * parentControlId + " input[name],#" + parentControlId + " select[name],#" +
+ * parentControlId + " textarea[name]").each(function(index,item){ if
+ * ($(item).val()==''){ var controlId=$(item).attr('id'); var controlName =
+ * $('[for="'+controlId+'"').html(); if (controlName!=null) controlName =
+ * controlName.replace(':','');
+ * 
+ * if (checkMsg!=''){ checkMsg = checkMsg + ','; } checkMsg =
+ * checkMsg+controlName; } }); if (checkMsg!=''){ alert(checkMsg+"不能为空!");
+ * return false; } return true; }
+ */
+/* json对象转换成字符串 */
+function json2Str(jsonData) {
+	if (jsonData == null)
+		return null;
+	return JSON.stringify(jsonData);
+}
+
+function str2Json(str) {
+	if (str == null || str.length == 0)
 		return null;
 	return JSON.parse(str);
 }
 
-/*取随机数*/
+/* 取随机数 */
 function GetRandomNum(Min, Max) {
 	var Range = Max - Min;
 	var Rand = Math.random();
 	return (Min + Math.round(Rand * Range));
 }
-/*获取contextpath*/
+/* 获取contextpath */
 function getContextPath() {
 	var parentSrc = window.location.pathname;
 	parentSrc = parentSrc.substring(1, parentSrc.length);
@@ -127,6 +140,7 @@ var idHtmlMap = {
 	"changePass" : "my/changePass.html",
 	"work" : "publish/work.html",
 	"reqwork" : "publish/reqwork.html",
+	"reqWorkDetail" : "home/reqWorkDetail.html",
 	"userContract" : "my/userContract.html",
 	"resumeDetail" : "my/resumeDetail.html",
 	"editResumeDetail" : "my/editResumeDetail.html",
@@ -137,14 +151,19 @@ var idHtmlMap = {
 /* 显示子页面，隐藏原页面 */
 function changeSubPage(newpageid, oldpageid, params) {
 	if (parent.$('#indexPage').length > 0) {
-		parent.$('#footNavBar').hide();
 		// 刷新parent.displayFrameId的高度
+		console.log(parent.$('#indexPage').css('height'));
 		var newh = parent.window.innerHeight
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
+		
 		parent.$('#' + parent.displayFrameId).css('height', newh + 'px');
+		console.log(parent.$('#indexPage').css('height'));
+		parent.$('#footNavBar').hide();
+		console.log(parent.$('#indexPage').css('height'));
 	}
-
+	$('#' + oldpageid).hide();
+	console.log(parent.$('#indexPage').css('height'));
 	var clientWindowHeight = window.innerHeight
 			|| document.documentElement.clientHeight
 			|| document.body.clientHeight;
@@ -175,7 +194,8 @@ function changeSubPage(newpageid, oldpageid, params) {
 	}
 	// 如果没有otherpage iframe,则在body里创建一个iframe
 	if ($('#otherPage').length == 0) {
-		$('<iframe src="#" style="border:0;display: none;width:'
+		$(
+				'<iframe src="#" style="border:0;margin:0;display: none;width:'
 						+ clientWindowWidth + 'px;height:' + clientWindowHeight
 						+ 'px;" id="otherPage"/>').appendTo('body');
 		if (params != null) {
@@ -189,7 +209,8 @@ function changeSubPage(newpageid, oldpageid, params) {
 				newsrc = newsrc + '?' + params;
 			}
 			$('#otherPage').remove();
-			$('<iframe src="#" style="border:0;display: none;width:'
+			$(
+					'<iframe src="#" style="border:0;margin:0;display: none;width:'
 							+ clientWindowWidth + 'px;height:'
 							+ clientWindowHeight + 'px;" id="otherPage"/>')
 					.appendTo('body');
@@ -198,7 +219,6 @@ function changeSubPage(newpageid, oldpageid, params) {
 	}
 
 	$('#otherPage').show();
-	$('#' + oldpageid).hide();
 }
 
 /* 关闭子页面 */
@@ -211,7 +231,8 @@ function closeSubPage(destpageid) {
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
 
-		parent.parent.$('#' + parent.parent.displayFrameId).css('height',newh + 'px');
+		parent.parent.$('#' + parent.parent.displayFrameId).css('height',
+				newh + 'px');
 	}
 	parent.$('#otherPage').hide();
 	if (destpageid == null) {
@@ -267,4 +288,80 @@ function showConfirmDialog(confirmMsg, okFun) {
 	var popObj = $('#confirmMsgDialog');
 	popObj.popup();
 	$('#confirmMsgDialog').popup("open");
+}
+
+/*
+ * 显示信息项修改对话框 infoCode为信息项编码，也是控件id
+ */
+function showModDialog(infoCode) {
+	// 删除已有提示框
+	if ($('#modDialog').length > 0) {
+		$('#modDialog').remove();
+	}
+	// 创建信息项修改对话框
+	var html = '<div data-role="popup" id="modDialog" data-confirmed="no" data-transition="pop" data-dismissible="false">\
+		<div role="main" class="ui-content">+CONTENT+\
+		</div></div>';
+
+	// 根据infoCode指定的信息项来决定是显示下拉框，还是显示输入框
+	var infoType = '';
+	var maxInfoLength = 10;
+	var oldValue = $('#infoCode').html();
+
+	var formHtml = '<form action="" onsubmit="return modConfirm()">';
+	if (infoType == 'enum') {
+		var isMulti = 'yes';
+
+		var selectHtml = '<fieldset data-role="controlgroup"> ';
+
+		if (isMulti == 'yes') {
+			selectHtml += '<input type="checkbox" name="checkbox-1a" id="checkbox-1a" checked="">\
+			    <label for="checkbox-1a">Cheetos</label> \
+			    <input type="checkbox" name="checkbox-2a" id="checkbox-2a">\
+			    <label for="checkbox-2a">Doritos</label>\
+			    <input type="checkbox" name="checkbox-3a" id="checkbox-3a">\
+			    <label for="checkbox-3a">Fritos</label>\
+			    <input type="checkbox" name="checkbox-4a" id="checkbox-4a">\
+			    <label for="checkbox-4a">Sun Chips</label>';
+		} else {
+			selectHtml += '<input type="radio" name="dialogCtrlId" id="checkbox-1a" checked="">\
+				    <label for="checkbox-1a">Cheetos</label> \
+				    <input type="radio" name="dialogCtrlId" id="checkbox-2a">\
+				    <label for="checkbox-2a">Doritos</label>\
+				    <input type="radio" name="dialogCtrlId" id="checkbox-3a">\
+				    <label for="checkbox-3a">Fritos</label>\
+				    <input type="radio" name="dialogCtrlId" id="checkbox-4a">\
+				    <label for="checkbox-4a">Sun Chips</label>';
+		}
+
+		selectHtml += '</fieldset>';
+		formHmtl += selectHtml;
+	} else if (infoType == 'string') {
+		if (maxInfoLength > 1024) {// textarea
+			formHmtl += '<textarea cols="40" rows="8" type="textarea" name="dialogCtrlId" id="dialogCtrlId" required="required" placeholder=""></textarea>';
+		} else {// 普通输入框
+			formHmtl += '<input type="text" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required="required" placeholder="">';
+		}
+	} else if (infoType == 'number') {
+		formHmtl += '<input type="text" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required="required" placeholder="必须是整数" pattern="[0-9]{1,3}" title="必须是整数">';
+	} else if (infoType == 'date') {
+		formHmtl += '<input type="date" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required="required">';
+	}
+
+	formHmtl += '<button class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b optionConfirm" type="submmit">提交</button>';
+	formHmtl += '<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b optionCancel" data-rel="back" data-transition="flow">取消</a>';
+	formHmtl += '</form>';
+
+	$(html).appendTo('body');
+	var popObj = $('#modDialog');
+	popObj.popup();
+	$('#modDialog').popup("open");
+}
+
+function modConfirm() {
+	var newValue = '';
+	newValue = $('#dialogCtrlId').html();
+
+	$('#infoCode').html(newValue);
+	$('#modDialog').popup("close");
 }

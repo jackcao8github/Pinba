@@ -19,8 +19,8 @@
 	function swipeRight() {
 		closeSubPage();
 	}
+	var workId = 0;
 	$(document).ready(function() {
-
 		//为关注按钮增加响应事件
 		$('#favBtn').bind('click', function() {
 			var css = $(this).find('i').attr('class');
@@ -42,17 +42,61 @@
 		$('#shopcartBtn').bind('click', function() {
 
 		});
+
+		workId = getQueryString('workId');
+		if (workId > 0) {
+			$('#title').html('修改工作');
+			pageInit();
+		}
 	});
-	
-	function openWork(obj){
-		var workid = obj.workid;
-		changeSubPage('workDetail', 'workdetailPage');
+
+	function pageInit() {
+		var workInfo = {};
+		if (workId > 0) {
+			workInfo.workId = workId;
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			workInfo.userToken = cachedUserInfo.userToken;
+
+			ajaxReq('workAction', {
+				method : 'getWorkInfo',
+				workInfo : json2Str(workInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					bindData(data);
+				} else {
+					alert(data.msg);
+				}
+			});
+		}
+	}
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				//处理下拉框采集的数据
+				var realValue = jsonData[o];
+				var displayValue = getDisplayEnumValue(o, realValue);
+				if (displayValue == realValue) {//没有显示值则用realValue显示
+					ctrl.html(realValue);
+				} else {
+					ctrl.html(displayValue);
+				}
+			}
+		}
+	}
+	function modWork() {
+		changeSubPage('work', 'workdetailPage', 'workId=' + workId);
 	}
 </script>
 
 
 <style type="text/css">
-li{padding:0em 1em}
+li {
+	padding: 0em 1em
+}
 </style>
 
 </head>
@@ -65,241 +109,202 @@ li{padding:0em 1em}
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
-			<h1>工作详情</h1>
+			<h1 id="workName">工作详情</h1>
+			<a onclick="modWork()" id="modBtn"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改工作</a>
 		</div>
 		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">招聘营业员(江宁)<span class="ui-li-count">2人关注</span></li>
-			<li data-icon="false" style="padding:0em 1em">
+			<li data-role="list-divider">基本信息<span class="ui-li-count">2人关注</span></li>
+			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>人数:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>不限</p>
+						<p id="numberOfRecruit"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>区域:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>江宁</p>
+						<p id="workArea"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>地址:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>河定桥</p>
+						<p id="address"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>职位:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p id="post"></p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>发布时间:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>2015-9-1 23:06</p>
+						<p id="createDate"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>截止时间:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>2015-9-30 23:06</p>
+						<p id="expDate"></p>
 					</div>
 				</div>
 			</li>
 			<li data-role="list-divider">待遇</li>
-			<li data-icon="false" style="padding:0em 1em">
+			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>日薪:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>100元</p>
+						<p id="daySallary"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>工资当天结算:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>是</p>
+						<p id="dayCharge"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>提供食宿:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>是</p>
+						<p id="foodAndLodging"></p>
 					</div>
 				</div>
 			</li>
 			<li data-role="list-divider">要求</li>
-			<li data-icon="false" style="padding:0em 1em">
+			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>学历:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>不限</p>
+						<p id="expectDegree"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>工作经验:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>不限</p>
+						<p id="expectExperience"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>年龄:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>不限</p>
+						<p id="expectAge"></p>
 					</div>
 				</div>
 			</li>
 			<li data-role="list-divider">工作内容</li>
-			<li data-icon="false" style="padding:0em 1em">
-				<p style="white-space: pre-line;">（1）在所指派的岗位内招呼客人，留意客人进餐情况，服从上司指派，为客人提供良好服务。
-					（2）按照工作程序和标准做好各项工作，如换台布、摆台、收拾餐具，准备餐具及作好清洁卫生等。
-					（3）每日按时凭单到仓库领取日用品(可由领班负责或接受领班交待)。 （4）了解每日供应菜式及酒水以便介绍给客人。
-					（5）为客人上菜、分菜、斟酒，收换餐具，服务客人就餐。
-					（6）注意客人所点的菜品。尽量帮助客人解决就餐过程中的各类问题。若自己不能解决的可及时反映请示领班。
-					（7）尽量避免用具破损，轻拿轻放，使自己工作尽责。 （8）负责好餐后各项收尾工作，清洁好当值卫生，交接好。</p>
+			<li data-icon="false" style="padding: 0em 1em">
+				<p style="white-space: pre-line;" id="content"></p>
 			</li>
+
+		</ul>
+		<ul data-role="listview" id="companyInfoUL">
 			<li data-role="list-divider">公司信息<span class="ui-li-count"><div
 						style="float: right; color: #f63">
 						<i class="fa fa-star"></i><i class="fa fa-star"></i><i
 							class="fa fa-star"></i><i class="fa fa-star"></i><i
 							class="fa fa-star-half-full"></i>
 					</div></span></li>
-			<li data-icon="false" style="padding:0em 1em">
+			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司名称:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;">xxx店</p>
+						<p style="white-space: pre-line;" id="companyUserName"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司介绍:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;">怎样怎样的好</p>
+						<p style="white-space: pre-line;" id="companyDesc"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司地址:</p>
 					</div>
 					<div style="float: left; width: 70%">
 						<p>
-						<p style="white-space: pre-line;">江宁-上元大街南京市江宁区（万达E座对面）上元大街336号爱婴岛旁</p>
+						<p style="white-space: pre-line;" id="companyAddress"></p>
 						</p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>电话:</p>
 					</div>
-					<div style="float: left; width: 70%">
-						<p>025-52160001</p>
+					<div style="float: left; width: 70%" id="companyFixphone">
+						<p></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>邮箱:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>xxx@qq.com</p>
+						<p id="companyEmail"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
-					<div style="float: left; width: 30%;color:#a3a3a3">
+					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>网址:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>www.dd.com</p>
+						<p id="companyUrl"></p>
 					</div>
 				</div>
 			</li>
-
-
-			<li data-role="list-divider">该公司其它招聘<span class="ui-li-count">2</span></li>
-			<li data-icon="false" style="padding:0em 1em">
-				<ul data-role="listview" id="workList">
-					<li data-icon="false" onclick="openWork(this)" workid="1"><a
-						href="#" class="ui-btn ui-mini">
-							<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<div style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</div>
-							</div>
-							<p class="ui-li-aside">
-								<strong>22:23 PM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a href="#" class="ui-btn ui-mini">
-							<h2>招聘营业员(江宁)</h2> <!--招聘标题-->
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限|经验不限|年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<div style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</div>
-							</div>
-							<p class="ui-li-aside">
-								<strong>22:23 PM</strong>
-							</p>
-					</a></li>
-				</ul>
-			</li>
+			<li><a href="#">该公司其它招聘<span class="ui-li-count">2</span></a></li>
 		</ul>
 
-
-
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false">
-			<div data-role="navbar" data-grid="b">
+			data-tap-toggle="false" class="ui-bar">
+			<div data-role="controlgroup" data-type="horizontal">
+				<a href="index.html" data-role="button" data-icon="plus">关注</a> <a
+					href="index.html" data-role="button" data-icon="mail">投递简历</a>
+			</div>
+			<!-- <div data-role="navbar" data-grid="b">
 				<ul style="text-align: center; padding: 5px 0">
-					<!-- 关注 -->
+					关注
 					<li id="favBtn" style="width: 20%"><a class="ui-btn">关注</a></li>
-					<!-- 分享 -->
+					分享
 					<li id="shareBtn" style="width: 20%"><a class="ui-btn">咨询</a></li>
-					<!-- 发送简历 -->
+					发送简历
 					<li id="buyBtn" style="width: 60%;"><a data-role="button"
 						style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">投递简历</a></li>
 
 				</ul>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </body>

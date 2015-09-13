@@ -30,7 +30,7 @@
 		var userInfo = {};
 		userInfo.userName = userName;
 		userInfo.password = $.md5(password);
-		;
+		
 		userInfo.msgverifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.userType = "private";
@@ -40,59 +40,11 @@
 			userInfo : json2Str(userInfo)
 		}, function(data) {
 			if (data.flag == 'success') {
-				localStorage.userId = data.userId;
-				localStorage.userName = data.userName;
-				localStorage.userToken = data.userToken;
-				localStorage.userType = data.userType;
-				localStorage.userCredit = data.userCredit;
-				localStorage.userLevel = data.userLevel;
-				localStorage.balance = data.balance;
-				localStorage.points = data.points;
-				localStorage.userAuthState = data.userAuthState;
+				localStorage.userInfo = json2Str(data);//
 				closeSubPage();
 			} else {
 				alert(data.msg);
 				return false;
-			}
-		});
-		return false;
-	}
-	function reg4Company() {
-		var cellphone = $('#tel').val();
-		var password = $('#password').val();
-		var verifyCode = $('#msgverifyCode').val();
-		var companyName = $('#name').val();
-		var companyAddress = $('#address').val();
-		var companySize = $('#size').val();
-		var companyIndustry = $('#type').val();
-
-		var userInfo = {};
-		userInfo.userName = companyName;
-		userInfo.password = password;
-		userInfo.msgverifyCode = verifyCode;
-		userInfo.cellphone = cellphone;
-		userInfo.address = companyAddress;
-		userInfo.companySize = companySize;
-		userInfo.companyIndustry = companyIndustry;
-		userInfo.userType = "company";
-
-		ajaxReq('userAction', {
-			method : 'newUser',
-			userInfo : json2Str(userInfo)
-		}, function(data) {
-			if (data.flag == 'success') {
-				localStorage.userId = data.userId;
-				localStorage.userName = data.userName;
-				localStorage.userToken = data.userToken;
-				localStorage.userType = data.userType;
-				localStorage.userCredit = data.userCredit;
-				localStorage.userLevel = data.userLevel;
-				localStorage.balance = data.balance;
-				localStorage.points = data.points;
-				localStorage.userAuthState = data.userAuthState;
-				closeSubPage();
-			} else {
-				alert(data.msg);
 			}
 		});
 		return false;

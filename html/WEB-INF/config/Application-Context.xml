@@ -14,7 +14,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://127.0.0.1:3306/mres</value>
+			<value>jdbc:mysql://127.0.0.1:3306/mres?useUnicode=true&amp;characterEncoding=UTF-8</value>
 		</property>
 		<property name="username">
 			<value>root</value>
@@ -42,7 +42,25 @@
 			<ref local="dataSource" />
 		</property>
 	</bean>
-	
+	<bean id="seqDAOProxy"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <ref local="seqDAO" />
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="seqDAO" class="com.webapp.common.dao.SysSeqDAO">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+    </bean>
 
 	<bean id="userDAOProxy"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
@@ -63,24 +81,63 @@
 			<ref local="dataSource" />
 		</property>
 	</bean>
+	<bean id="resumeDAOProxy"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <ref local="resumeDAO" />
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="resumeDAO" class="com.webapp.user.dao.ResumeManagerDAO">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+    </bean>
 	
-	<bean id="seqDAOProxy"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref bean="transactionManager" />
-		</property>
-		<property name="target">
-			<ref local="seqDAO" />
-		</property>
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="seqDAO" class="com.webapp.common.dao.SysSeqDAO">
-		<property name="dataSource">
-			<ref local="dataSource" />
-		</property>
-	</bean>
+	<bean id="workDAOProxy"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <ref local="workDAO" />
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="workDAO" class="com.webapp.work.dao.WorkManagerDAO">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+    </bean>
+    
+    <bean id="charDAOProxy"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <ref local="charDAO" />
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="charDAO" class="com.webapp.common.dao.CharSpecDAO">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+    </bean>
 </beans>

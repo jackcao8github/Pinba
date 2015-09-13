@@ -13,7 +13,7 @@ import com.webapp.user.bean.UserBean;
 
 public class SysSeqDAO extends AbstractDAO {
 	public long getNewId(String seqName) throws InstantiationException, IllegalAccessException {
-		Map<String, String> params = new HashMap();
+		Map<String, Object> params = new HashMap();
 		params.put("SEQ_NAME", seqName);
 
 		List result = getBeans(SysSeqBean.class, params, true);
@@ -31,7 +31,7 @@ public class SysSeqDAO extends AbstractDAO {
 	}
 
 	public long getNewId(String tabName, String colName) {
-		Map<String, String> params = new HashMap();
+		Map<String, Object> params = new HashMap();
 		params.put("TAB_NAME", tabName);
 		params.put("COL_NAME", colName);
 
