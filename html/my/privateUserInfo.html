@@ -14,26 +14,44 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		var cachedUserInfo = str2Json(localStorage.userInfo);
+		pageInit();
+	});
+	var userId = 0;
+	function pageInit(){
+		var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
-        	var userInfo = {};
-        	userInfo.userId = cachedUserInfo.userId;
-        	ajaxReq('userAction', {
+            var userInfo = {};
+            userId = cachedUserInfo.userId;
+            userInfo.userId = cachedUserInfo.userId;
+            ajaxReq('userAction', {
                 method : 'getUserInfo',
                 userInfo : json2Str(userInfo)
             }, function(data) {
                 if (data.flag == 'success') {//登陆成功后返回主页面
-                	$('#userName').html(data.userName);
-                    $('#sex').html(data.sex);
-                    $('#cellphone').html(data.cellphone);
-                    $('#email').html(data.email);
+                    bindData(data,'userInfoDiv');
                 } else {
                     alert(data.msg);
                     return false;
                 }
             });
         }
-	});
+	}
+	//绑定数据到控件
+    function bindData(jsonData,divId) {
+        for ( var o in jsonData) {
+            var ctrl = $('#'+divId+' #' + o);
+            if (ctrl.length > 0) {
+                //处理下拉框采集的数据
+                var realValue = jsonData[o];
+                var displayValue = getDisplayEnumValue(o, realValue);
+                ctrl.html(displayValue);
+            }
+        }
+    }
+	
+    function modUserInfo(){
+        changeSubPage('changePrivateUserInfo', 'userInfoPage', 'userId=' + userId);
+    }
 	function logout() {
 		localStorage.removeItem("userInfo");
 
@@ -49,9 +67,11 @@
 	<div data-role="page" id="userInfoPage">
 
 		<div data-role="header">
-			<a href="#" data-rel="back" class="button" data-icon="back"
+			<a href="#" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
 			<h1>用户信息</h1>
+			<a onclick="modUserInfo()" id="modBtn"
+                class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改用户信息</a>
 		</div>
 		<div class="login">
 			<img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
@@ -59,12 +79,12 @@
 		</div>
 		<!-- 第一块 -->
 		<div class="firstblock">
-			<ul data-role="listview" data-inset="true" data-mini="true">
-				<li><a href="#">昵称 <span class="ui-li-count" id="userName"></span></a></li>
-				<li><a href="#">性别 <span class="ui-li-count" id="sex"></span></a></li>
-				<li><a href="#">年龄 <span class="ui-li-count" id="age"></span></a></li>
-				<li><a href="#">手机 <span class="ui-li-count" id="cellphone"></span></a></li>
-				<li><a href="#">邮箱 <span class="ui-li-count" id="email"></span></a></li>
+			<ul data-role="listview" data-mini="true"  id="userInfoDiv">
+				<li data-icon="false" ><a href="#">昵称 <span class="ui-li-count" id="userName"></span></a></li>
+				<li data-icon="false" ><a href="#">性别 <span class="ui-li-count" id="sex"></span></a></li>
+				<li data-icon="false" ><a href="#">年龄 <span class="ui-li-count" id="age"></span></a></li>
+				<li data-icon="false" ><a href="#">手机 <span class="ui-li-count" id="cellphone"></span></a></li>
+				<li data-icon="false" ><a href="#">邮箱 <span class="ui-li-count" id="email"></span></a></li>
 			</ul>
 
 			<div class="h1"></div>

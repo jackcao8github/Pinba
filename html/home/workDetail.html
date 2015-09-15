@@ -8,11 +8,9 @@
 <link rel="stylesheet" href="../mycss/photoswipe.css" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<script src="../js/jquery-1.7.1.min.js"></script>
+<script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
-<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
-<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
@@ -21,50 +19,150 @@
 	}
 	var workId = 0;
 	$(document).ready(function() {
-		//为关注按钮增加响应事件
-		$('#favBtn').bind('click', function() {
-			var css = $(this).find('i').attr('class');
-			if (css.indexOf('fa-star-o') > 0) {
-				$(this).find('i').attr('class', 'fa fa-star fa-2x');
-			} else {
-				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
-			}
-		});
-		//为分享按钮增加响应事件
-		$('#shareBtn').bind('click', function() {
+		//为关注钮增加响应事件
+	   $('#addFocusBtn').bind('click',function() {
+											var cachedUserInfo = getLoginUserInfo();
+											if (cachedUserInfo != null) {
+												var focusInfo = {};
+												focusInfo.userToken = cachedUserInfo.userToken;
+												focusInfo.userId = cachedUserInfo.userId;
+												focusInfo.workId = workId;
 
-		});
-		//为购买按钮增加响应事件
-		$('#buyBtn').bind('click', function() {
+												ajaxReq(
+														'workAction',
+														{
+															method : 'addFocus',
+															focusInfo : json2Str(focusInfo)
+														},
+														function(data) {
+															if (data.flag == 'success') {
+																$(
+																		'#addFocusBtn')
+																		.html(
+																				data.focusNumber);
+															} else {
+																alert(data.msg);
+															}
+														});
+											}
+										});
+						//为投简历按钮增加响应事件
+						$('#sendResumeBtn')
+								.bind(
+										'click',
+										function() {
+											//列出用户已有的简历
+											$('#resumeList').html('');
+											var resumeInfo = {};
+											var cachedUserInfo = getLoginUserInfo();
+											if (cachedUserInfo != null) {
+												resumeInfo.userId = cachedUserInfo.userId;
+												resumeInfo.userToken = cachedUserInfo.userToken;
+												resumeInfo.page = '1';
 
-		});
-		//为加入购物车按钮增加响应事件
-		$('#shopcartBtn').bind('click', function() {
+												ajaxReq(
+														'resumeAction',
+														{
+															method : 'getResumeList',
+															resumeInfo : json2Str(resumeInfo)
+														},
+														function(data) {
+															if (data.flag != 'fail') {
+																if (data.length == 0) {
+																	alert("你还没有简历，需要先增加一上简历!");
+																	changeSubPage(
+																			'resume',
+																			'workdetailPage');
+																} else {
+																	var lihtmls = '<li data-role="list-divider">选择一个简历</li>';
 
-		});
+																	for ( var i = 0; data.length > i; i++) {
+																		var resumeobj = data[i];
+																		var lihtml = '<li><a onclick="sendResume(this)" resumeId="'
+																				+ resumeobj.resumeId
+																				+ '">'
+																				+ resumeobj.resumeName
+																				+ '</a></li>';
+																		lihtmls += lihtml;
+																	}
+																	$(
+																			'#resumeList')
+																			.append(
+																					lihtmls);
+																	$(
+																			'#resumeList')
+																			.listview(
+																					"refresh");
 
-		workId = getQueryString('workId');
-		if (workId > 0) {
-			$('#title').html('修改工作');
-			pageInit();
+																	//打开简历选择框
+																	$(
+																			'#popupMenu')
+																			.popup();
+																	$(
+																			'#popupMenu')
+																			.popup(
+																					'open');
+																}
+
+															} else {
+																alert(data.msg);
+															}
+														});
+											}
+										});
+
+						workId = getQueryString('workId');
+						if (workId > 0) {
+							$('#title').html('修改工作');
+							pageInit();
+						}
+					});
+	function sendResume(obj) {
+		var resumeId = $(obj).attr('resumeId');
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			var sendResumeInfo = {};
+			sendResumeInfo.userToken = cachedUserInfo.userToken;
+			sendResumeInfo.resumeId = resumeId;
+			sendResumeInfo.workId = workId;
+
+			ajaxReq('resumeAction', {
+				method : 'sendResume',
+				sendResumeInfo : json2Str(sendResumeInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					alert(data.msg);
+
+					$('#popupMenu').popup("close");
+				} else {
+					alert(data.msg);
+				}
+			});
 		}
-	});
-
+	}
 	function pageInit() {
 		var workInfo = {};
 		if (workId > 0) {
 			workInfo.workId = workId;
 		}
-		var cachedUserInfo = str2Json(localStorage.userInfo);
+		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			workInfo.userToken = cachedUserInfo.userToken;
-
+			workInfo.readUserId = cachedUserInfo.userId;
 			ajaxReq('workAction', {
 				method : 'getWorkInfo',
 				workInfo : json2Str(workInfo)
 			}, function(data) {
 				if (data.flag == 'success') {
-					bindData(data);
+					bindData(data, 'workDetailDiv');
+					$('#addFocusBtn').html(data.focusNumber);
+					//如果不是工作所有者，需要删除修改按钮
+					var workOwnerId = data.userId;
+					if (cachedUserInfo.userId == workOwnerId) {
+						$('#footer').remove();
+					} else {
+						$('#modBtn').remove();
+					}
 				} else {
 					alert(data.msg);
 				}
@@ -72,19 +170,19 @@
 		}
 	}
 	//绑定数据到控件
-	function bindData(jsonData) {
+	function bindData(jsonData, divId) {
 		for ( var o in jsonData) {
-			var ctrl = $('#' + o);
+			var ctrl = $('#' + divId + ' #' + o);
 			if (ctrl.length > 0) {
 				//处理下拉框采集的数据
 				var realValue = jsonData[o];
 				var displayValue = getDisplayEnumValue(o, realValue);
-				if (displayValue == realValue) {//没有显示值则用realValue显示
-					ctrl.html(realValue);
-				} else {
-					ctrl.html(displayValue);
-				}
+				ctrl.html(displayValue);
 			}
+		}
+		//绑定企业信息
+		if (jsonData.userInfo != null) {
+			bindData(jsonData.userInfo, 'companyInfoUL');
 		}
 	}
 	function modWork() {
@@ -94,9 +192,6 @@
 
 
 <style type="text/css">
-li {
-	padding: 0em 1em
-}
 </style>
 
 </head>
@@ -109,12 +204,12 @@ li {
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
-			<h1 id="workName">工作详情</h1>
+			<h1>工作详情</h1>
 			<a onclick="modWork()" id="modBtn"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改工作</a>
 		</div>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">基本信息<span class="ui-li-count">2人关注</span></li>
+		<ul data-role="listview" data-inset="true" id="workDetailDiv">
+			<li data-role="list-divider" id="workName">基本信息</li>
 			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
@@ -238,33 +333,24 @@ li {
 						<p>公司名称:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;" id="companyUserName"></p>
+						<p style="white-space: pre-line;" id="userName"></p>
 					</div>
 				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>公司介绍:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;" id="companyDesc"></p>
-					</div>
-				</div>
+
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司地址:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p>
-						<p style="white-space: pre-line;" id="companyAddress"></p>
-						</p>
+						<p style="white-space: pre-line;" id="address"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>电话:</p>
 					</div>
-					<div style="float: left; width: 70%" id="companyFixphone">
-						<p></p>
+					<div style="float: left; width: 70%">
+						<p id="cellphone"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -272,7 +358,7 @@ li {
 						<p>邮箱:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p id="companyEmail"></p>
+						<p id="email"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -280,31 +366,41 @@ li {
 						<p>网址:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p id="companyUrl"></p>
+						<p id="url"></p>
+					</div>
+				</div>
+				<div style="overflow: hidden">
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>公司介绍:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p style="white-space: pre-line;" id="selfReview"></p>
 					</div>
 				</div>
 			</li>
-			<li><a href="#">该公司其它招聘<span class="ui-li-count">2</span></a></li>
+			<li><a href="#">该公司其它招聘<span class="ui-li-count" id="workNumber">2</span></a></li>
 		</ul>
 
-		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" class="ui-bar">
-			<div data-role="controlgroup" data-type="horizontal">
-				<a href="index.html" data-role="button" data-icon="plus">关注</a> <a
-					href="index.html" data-role="button" data-icon="mail">投递简历</a>
-			</div>
-			<!-- <div data-role="navbar" data-grid="b">
-				<ul style="text-align: center; padding: 5px 0">
-					关注
-					<li id="favBtn" style="width: 20%"><a class="ui-btn">关注</a></li>
-					分享
-					<li id="shareBtn" style="width: 20%"><a class="ui-btn">咨询</a></li>
-					发送简历
-					<li id="buyBtn" style="width: 60%;"><a data-role="button"
-						style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">投递简历</a></li>
+        <!-- 简历选择框 -->
+		<div data-role="popup" id="popupMenu">
+			<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+				id="resumeList">
+				<li data-role="list-divider"><h2>
+						select...
+						<h2></li>
+				<li><a href="#">View details</a></li>
+				<li><a href="#">Edit</a></li>
+				<li><a href="#">Disable</a></li>
+				<li><a href="#">Delete</a></li>
+			</ul>
+		</div>
 
-				</ul>
-			</div> -->
+		<div data-role="footer" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false" class="ui-bar" id="footer">
+			<div data-role="controlgroup" data-type="horizontal">
+				<a href="#" id="addFocusBtn" data-role="button" data-icon="plus">10
+				</a> <a href="#" id="sendResumeBtn" data-role="button" data-icon="mail">投递简历</a>
+			</div>
 		</div>
 	</div>
 </body>

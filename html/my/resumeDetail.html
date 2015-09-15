@@ -36,9 +36,10 @@
         if (resumeId > 0) {
             resumeInfo.resumeId = resumeId;
         }
-        var cachedUserInfo = str2Json(localStorage.userInfo);
+        var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
             resumeInfo.userToken = cachedUserInfo.userToken;
+            resumeInfo.readUserId = cachedUserInfo.userId;
 
             ajaxReq('resumeAction', {
                 method : 'getResumeInfo',
@@ -129,6 +130,14 @@ li {
 						<p id="sex"></p>
 					</div>
 				</div>
+				<div style="overflow: hidden">
+                    <div style="float: left; width: 30%; color: #a3a3a3">
+                        <p>年龄:</p>
+                    </div>
+                    <div style="float: left; width: 70%">
+                        <p id="age"></p>
+                    </div>
+                </div>
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>工作经验:</p>
@@ -233,7 +242,7 @@ li {
 			</li>
 			<li data-role="list-divider">自我评价</li>
 			<li data-icon="false" style="padding: 0em 1em">
-				<p style="white-space: pre-line;" id="selfreview"></p>
+				<p style="white-space: pre-line;" id="selfReview"></p>
 			</li>
 		</ul>
 

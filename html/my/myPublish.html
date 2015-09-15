@@ -11,86 +11,63 @@
 
 
 <style>
-
 </style>
 
 <script type="text/javascript">
-$(document).ready(
-        function() {
-        	getWorkList();
-        });
-function swipeRight(){
-	closeSubPage();
-}
-function openWorkDetail(obj) {
-	var workId = $(obj).attr('workId');
-	changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
-}
+	$(document).ready(function() {
+		getWorkList();
+	});
+	function swipeRight() {
+		closeSubPage();
+	}
+	function openWorkDetail(obj) {
+		var workId = $(obj).attr('workId');
+		changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
+	}
 
-function openReqWorkDetail(obj){
-	var workId = $(obj).attr('workId');
-    changeSubPage('reqWorkDetail', 'myPubPage', 'workId=' + workId);
-}
+	function getWorkList() {
+		$('#workListUL').html('');
+		var workInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userId = cachedUserInfo.userId;
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.page = '1';
+			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
 
-function getWorkList() {
-    $('#workListUL').html('');
-    var workInfo = {};
-    var cachedUserInfo = str2Json(localStorage.userInfo);
-    if (cachedUserInfo != null) {
-        workInfo.userId = cachedUserInfo.userId;
-        workInfo.userToken = cachedUserInfo.userToken;
-        workInfo.page = '1';
-        workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
-
-        ajaxReq('workAction', {
-            method : 'getWorkList',
-            workInfo : json2Str(workInfo)
-        }, function(data) {
-            if (data.flag != 'fail') {
-                var lihtmls = '';
-                for(var i=0;data.length>i;i++){
-                    var workObj = data[i];
-                    var lihtml = '<li><a onclick="openWorkDetail(this)" workId="'+workObj.workId+'"><h3>'+workObj.workName+'</h3><p>'+workObj.workType+'</p><p>发布时间:'+workObj.createDate+',失效时间:'+workObj.expDate+'</p></a></li>';
-                    lihtmls += lihtml;
-                }
-                $('#workListUL').append(lihtmls);
-                $('#workListUL').listview("refresh");
-            } else {
-                alert(data.msg);
-            }
-        });
-    }
-}
-
-function getReqWorkList() {
-    $('#reqWorkListUL').html('');
-    var workInfo = {};
-    var cachedUserInfo = str2Json(localStorage.userInfo);
-    if (cachedUserInfo != null) {
-        workInfo.userId = cachedUserInfo.userId;
-        workInfo.userToken = cachedUserInfo.userToken;
-        workInfo.page = '1';
-        workInfo.workType = 'reqPartTime,reqFullTime';//兼职/全职类求职
-
-        ajaxReq('workAction', {
-            method : 'getWorkList',
-            workInfo : json2Str(workInfo)
-        }, function(data) {
-            if (data.flag != 'fail') {
-                var lihtmls = '';
-                for(var i=0;data.length>i;i++){
-                    var workObj = data[i];
-                    var lihtml = '<li><a onclick="openReqWorkDetail(this)" workId="'+workObj.workId+'"><h3>'+workObj.workName+'</h3><p>'+workObj.workType+'</p><p>发布时间:'+workObj.createDate+',失效时间:'+workObj.expDate+'</p></a></li>';
-                    lihtmls += lihtml;
-                }
-                $('#reqWorkListUL').append(lihtmls);
-                $('#reqWorkListUL').listview("refresh");
-            } else {
-                alert(data.msg);
-            }
-        });
-    }
-}
+			ajaxReq(
+					'workAction',
+					{
+						method : 'getWorkList',
+						workInfo : json2Str(workInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a></li>';
+							for ( var i = 0; data.length > i; i++) {
+								var workObj = data[i];
+								var lihtml = litemplate.replace('+workId+',
+										workObj.workId).replace('+workName+',
+										workObj.workName).replace('+workType+',
+										workObj.workType).replace('+effDate+',
+										workObj.effDate).replace('+expDate+',
+										workObj.expDate).replace(
+										'+focusNumber+', workObj.focusNumber)
+										.replace('+lookNumber+',
+												workObj.lookNumber).replace(
+												'+resumeNumber+',
+												workObj.resumeNumber);
+								lihtmls += lihtml;
+							}
+							$('#workListUL').append(lihtmls);
+							$('#workListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
 </script>
 </head>
 <body>
@@ -98,62 +75,34 @@ function getReqWorkList() {
 		<div data-role="header" data-position="fixed" data-fullscreen="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
 
-			<h1>我的发布记录</h1>
-		</div>
-		<div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#workList" class="ui-btn-active"
-						id="">招聘</a></li>
-					<li><a href="#reqworkList" onclick="getReqWorkList()">求职</a></li>
-					<!-- <li><a href="#messageList"
-						id="messageTabLi">商品</a></li>
-					<li><a href="#friendList">拼活动</a></li> -->
-				</ul>
-			</div>
-
-			<div id="workList">
-				<ul data-role="listview" id="workListUL">
-					<li data-icon="false"><a onclick="openWork(this)" workid="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workid="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-				</ul>
-			</div>
-			<div id="reqworkList">
-				<ul data-role="listview" id="reqWorkListUL">
-					<li data-icon="false"><a onclick="openWork(this)" workid="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workid="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-				</ul>
-			</div>
+			<h1>我的招聘</h1>
 		</div>
 
+		<div id="workList">
+			<ul data-role="listview" id="workListUL">
+				<li data-icon="false"><a onclick="openWork(this)" workId="1"
+					style="padding-top: 0px; padding-bottom: 0px;"> <img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+						<h2>臻洪</h2> <!-- 用人单位-->
+						<p>临时工</p> <!-- 兼职名称 -->
+						<p>2015-8-1</p> <!-- 兼职名称 -->
+				</a></li>
+
+				<li data-icon="false"><a onclick="openWork(this)" workId="12"
+					style="padding-top: 0px; padding-bottom: 0px;"> <img
+						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+						<h2>臻洪</h2> <!-- 用人单位-->
+						<p>临时工</p> <!-- 兼职名称 -->
+						<p>2015-8-1</p> <!-- 兼职名称 -->
+				</a></li>
+			</ul>
+			
+			<a data-role="button" data-mini="true" data-icon="plus"
+                    onclick="changeSubPage('work', 'myPubPage')">发布招聘信息</a>
+		</div>
 	</div>
 </body>
 </html>

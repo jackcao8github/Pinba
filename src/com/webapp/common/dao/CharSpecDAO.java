@@ -92,4 +92,39 @@ public class CharSpecDAO extends AbstractDAO {
 		}
 		return 0L;
 	}
+	
+	public String getDisplayValue(String charCode,String realValue){
+		JSONObject charMap = getAllCharSpecValue();
+		if (charMap.containsKey(charCode)){
+			JSONObject values = charMap.getJSONObject(charCode);
+				Iterator it = values.entrySet().iterator();
+				while (it.hasNext()){
+					Entry ent = (Entry) it.next();
+					if (ent.getKey().equals(realValue)){
+						return ((JSONObject) ent.getValue()).getString("value");
+					}
+				}
+				return realValue;
+		}else{
+			return realValue;
+		}
+	}
+	
+	public String getRealValue(String charCode,String disValue){
+		JSONObject charMap = getAllCharSpecValue();
+		if (charMap.containsKey(charCode)){
+			JSONObject values = charMap.getJSONObject(charCode);
+				Iterator it = values.entrySet().iterator();
+				while (it.hasNext()){
+					Entry ent = (Entry) it.next();
+					JSONObject subValue = (JSONObject) ent.getValue();
+					if (subValue.getString("value").equals(disValue)){
+						return ent.getKey().toString();
+					}
+				}
+				return disValue;
+		}else{
+			return disValue;
+		}
+	}
 }

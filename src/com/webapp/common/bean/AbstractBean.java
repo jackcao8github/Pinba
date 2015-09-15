@@ -251,4 +251,48 @@ public abstract class AbstractBean implements Serializable {
 
 		return sqlAndParams;
 	}
+	
+	public PreparedSqlAndParams getBeanCountSql(Map<String, Object> params) {
+		PreparedSqlAndParams sqlAndParams = new PreparedSqlAndParams();
+		Iterator it = attrValues.entrySet().iterator();
+
+		sqlAndParams.sql.append("SELECT COUNT(1) AS RESULT");
+		sqlAndParams.sql.append(" FROM ").append(this.tableName);
+
+		if (params != null && params.size() > 0) {
+			StringBuffer wherecolNames = new StringBuffer();
+			Iterator it2 = params.entrySet().iterator();
+
+			List<Object> argList = new ArrayList();
+			while (it2.hasNext()) {
+				Entry ent = (Entry) it2.next();
+				if (wherecolNames.length() > 0) {
+					wherecolNames.append(" AND ");
+				}
+				Object value = ent.getValue();
+				if (value instanceof String[]) {
+					wherecolNames.append(ent.getKey().toString()).append(" IN (");
+
+					String[] values = (String[]) value;
+					for (int i = 0; i < values.length; i++) {
+						if (i > 0) {
+							wherecolNames.append(",");
+						}
+						wherecolNames.append("?");
+						argList.add(values[i]);
+					}
+
+					wherecolNames.append(")");
+				} else {
+					wherecolNames.append(ent.getKey().toString()).append("=?");
+					argList.add(ent.getValue());
+				}
+			}
+			sqlAndParams.sql.append(" WHERE ").append(wherecolNames);
+
+			sqlAndParams.args = argList.toArray();
+		}
+
+		return sqlAndParams;
+	}
 }

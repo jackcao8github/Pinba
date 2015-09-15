@@ -20,10 +20,14 @@ import com.webapp.common.util.TimeUtil;
 import com.webapp.user.bean.UserAcctBean;
 import com.webapp.user.bean.UserBean;
 import com.webapp.user.bean.UserCharBean;
-import com.webapp.user.bean.UserResumeBean;
-import com.webapp.user.bean.UserResumeCharBean;
 
 public class UserManagerDAO extends AbstractDAO {
+	private static CharSpecDAO charSpecDao = null;
+
+	public UserManagerDAO(){
+		charSpecDao = new CharSpecDAO();
+		charSpecDao.setDataSource(this.getDataSource());
+	}
 	public JSONObject login(JSONObject userJson) throws Exception {
 		//
 		String loginCode = userJson.getString("loginCode");// loginCode可能是手机号，userId
@@ -127,17 +131,18 @@ public class UserManagerDAO extends AbstractDAO {
 		acctBean.setCreateDate(TimeUtil.getLocalTimeString());
 
 		super.insertBean(acctBean);
-
+		
 		// 新建特征
 		Set<String> keySet = userJson.keySet();
 		for (String key : keySet) {
-			long charId = CharSpecConsts.getCharId(key);
+			long charId = charSpecDao.getCharId(key);
 			if (charId > 0) {
 				UserCharBean newbean = new UserCharBean();
 				newbean.setUserId(userId);
 				newbean.setCharId(charId);
 				newbean.setValue(userJson.getString(key));
-
+				newbean.setCreateDate(TimeUtil.getLocalTimeString());
+				
 				super.insertBean(newbean);
 			}
 		}
@@ -173,7 +178,7 @@ public class UserManagerDAO extends AbstractDAO {
 		// 更新user char
 		Set<String> keySet = userJson.keySet();
 		for (String key : keySet) {
-			long charId = CharSpecConsts.getCharId(key);
+			long charId = charSpecDao.getCharId(key);
 			if (charId > 0) {
 				Map<String, Object> params = new HashMap();
 				params.put("USER_ID", userJson.getString("userId"));
@@ -286,10 +291,23 @@ public class UserManagerDAO extends AbstractDAO {
 			for (AbstractBean abBean : result) {
 				UserCharBean userCharBean = (UserCharBean) abBean;
 
-				retJson.put(CharSpecConsts.getCode(userCharBean.getCharId()), userCharBean.getValue());
+				retJson.put(this.charSpecDao.getCode(userCharBean.getCharId()), userCharBean.getValue());
 			}
 		}
 
 		return retJson;
 	}
+	
+	public String getUserNameByUserId(long userId) throws Exception{
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+
+		UserBean userBean = (UserBean) getBean(UserBean.class, params);
+		if (userBean == null) {
+			throw new Exception("参数userId" + userId + "不正确!");
+		}
+
+		return userBean.getUserName();
+	}
+	
 }

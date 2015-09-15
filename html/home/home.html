@@ -99,6 +99,9 @@
 				$(".main_visual").bind(touchEvents.toucancel, function() {
 					return false;
 				}, false);
+			    $('#workList').html('');
+			    $('#reqworkList').html('');
+				loadWorkList();
 			});
 
 	/* 显示当前定位城市 */
@@ -120,88 +123,170 @@
 		parent.switchIframeByClick('wode');
 	}
 	function swipeUp() {
-		/* 正在查看的是工作列表 */
-		if ($('a[class*="ui-btn-active"]').attr('href') == "#workDiv") {
-			loadWorkList();
-		} else {/* 正在查看的是求职列表 */
-			loadReqWorkList();
-		}
+		/* var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop / (docHeight - winHeight) >= 0.9) {//滚动到距底部20%时 */
+			/* 正在查看的是工作列表 */
+			if ($('a[class*="ui-btn-active"]').attr('href') == "#workDiv") {
 
+				loadWorkList();
+
+			} else {/* 正在查看的是求职列表 */
+				loadReqWorkList();
+			}
+		//}
 	}
 	function loadWorkList() {
-		//$('#yourLike').html("猜你喜欢....");
-		var scrolltop = $(document).scrollTop();
-		var docHeight = $(document).height();
-		var winHeight = $(window).height();
-		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
-			var newhtml = '<li data-icon="false" onclick="openWork(this)" workId="1"><a href="#" class="ui-btn ui-mini">\
-				<div style="overflow: hidden;">\
-				<p style="float: left;font-weight:bold;">+title+</p>\
-				<p style="color: black; float: right">+time+</p>\
-				</div>\
-							<div style="overflow: hidden;">\
-							<p style="float: left">+condition+</p>\
-							<p style="color: red; float: right">日薪:100-200</p>\
-						</div>\
-						<div style="overflow: hidden;">\
-							<p style="float: left">+username+</p>\
-							<div style="float: right; color: #f63">\
-								<i class="fa fa-star"></i><i class="fa fa-star"></i><i\
-										class="fa fa-star"></i><i class="fa fa-star"></i><i\
-										class="fa fa-star-half-full"></i>\
-							</div>\
-						</div>\
-					</a></li>';
+		var workInfo = {};
+			workInfo.page = '1';
+			workInfo.cityName = localStorage.city;
+			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
 
-			for ( var i = 0; 10 > i; i++) {
-				var html = newhtml.replace('+userimage+', '#').replace(
-						'+username+', '企业用户' + i).replace('+title+',
-						'需要用人' + i + '(江宁)').replace('+time+', '22:2' + i)
-						.replace('+condition+',
-								'学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限');
+			ajaxReq('workAction', {
+				method : 'getWorkList',
+				workInfo : json2Str(workInfo)
+			}, function(data) {
+				if (data.flag != 'fail') {
+					fillWorkList(data);
+				} else {
+					alert(data.msg);
+				}
+			});
+	}
 
-				$('#workList').append(html);
-			}
+	function fillWorkList(data) {
+		var newhtml = '<li data-icon="false" onclick="openWork(this)" workId="+workId+"><a href="#" class="ui-btn ui-mini">\
+            <div style="overflow: hidden;">\
+            <p style="float: left;font-weight:bold;">+title+</p>\
+            <p style="color: black; float: right">+time+</p>\
+            </div><div style="overflow: hidden;">\
+                        <p style="float: left">+condition+</p>\
+                        <p style="color: red; float: right">时薪:+daymoney+</p>\
+                    </div><div style="overflow: hidden;">\
+                        <p style="float: left">+username+</p>\
+                        <div style="float: right; color: #f63">+userCredit+\
+                        </div></div></a></li>';
 
-			$('#workList').listview("refresh");
+		for ( var i = 0; data.length > i; i++) {
+			var workObj = data[i];
+			var conditionStr = '';
+			conditionStr += getDisplayEnumValue('expectDegree',
+					workObj.expectDegree)
+					+ '学历';
+			conditionStr += '&nbsp;|&nbsp;';
+			conditionStr += getDisplayEnumValue('expectExperience',
+					workObj.expectExperience)
+					+ '经验';
+			conditionStr += '&nbsp;|&nbsp;';
+			conditionStr += getDisplayEnumValue('expectAge', workObj.expectAge)
+					+ '年龄';
+			
+			var userCreditHtml = createCreditHtml(workObj.userCredit);
+
+			var html = newhtml.replace('+username+', workObj.userName)
+					.replace('+title+', workObj.workName).replace('+time+',
+							workObj.effDate).replace('+condition+',
+							conditionStr).replace('+daymoney+',
+							workObj.daySallary).replace('+workId+',workObj.workId).replace('+userCredit+',userCreditHtml);
+
+			$('#workList').append(html);
 		}
+
+		$('#workList').listview("refresh");
+	}
+	
+	function createCreditHtml(userCredit){
+		var strArr = [];
+		var mod = userCredit/100;
+		mod = parseInt(mod);
+		var left =  userCredit%100;
+		if (mod>0){
+			for (var i=0;mod>i;i++){
+				strArr.push('<i class="fa fa-star"></i>');
+			}
+		}
+		if (left>50){
+			strArr.push('<i class="fa fa-star-o"></i>');
+		}
+	    if (strArr.length!=5)
+		{
+	    	var c = 5-strArr.length;
+	    	for (var j=0;c>j;j++)
+	    	    strArr.push('<i class="fa fa-star-o"></i>');
+		}
+
+	    return strArr.join('');
 	}
 	function loadReqWorkList() {
-		var scrolltop = $(document).scrollTop();
-		var docHeight = $(document).height();
-		var winHeight = $(window).height();
-		if (scrolltop / (docHeight - winHeight) >= 0.8) {//滚动到距底部20%时
-			var newhtml = '<li data-icon="false" onclick="openResume(this)" resumeId="1"><a\
-				href="#" class="ui-btn ui-mini">\
-			<div style="overflow: hidden;">\
-				<p style="float: left; font-weight: bold;">+title+</p>\
-				<p style="color: black; float: right">+time+</p>\
-			</div>\
-				<p>+condition+</p>\
-				<p >+req+</p>\
-	</a></li>';
+		var workInfo = {};
+            workInfo.page = '1';
+            workInfo.cityName = localStorage.city;
+            workInfo.workType = 'reqPartTime,reqFullTime';//兼职求职/全职求职
 
-			for ( var i = 0; 10 > i; i++) {
-				var html = newhtml.replace('+title+',
-						'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员' + i)
-						.replace('+time+', '22:2' + i).replace('+condition+',
-								'学历：本科&nbsp;|&nbsp;工作经验：3年').replace('+req+',
-								'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁');
+            ajaxReq('workAction', {
+                method : 'getWorkList',
+                workInfo : json2Str(workInfo)
+            }, function(data) {
+                if (data.flag != 'fail') {
+                	fillReqWorkList(data);
+                } else {
+                    alert(data.msg);
+                }
+            });
+	}
+	
+	function fillReqWorkList(data){
+        var newhtml = '<li data-icon="false" onclick="openReqWorkDetail(this)" workId="+workId+"><a\
+            href="#" class="ui-btn ui-mini">\
+        <div style="overflow: hidden;">\
+            <p style="float: left; font-weight: bold;">+workName+</p>\
+            <p style="color: black; float: right">+time+</p>\
+        </div><p>+basicInfo+</p><p>+condition+</p><p >+req+</p></a></li>';
 
-				$('#reqworkList').append(html);
-			}
+        for ( var i = 0; data.length > i; i++) {
+            var workObj = data[i];
+            var basicInfo = '';
+            basicInfo +=  workObj.resumeInfo.realName;
+            basicInfo += '&nbsp;|&nbsp;';
+            basicInfo +=  getDisplayEnumValue('sex',
+                    workObj.resumeInfo.sex);
+            basicInfo += '&nbsp;|&nbsp;';
+            basicInfo += workObj.resumeInfo.age;
+            
+            var conditionStr = '';
+            conditionStr += getDisplayEnumValue('degree',
+                    workObj.resumeInfo.degree)
+                    + '学历';
+            conditionStr += '&nbsp;|&nbsp;';
+            conditionStr += getDisplayEnumValue('experience',
+                    workObj.resumeInfo.experience)
+                    + '年工作经验';
+           
 
-			$('#reqworkList').listview("refresh");
-		}
+            var reqInfo = '';
+            reqInfo += '期望日薪:'+workObj.resumeInfo.daySallary;
+            reqInfo += '&nbsp;|&nbsp;';
+            reqInfo += '期望工作地:'+getDisplayEnumValue('expectWorkArea',workObj.resumeInfo.expectWorkArea);
+            
+            //'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员'
+            //'学历：本科&nbsp;|&nbsp;工作经验：3年'
+            //'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁'
+            var html = newhtml.replace('+basicInfo+',basicInfo).replace('+workId+',workObj.workId).replace('+workName+',workObj.workName)
+                    .replace('+time+', workObj.createDate).replace('+condition+',conditionStr).replace('+req+',reqInfo );
+            $('#reqworkList').append(html);
+        }
+
+        $('#reqworkList').listview("refresh");
 	}
 	function openWork(obj) {
-		var workid = obj.workId;
+		var workid = $(obj).attr('workId');
 		changeSubPage('workDetail', 'homePage', 'workid=' + workid);
 	}
 
-	function openResume(obj) {
-		var resumeId = obj.resumeId;
-		changeSubPage('resumeDetail', 'homePage', 'resumeId=' + resumeId);
+	function openReqWorkDetail(obj){
+	    var workId = $(obj).attr('workId');
+	    changeSubPage('reqWorkDetail', 'homePage', 'workId=' + workId);
 	}
 </script>
 
@@ -305,7 +390,7 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#workDiv" class="ui-btn-active">招聘</a></li>
-					<li><a href="#reqWorkDiv">求职</a></li>
+					<li><a href="#reqWorkDiv" onclick="loadReqWorkList()">求职</a></li>
 				</ul>
 			</div>
 

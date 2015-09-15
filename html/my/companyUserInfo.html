@@ -3,19 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width" />
-
+<script src="../js/jquery-1.11.3.js"></script>
 <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
 <link rel="stylesheet" href="../css/font-awesome.css" />
-<script src="../js/jquery-1.11.3.js"></script>
 <script src="../js/jquery.mobile-1.4.5.js"></script>
 <script src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		var cachedUserInfo = str2Json(localStorage.userInfo);
+		pageInit();
+	});
+	var userId = 0;
+	function pageInit(){
+		var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
+        	userId = cachedUserInfo.userId;
             var userInfo = {};
             userInfo.userId = cachedUserInfo.userId;
             ajaxReq('userAction', {
@@ -23,20 +27,29 @@
                 userInfo : json2Str(userInfo)
             }, function(data) {
                 if (data.flag == 'success') {//登陆成功后返回主页面
-                	$('#userName').html(data.userName);
-                    $('#cellphone').html(data.cellphone);
-                    $('#email').html(data.email);
-                    $('#address').html(data.address);
-                    $('#companySize').html(data.companySize);
-                    $('#companyIndustry').html(data.companyIndustry);
+                    bindData(data,'userInfoDiv');
                 } else {
                     alert(data.msg);
                     return false;
                 }
             });
         }
-		
-	});
+	}
+	//绑定数据到控件
+    function bindData(jsonData,divId) {
+        for ( var o in jsonData) {
+            var ctrl = $('#'+divId+' #' + o);
+            if (ctrl.length > 0) {
+                //处理下拉框采集的数据
+                var realValue = jsonData[o];
+                var displayValue = getDisplayEnumValue(o, realValue);
+                ctrl.html(displayValue);
+            }
+        }
+    }
+	function modUserInfo(){
+		changeSubPage('changeCompanyUserInfo', 'userInfoPage', 'userId=' + userId);
+	}
 	function logout() {
 		localStorage.removeItem("userInfo");
 
@@ -52,9 +65,11 @@
 	<div data-role="page" id="userInfoPage">
 
 		<div data-role="header">
-			<a href="#" data-rel="back" class="button" data-icon="back"
+			<a href="#" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
 			<h1>用户信息</h1>
+			<a onclick="modUserInfo()" id="modBtn"
+                class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改用户信息</a>
 		</div>
 		<div class="login">
 			<img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
@@ -62,13 +77,14 @@
 		</div>
 		<!-- 第一块 -->
 		<div class="firstblock">
-			<ul data-role="listview" data-inset="true" data-mini="true">
-				<li><a href="#">名称 <span class="ui-li-count" id="userName"></span></a></li>
-				<li><a href="#">手机 <span class="ui-li-count" id="cellphone"></span></a></li>
-				<li><a href="#">邮箱 <span class="ui-li-count" id="email"></span></a></li>
-				<li><a href="#">公司地址<span class="ui-li-count" id="address"></span></a></li>
-				<li><a href="#">公司规模<span class="ui-li-count" id="companySize"></span></a></li>
-				<li><a href="#">公司行业<span class="ui-li-count" id="companyIndustry"></span></a></li>
+			<ul data-role="listview" data-mini="true" id="userInfoDiv">
+				<li data-icon="false" >名称 <span class="ui-li-count" id="userName"></span></li>
+				<li data-icon="false" >手机<span class="ui-li-count" id="cellphone"></span></li>
+				<li data-icon="false" >邮箱 <span class="ui-li-count" id="email"></span></li>
+				<li data-icon="false" >公司地址<span class="ui-li-count" id="address"></span></li>
+				<li data-icon="false" >公司规模<span class="ui-li-count" id="size"></span></li>
+				<li data-icon="false" >公司行业<span class="ui-li-count" id="industry"></span></li>
+				<li data-icon="false" >公司介绍<p id="selfReview" style="white-space: pre-wrap;"></p></li>
 			</ul>
 
 			<div class="h1"></div>

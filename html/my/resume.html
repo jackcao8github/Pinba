@@ -32,10 +32,10 @@
 					if (resumeId > 0) {
 						resumeInfo.resumeId = resumeId;
 					}
-					var cachedUserInfo = str2Json(localStorage.userInfo);
+					var cachedUserInfo = getLoginUserInfo();
 					if (cachedUserInfo != null) {
 						resumeInfo.userToken = cachedUserInfo.userToken;
-
+						
 						ajaxReq('resumeAction', {
 							method : 'getResumeInfo',
 							resumeInfo : json2Str(resumeInfo)
@@ -60,7 +60,7 @@
 				if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
 					selectOptions(o,value);	
 				}
-				else if (o=='selfreview'){
+				else if (o=='selfReview'){
 					ctrl.html(value);
 				}else{
 					ctrl.val(value);
@@ -79,12 +79,13 @@
 			resumeInfo.resumeId = resumeId;
 			method = 'modResume';
 		}
-		var cachedUserInfo = str2Json(localStorage.userInfo);
+		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			resumeInfo.userId = cachedUserInfo.userId;
 			resumeInfo.resumeName = $('#resumeName').val();
 			resumeInfo.realName = $('#realName').val();
 			resumeInfo.sex = $('#sex').val();
+			resumeInfo.age = $('#age').val();
 			resumeInfo.resumeType = $('#resumeType').val();
 			resumeInfo.expectIndustry = $('#expectIndustry').val();
 			
@@ -113,7 +114,7 @@
 			resumeInfo.expectIndustry = $('#expectIndustry').val();
 			resumeInfo.degree = $('#degree').val();
 			resumeInfo.experience = $('#experience').val();
-			resumeInfo.selfreview = $('#selfreview').val();
+			resumeInfo.selfReview = $('#selfReview').val();
 			resumeInfo.cellphone = $('#cellphone').val();
 			resumeInfo.email = $('#email').val();
 			resumeInfo.verifyCode = $('#verifyCode').val();
@@ -149,6 +150,15 @@
 					<label for="resumeName">简历名称:</label> <input type="text"
 						name="resumeName" id="resumeName" value="" required="required">
 				</div>
+				
+				<div data-role="fieldcontain">
+                    <label for="resumeType" class="select">简历类型:</label> <select
+                        name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+
+                        <option value="partTime" selected>兼职</option>
+                        <option value="fullTime">全职</option>+END+
+                    </select>
+                </div>
+				
 				<div data-role="fieldcontain">
 					<label for="realName">真实姓名:</label> <input type="text" name="realName"
 						id="realName" value="" required="required">
@@ -169,12 +179,10 @@
 					</select>
 				</div>
 				<div data-role="fieldcontain">
-					<label for="resumeType" class="select">简历类型:</label> <select
-						name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+
-						<option value="partTime" selected>兼职</option>
-						<option value="fullTime">全职</option>+END+
-					</select>
-				</div>
+                    <label for="age">年龄:</label> <input type="text" name="age"
+                        id="age" value="" required="required">
+                </div>
+				
 				<div data-role="fieldcontain">
 					<label for="expectPost" class="select">期望职位:</label> <select name="expectPost" multiple="multiple"
 						id="expectPost" data-native-menu="false">
@@ -330,8 +338,8 @@
 				</div>
 
 				<div data-role="fieldcontain">
-					<label for="selfreview">自我评价:</label>
-					<textarea cols="40" rows="8" name="selfreview" id="selfreview"
+					<label for="selfReview">自我评价:</label>
+					<textarea cols="40" rows="8" name="selfReview" id="selfReview"
 						required="required" placeholder="让用人单位更好了解你" data-mini="true"></textarea>
 				</div>
 

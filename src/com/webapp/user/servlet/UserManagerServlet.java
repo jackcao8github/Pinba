@@ -29,8 +29,6 @@ public class UserManagerServlet extends AbstractServlet {
 		userDao = (UserManagerDAO) ContextLoaderListener.getCurrentWebApplicationContext().getBean("userDAOProxy");
 	}
 
-	
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpServletRequest hreq = (HttpServletRequest) request;
 		response.setContentType("text/html;charset=utf-8");
@@ -40,52 +38,52 @@ public class UserManagerServlet extends AbstractServlet {
 			returnFailResult("参数method不能为空", response);
 			return;
 		}
-		
+
 		try {
-			if (method.equals("newUser")) {//新增用户
+			if (method.equals("newUser")) {// 新增用户
 				String userInfo = hreq.getParameter("userInfo");
-				JSONObject userJson = JSONObject.fromObject(userInfo);
+
 				if (StringUtils.isEmpty(userInfo)) {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
-				//新建用户
+				JSONObject userJson = JSONObject.fromObject(userInfo);
+				// 新建用户
 				long userId = userDao.newUser(userJson);
-				
-				//立即登陆后返回
+
+				// 立即登陆后返回
 				JSONObject loginInfo = new JSONObject();
 				loginInfo.put("loginCode", userId);
 				loginInfo.put("password", userJson.getString("password"));
-				
+
 				JSONObject retJson = userDao.login(loginInfo);
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("modUser")) {//修改用户
+			} else if (method.equals("modUser")) {// 修改用户
 				String userInfo = hreq.getParameter("userInfo");
-				JSONObject userJson = JSONObject.fromObject(userInfo);
+
 				if (StringUtils.isEmpty(userInfo)) {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
-				
+				JSONObject userJson = JSONObject.fromObject(userInfo);
 				userDao.modUser(userJson);
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "修改成功");
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("login")) {//登陆
+			} else if (method.equals("login")) {// 登陆
 				String userInfo = hreq.getParameter("userInfo");
-				JSONObject userJson = JSONObject.fromObject(userInfo);
+
 				if (StringUtils.isEmpty(userInfo)) {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
-				
+				JSONObject userJson = JSONObject.fromObject(userInfo);
 				String verifyCode = userJson.getString("verifyCode");// 图片验证码
 				Object verifyCodeObj = request.getSession().getAttribute("__SESSION_VERIFY__");
 				String verifyCodeInSession = null;
-				if (verifyCodeObj!=null){
+				if (verifyCodeObj != null) {
 					verifyCodeInSession = verifyCodeObj.toString();
 				}
-				
 
 				if (StringUtils.equalsIgnoreCase(verifyCode, verifyCodeInSession)) {
 
@@ -93,34 +91,41 @@ public class UserManagerServlet extends AbstractServlet {
 					returnFailResult("验证码不正确!", response);
 					return;
 				}
-				//使用私钥对密码进行解密
-				/*String password = userJson.getString("password");
-				String privateKeyEx = (String) request.getSession().getAttribute("__SESSION_PRIVATE_KEY1__"); 
-				String privateKeyMo = (String) request.getSession().getAttribute("__SESSION_PRIVATE_KEY2__"); 
-
-				RSAPrivateKey privateKey = RSAUtils.getPrivateKey(privateKeyMo, privateKeyEx);
-				String descrypedPwd = RSAUtils.decryptByPrivateKey(password, privateKey); //解密后的密码,password是提交过来的密码 
-				
-				int ind = descrypedPwd.lastIndexOf(" ");
-				if (ind>0){
-					descrypedPwd = descrypedPwd.substring(ind, descrypedPwd.length());
-				}
-				userJson.put("password",descrypedPwd);*/
+				// 使用私钥对密码进行解密
+				/*
+				 * String password = userJson.getString("password"); String
+				 * privateKeyEx = (String)
+				 * request.getSession().getAttribute("__SESSION_PRIVATE_KEY1__"
+				 * ); String privateKeyMo = (String)
+				 * request.getSession().getAttribute
+				 * ("__SESSION_PRIVATE_KEY2__");
+				 * 
+				 * RSAPrivateKey privateKey =
+				 * RSAUtils.getPrivateKey(privateKeyMo, privateKeyEx); String
+				 * descrypedPwd = RSAUtils.decryptByPrivateKey(password,
+				 * privateKey); //解密后的密码,password是提交过来的密码
+				 * 
+				 * int ind = descrypedPwd.lastIndexOf(" "); if (ind>0){
+				 * descrypedPwd = descrypedPwd.substring(ind,
+				 * descrypedPwd.length()); }
+				 * userJson.put("password",descrypedPwd);
+				 */
 				JSONObject retJson = userDao.login(userJson);
 				returnSuccessResult(retJson, response);
-			} else if (method.equals("changePass")){//修改密码
+			} else if (method.equals("changePass")) {// 修改密码
 				String userInfo = hreq.getParameter("userInfo");
-				JSONObject userJson = JSONObject.fromObject(userInfo);
+
 				if (StringUtils.isEmpty(userInfo)) {
 					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
+				JSONObject userJson = JSONObject.fromObject(userInfo);
 				String msgVerifyCode = userJson.getString("msgVerifyCode");
 				String newpass = userJson.getString("newPassword");
 				String cellphone = userJson.getString("cellphone");
-				//TODO 找到用户手机，判断短信验证码
-				
-				//修改密码
+				// TODO 找到用户手机，判断短信验证码
+
+				// 修改密码
 				long userId = userDao.getUserIdByCellPhone(cellphone);
 				userJson.clear();
 				userJson.put("password", newpass);
@@ -130,18 +135,19 @@ public class UserManagerServlet extends AbstractServlet {
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "修改成功");
 				returnSuccessResult(retJson, response);
-			}else if (method.equals("getUserInfo")){//加载用户信息
+			} else if (method.equals("getUserInfo")) {// 加载用户信息
 				String userInfo = hreq.getParameter("userInfo");
-				JSONObject userJson = JSONObject.fromObject(userInfo);
+
 				if (StringUtils.isEmpty(userInfo)) {
-					returnFailResult("参数userInfo不能为空", response);
+					returnFailResult("参数focusInfo不能为空", response);
 					return;
 				}
+				JSONObject userJson = JSONObject.fromObject(userInfo);
 				long userId = userJson.getLong("userId");
-				//String token = userJson.getString("token");
-				//先判断token是否正确，如果不正确则提示重新登陆
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
 
-				//加载用户信息
+				// 加载用户信息
 				JSONObject retJson = userDao.getUserInfo(userId);
 				returnSuccessResult(retJson, response);
 			}

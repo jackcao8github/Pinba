@@ -25,14 +25,19 @@
 		var workId = $(obj).attr('workId');
 		changeSubPage('workDetail', 'myWorkPage', 'workId=' + workId);
 	}
-
+	function openReqWorkDetail(obj) {
+        var workId = $(obj).attr('workId');
+        changeSubPage('reqWorkDetail', 'myPubPage', 'workId=' + workId);
+    }
+	
+	
 	function getWorkHisList() {
 
 	}
 	function getResumeList() {
 		$('#resumeListUL').html('');
 		var resumeInfo = {};
-        var cachedUserInfo = str2Json(localStorage.userInfo);
+        var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
             resumeInfo.userId = cachedUserInfo.userId;
             resumeInfo.userToken = cachedUserInfo.userToken;
@@ -46,7 +51,7 @@
                     var lihtmls = '';
                     for(var i=0;data.length>i;i++){
                         var resumeobj = data[i];
-                        var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>'+resumeobj.resumeName+'</h3><p>'+resumeobj.resumeType+'</p></a></li>';
+                        var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>简历名称:'+resumeobj.resumeName+'</h3><p>简历类型:'+resumeobj.resumeType+'</p><p>简历投递次数:'+resumeobj.resumeSendNumber+'&nbsp;|&nbsp;简历查看次数:'+resumeobj.lookNumber+'</p></a></li>';
                         lihtmls += lihtml;
                     }
                     $('#resumeListUL').append(lihtmls);
@@ -58,33 +63,47 @@
         }
 	}
 
-	function getResumeSendHisList() {
-        
-        var resumeInfo = {};
-        var cachedUserInfo = str2Json(localStorage.userInfo);
+	function getReqWorkList() {
+        $('#reqWorkListUL').html('');
+        var workInfo = {};
+        var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
-            resumeInfo.userId = cachedUserInfo.userId;
-            resumeInfo.userToken = cachedUserInfo.userToken;
-            
-            ajaxReq('resumeAction', {
-                method : 'getResumeList',
-                resumeInfo : json2Str(resumeInfo)
-            }, function(data) {
-                if (data.flag != 'fail') {
-                	var lihtmls = '';
-                    for(var i=0;data.length>i;i++){
-                    	var resumeobj = data[i];
-                    	var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>'+resumeobj.resumeName+'</h3><p>'+resumeobj.resumeType+'</p></a></li>';
-                    	lihtmls += lihtml;
-                    }
-                    $('#resumeListUL').append(html);
-                    $('#resumeListUL').listview("refresh");
-                } else {
-                    alert(data.msg);
-                }
-            });
+            workInfo.userId = cachedUserInfo.userId;
+            workInfo.userToken = cachedUserInfo.userToken;
+            workInfo.page = '1';
+            workInfo.workType = 'reqPartTime,reqFullTime';//兼职/全职类求职
+
+            ajaxReq(
+                    'workAction',
+                    {
+                        method : 'getWorkList',
+                        workInfo : json2Str(workInfo)
+                    },
+                    function(data) {
+                        if (data.flag != 'fail') {
+                            var lihtmls = '';
+                            var litemplate = '<li><a onclick="openReqWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+</p></a></li>';
+                            for ( var i = 0; data.length > i; i++) {
+                                var workObj = data[i];
+                                var lihtml = litemplate.replace('+workId+',
+                                        workObj.workId).replace('+workName+',
+                                        workObj.workName).replace('+workType+',
+                                        workObj.workType).replace('+effDate+',
+                                        workObj.effDate).replace('+expDate+',
+                                        workObj.expDate).replace(
+                                        '+focusNumber+', workObj.focusNumber)
+                                        .replace('+lookNumber+',
+                                                workObj.lookNumber);
+                                lihtmls += lihtml;
+                            }
+                            $('#reqWorkListUL').append(lihtmls);
+                            $('#reqWorkListUL').listview("refresh");
+                        } else {
+                            alert(data.msg);
+                        }
+                    });
         }
-	}
+    }
 </script>
 </head>
 <body>
@@ -105,7 +124,7 @@
 						onclick="getWorkHisList()">工作记录</a></li>
 					<li><a href="#resumeList" id="messageTabLi"
 						onclick="getResumeList()">简历</a></li>
-					<li><a href="#sendHisList" onclick="getResumeSendHisList()">投递记录</a></li>
+					<li><a href="#reqworkList" onclick="getReqWorkList()">求职记录</a></li>
 				</ul>
 			</div>
 
@@ -113,7 +132,7 @@
 				<ul data-role="listview" id="resumeListUL">
 					
 				</ul>
-				<a data-role="button" data-mini="true"
+				<a data-role="button" data-mini="true" data-icon="plus"
 					onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
 			</div>
 
@@ -185,17 +204,27 @@
 					</a></li>
 				</ul>
 			</div>
-			<div id="sendHisList">
-				<ul data-role="listview">
-					<li data-icon="false"><a onclick="openWork(this)" workId="2"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-				</ul>
-			</div>
+			<div id="reqworkList">
+                <ul data-role="listview" id="reqWorkListUL">
+                    <li data-icon="false"><a onclick="openWork(this)" workId="1"
+                        style="padding-top: 0px; padding-bottom: 0px;"> <img
+                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+                            <h2>臻洪</h2> <!-- 用人单位-->
+                            <p>临时工</p> <!-- 兼职名称 -->
+                            <p>2015-8-1</p> <!-- 兼职名称 -->
+                    </a></li>
+
+                    <li data-icon="false"><a onclick="openWork(this)" workId="12"
+                        style="padding-top: 0px; padding-bottom: 0px;"> <img
+                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+                            <h2>臻洪</h2> <!-- 用人单位-->
+                            <p>临时工</p> <!-- 兼职名称 -->
+                            <p>2015-8-1</p> <!-- 兼职名称 -->
+                    </a></li>
+                </ul>
+                <a data-role="button" data-mini="true" data-icon="plus"
+                    onclick="changeSubPage('reqwork', 'myWorkPage')">发布求职信息</a>
+            </div>
 		</div>
 
 	</div>

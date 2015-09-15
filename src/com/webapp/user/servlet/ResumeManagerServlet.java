@@ -52,11 +52,17 @@ public class ResumeManagerServlet extends AbstractServlet {
 					return;
 				}
 				long resumeId = resumeJson.getLong("resumeId");
+				long readUserId = resumeJson.containsKey("readUserId")==true?resumeJson.getLong("readUserId"):0L;
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载用户信息
 				JSONObject retJson = resumeDao.getResumeInfo(resumeId);
+				//如果不是工作发布者来看这个工作，则记录查看日志
+				if (readUserId>0L&&retJson.getLong("userId")!=readUserId){
+					resumeDao.newLookHis(readUserId,resumeId);
+				}
+				
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("newResume")){//新增简历信息
 				String resumeInfo = hreq.getParameter("resumeInfo");
@@ -102,6 +108,25 @@ public class ResumeManagerServlet extends AbstractServlet {
 				//加载简历列表
 				JSONArray resumeList = resumeDao.getResumeList(resumeId,page);
 				returnSuccessResult(resumeList, response);
+			}else if (method.equals("sendResume")) {// 发送简历
+				String sendResumeInfo = hreq.getParameter("sendResumeInfo");
+
+				if (StringUtils.isEmpty(sendResumeInfo)) {
+					returnFailResult("参数focusInfo不能为空", response);
+					return;
+				}
+				JSONObject sendResumeJson = JSONObject.fromObject(sendResumeInfo);
+				long workId = sendResumeJson.getLong("workId");
+				long resumeId = sendResumeJson.getLong("resumeId");
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+
+				// 加载用户信息
+				long workIdFocusNumber = resumeDao.sendResume(workId, resumeId);
+				JSONObject retJson = new JSONObject();
+				retJson.put("sendResumeNumber", workIdFocusNumber);
+				retJson.put("msg", "发送成功!");
+				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
 			returnFailResult(ExceptionUtil.getMessage(e), response);

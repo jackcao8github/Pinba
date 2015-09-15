@@ -51,11 +51,17 @@ public class WorkManagerServlet extends AbstractServlet {
 					return;
 				}
 				long workId = resumeJson.getLong("workId");
+				long readUserId = resumeJson.getLong("readUserId");
+				
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载用户信息
 				JSONObject retJson = workDao.getWorkInfo(workId);
+				//如果不是工作发布者来看这个工作，则记录查看日志
+				if (retJson.getLong("userId")!=readUserId){
+					workDao.newLookHis(readUserId,workId);
+				}
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("newWork")){//新增简历信息
 				String workInfo = hreq.getParameter("workInfo");
@@ -86,29 +92,50 @@ public class WorkManagerServlet extends AbstractServlet {
 				JSONObject retJson =  new JSONObject();
 				retJson.put("msg", "修改成功！");
 				returnSuccessResult(retJson, response);
-			}else if (method.equals("getWorkList")){//加载简历列表
+			}else if (method.equals("getWorkList")){//加载工作列表
 				String workInfo = hreq.getParameter("workInfo");
 				JSONObject resumeJson = JSONObject.fromObject(workInfo);
 				if (StringUtils.isEmpty(workInfo)) {
 					returnFailResult("参数workInfo不能为空", response);
 					return;
 				}
-				long workId = resumeJson.getLong("userId");
+				long userId = resumeJson.containsKey("userId")==true?resumeJson.getLong("userId"):0;
 				int page = resumeJson.getInt("page");
 				String workType = resumeJson.getString("workType");
+				String cityName = resumeJson.containsKey("cityName")==true?resumeJson.getString("cityName"):"";
 				
 				String[] workTypes =null;
 				if (workType!=null){
 					workTypes = workType.split(",");
 				}
+				//从session中取用户当前所在城市
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载简历列表
-				JSONArray resumeList = workDao.getWorkList(workId,workTypes,page);
+				JSONArray resumeList = workDao.getWorkList(userId,workTypes,cityName,page);
 				returnSuccessResult(resumeList, response);
+			} else if (method.equals("addFocus")) {// 增加关注
+				String focusInfo = hreq.getParameter("focusInfo");
+
+				if (StringUtils.isEmpty(focusInfo)) {
+					returnFailResult("参数focusInfo不能为空", response);
+					return;
+				}
+				JSONObject focusJson = JSONObject.fromObject(focusInfo);
+				long userId = focusJson.getLong("userId");
+				long workId = focusJson.getLong("workId");
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+
+				// 加载用户信息
+				long workIdFocusNumber = workDao.addFocus(userId, workId);
+				JSONObject retJson = new JSONObject();
+				retJson.put("focusNumber", workIdFocusNumber);
+				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			returnFailResult(ExceptionUtil.getMessage(e), response);
 			return;
 		}

@@ -8,13 +8,17 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.webapp.common.bean.AbstractBean;
 import com.webapp.common.bean.PreparedSqlAndParams;
 
 public abstract class AbstractDAO {
+	Log log = LogFactory.getLog(AbstractDAO.class);
 	private DataSource dataSource;
 
 	public DataSource getDataSource() {
@@ -28,6 +32,8 @@ public abstract class AbstractDAO {
 	protected Object insertBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.insertSql();
+		log.debug(sqlAndParams.sql);
+		log.debug(sqlAndParams.args);
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 		return abstractBean.getKeyColValue();
 	}
@@ -38,12 +44,16 @@ public abstract class AbstractDAO {
 		if (sqlAndParams == null) {
 			return;
 		}
+		log.debug(sqlAndParams.sql);
+		log.debug(sqlAndParams.args);
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
 	protected void deleteBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.deleteSql();
+		log.debug(sqlAndParams.sql);
+		log.debug(sqlAndParams.args);
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
@@ -68,6 +78,8 @@ public abstract class AbstractDAO {
 		List result = null;
 		try {
 			sqlAndParams = ((AbstractBean) clazz.newInstance()).getBeansSql(params, forupdate);
+			log.debug(sqlAndParams.sql);
+			log.debug(sqlAndParams.args);
 			JdbcTemplate jt = new JdbcTemplate(getDataSource());
 			result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args, new RowMapper() {
 				@Override
@@ -111,5 +123,27 @@ public abstract class AbstractDAO {
 			e1.printStackTrace();
 		}
 		return result;
+	}
+	
+	public long getBeanCount(final Class clazz, Map<String, Object> params){
+		PreparedSqlAndParams sqlAndParams = null;
+		try {
+			sqlAndParams = ((AbstractBean) clazz.newInstance()).getBeanCountSql(params);
+			log.debug(sqlAndParams.sql);
+			log.debug(sqlAndParams.args);
+			JdbcTemplate jt = new JdbcTemplate(getDataSource());
+			SqlRowSet rowSet = jt.queryForRowSet(sqlAndParams.sql.toString(),sqlAndParams.args);
+			if (rowSet!=null){
+				rowSet.first();
+				return rowSet.getLong("RESULT");
+			}
+		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return 0;
 	}
 }

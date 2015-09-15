@@ -36,10 +36,10 @@ var workType = 'reqPartTime';
                     if (workId > 0) {
                         workInfo.workId = workId;
                     }
-                    var cachedUserInfo = str2Json(localStorage.userInfo);
+                    var cachedUserInfo = getLoginUserInfo();
                     if (cachedUserInfo != null) {
                         workInfo.userToken = cachedUserInfo.userToken;
-
+                        workInfo.readUserId = cachedUserInfo.userId;
                         ajaxReq('workAction', {
                             method : 'getWorkInfo',
                             workInfo : json2Str(workInfo)
@@ -80,7 +80,7 @@ var workType = 'reqPartTime';
             workInfo.workId = workId;
             method = 'modWork';
         }
-        var cachedUserInfo = str2Json(localStorage.userInfo);
+        var cachedUserInfo = getLoginUserInfo();
         if (cachedUserInfo != null) {
             workInfo.userId = cachedUserInfo.userId;
             workInfo.workName = $('#workName').val();

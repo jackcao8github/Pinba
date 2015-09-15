@@ -36,10 +36,10 @@
 					if (workId > 0) {
 						workInfo.workId = workId;
 					}
-					var cachedUserInfo = str2Json(localStorage.userInfo);
+					var cachedUserInfo = getLoginUserInfo();
 					if (cachedUserInfo != null) {
 						workInfo.userToken = cachedUserInfo.userToken;
-
+						workInfo.readUserId = cachedUserInfo.userId;
 						ajaxReq('workAction', {
 							method : 'getWorkInfo',
 							workInfo : json2Str(workInfo)
@@ -80,7 +80,7 @@
 			workInfo.workId = workId;
 			method = 'modWork';
 		}
-		var cachedUserInfo = str2Json(localStorage.userInfo);
+		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			workInfo.userId = cachedUserInfo.userId;
 			workInfo.workName = $('#workName').val();
@@ -264,7 +264,7 @@
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false">
-			<a data-role="button" class="ui-btn ui-corner-all" style="width:100%;color:red"  onclick="pub()">发布</a>
+			<a data-role="button" class="ui-btn ui-corner-all" style="width:100%;height:100%;color:red"  onclick="pub()">发布</a>
 		</div>
 	</div>
 </body>

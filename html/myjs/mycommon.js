@@ -1,5 +1,18 @@
 document.write('<script type="text/javascript" src="../js/json2.js"></script>');// 引入json库
 document.write('<script type="text/javascript" src="../myjs/charspecvalue.js"></script>');// 引入json库
+
+//取当前登陆用户信息
+function getLoginUserInfo(){
+	var cachedUserInfo = str2Json(localStorage.userInfo);
+	if (cachedUserInfo != null) {
+		return cachedUserInfo;
+	}else{
+		//转到登陆页面
+		changeSubPage('login');
+	}
+}
+
+
 // 取url带入的所有页面参数
 function getRequest() {
 	var url = location.search; // 获取url中"?"符后的字串
@@ -145,6 +158,8 @@ var idHtmlMap = {
 	"resumeDetail" : "my/resumeDetail.html",
 	"editResumeDetail" : "my/editResumeDetail.html",
 	"reqwork" : "publish/reqwork.html",
+	"changeCompanyUserInfo" : "my/changeCompanyUserInfo.html",
+	"changePrivateUserInfo" : "my/changePrivateUserInfo.html",
 	"resume" : "my/resume.html"
 };
 
@@ -152,18 +167,19 @@ var idHtmlMap = {
 function changeSubPage(newpageid, oldpageid, params) {
 	if (parent.$('#indexPage').length > 0) {
 		// 刷新parent.displayFrameId的高度
-		console.log(parent.$('#indexPage').css('height'));
 		var newh = parent.window.innerHeight
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
 		
-		parent.$('#' + parent.displayFrameId).css('height', newh + 'px');
-		console.log(parent.$('#indexPage').css('height'));
+		parent.$('#' + parent.displayFrameId).css('height', newh-10 + 'px');
 		parent.$('#footNavBar').hide();
-		console.log(parent.$('#indexPage').css('height'));
+	}
+	if (oldpageid==null){
+		oldpageid = $('[data-role="page"]').attr('id');
 	}
 	$('#' + oldpageid).hide();
-	console.log(parent.$('#indexPage').css('height'));
+	
+	
 	var clientWindowHeight = window.innerHeight
 			|| document.documentElement.clientHeight
 			|| document.body.clientHeight;
@@ -232,7 +248,7 @@ function closeSubPage(destpageid) {
 				|| parent.document.body.clientHeight;
 
 		parent.parent.$('#' + parent.parent.displayFrameId).css('height',
-				newh + 'px');
+				newh-10 + 'px');
 	}
 	parent.$('#otherPage').hide();
 	if (destpageid == null) {

@@ -11,10 +11,6 @@
 <script src="../js/jQuery.md5.js" type="text/javascript"></script>
 
 <style>
-.controlgroup-textinput {
-	    padding-top: .22em;
-	    padding-bottom: .22em;
-}
 </style>
 
 <script type="text/javascript">
@@ -36,10 +32,11 @@
 		userInfo.msgverifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.address = companyAddress;
-		userInfo.companySize = companySize;
-		userInfo.companyIndustry = companyIndustry;
+		userInfo.size = companySize;
+		userInfo.industry = companyIndustry;
 		userInfo.userType = "company";
-
+		userInfo.selfreview = $('#selfreview').val();
+		
 		ajaxReq('userAction', {
 			method : 'newUser',
 			userInfo : json2Str(userInfo)

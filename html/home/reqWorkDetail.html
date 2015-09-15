@@ -21,27 +21,28 @@
 	}
 	var workId = 0;
 	$(document).ready(function() {
-		//为关注按钮增加响应事件
-		$('#favBtn').bind('click', function() {
-			var css = $(this).find('i').attr('class');
-			if (css.indexOf('fa-star-o') > 0) {
-				$(this).find('i').attr('class', 'fa fa-star fa-2x');
-			} else {
-				$(this).find('i').attr('class', 'fa fa-star-o fa-2x');
-			}
-		});
-		//为分享按钮增加响应事件
-		$('#shareBtn').bind('click', function() {
+		
+		//为关注钮增加响应事件
+        $('#addFocusBtn').bind('click', function() {
+            var cachedUserInfo = getLoginUserInfo();
+            if (cachedUserInfo != null) {
+                var focusInfo = {};
+                focusInfo.userToken = cachedUserInfo.userToken;
+                focusInfo.userId = cachedUserInfo.userId;
+                focusInfo.workId = workId;
 
-		});
-		//为购买按钮增加响应事件
-		$('#buyBtn').bind('click', function() {
-
-		});
-		//为加入购物车按钮增加响应事件
-		$('#shopcartBtn').bind('click', function() {
-
-		});
+                ajaxReq('userAction', {
+                    method : 'addFocus',
+                    focusInfo : json2Str(focusInfo)
+                }, function(data) {
+                    if (data.flag == 'success') {
+                        $('#addFocusBtn').html(data.focusNumber);
+                    } else {
+                        alert(data.msg);
+                    }
+                });
+            }
+        });
 
 		workId = getQueryString('workId');
 		if (workId > 0) {
@@ -49,27 +50,37 @@
 			pageInit();
 		}
 	});
-	function pageInit(){
+	function pageInit() {
 		var workInfo = {};
-        if (workId > 0) {
-            workInfo.workId = workId;
-        }
-        var cachedUserInfo = str2Json(localStorage.userInfo);
-        if (cachedUserInfo != null) {
-            workInfo.userToken = cachedUserInfo.userToken;
-
-            ajaxReq('workAction', {
-                method : 'getWorkInfo',
-                workInfo : json2Str(workInfo)
-            }, function(data) {
-                if (data.flag == 'success') {
-                    bindData(data);
-                } else {
-                    alert(data.msg);
-                    return false;
-                }
-            });
-        }
+		if (workId > 0) {
+			workInfo.workId = workId;
+		}
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.readUserId = cachedUserInfo.userId;
+			
+			ajaxReq('workAction', {
+				method : 'getWorkInfo',
+				workInfo : json2Str(workInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					bindData(data);
+					$('#addFocusBtn').html(data.focusNumber);
+					
+					//如果不是工作所有者，需要删除修改按钮
+                    var workOwnerId = data.userId;
+                    if (cachedUserInfo.userId == workOwnerId) {
+                        $('#footer').remove();
+                    } else {
+                        $('#modBtn').remove();
+                    }
+				} else {
+					alert(data.msg);
+					return false;
+				}
+			});
+		}
 	}
 	//绑定数据到控件
 	function bindData(jsonData) {
@@ -78,27 +89,27 @@
 			var ctrl = $('#' + o);
 			if (ctrl.length > 0) {
 				ctrl.html(value);
-			}else if (o=='resumeId'){
-				var resumeHtml = getContextPath() + '/my/resumeDetail.html?mode=intergration&resumeId='+value;
-				$('#resumeFrame').attr('src',resumeHtml);
+			} else if (o == 'resumeId') {
+				var resumeHtml = getContextPath()
+						+ '/my/resumeDetail.html?mode=intergration&resumeId='
+						+ value;
+				$('#resumeFrame').attr('src', resumeHtml);
 			}
 		}
 	}
-	
-	function resizeIFrameHeight(obj){
-		 var iframe = document.getElementById(obj.id);
-		 iframe.height = iframe.contentDocument.body.scrollHeight+100;
+
+	function resizeIFrameHeight(obj) {
+		var iframe = document.getElementById(obj.id);
+		iframe.height = iframe.contentDocument.body.scrollHeight + 100;
 	}
 	function modReqWork() {
-		changeSubPage('reqwork', 'workdetailPage','workId='+workId);
+		changeSubPage('reqwork', 'workdetailPage', 'workId=' + workId);
 	}
 </script>
 
 
 <style type="text/css">
-li {
-	padding: 0em 1em
-}
+
 </style>
 
 </head>
@@ -113,20 +124,20 @@ li {
 				onclick="closeSubPage();return false;">Back</a>
 			<h1 id="workName">求职详情</h1>
 			<a onclick="modReqWork()" id="modBtn"
-                class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改求职</a>
+				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改求职</a>
 		</div>
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider"><span>基本信息</span><span
 				class="ui-li-count">2人关注</span></li>
 			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
-                    <div style="float: left; width: 30%; color: #a3a3a3">
-                        <p>求职内容:</p>
-                    </div>
-                    <div style="float: left; width: 70%">
-                        <p id="content"></p>
-                    </div>
-                </div>
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>求职内容:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p id="content"></p>
+					</div>
+				</div>
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>发布时间:</p>
@@ -144,25 +155,26 @@ li {
 					</div>
 				</div>
 			</li>
-			
-			
+
+
 			<li data-role="list-divider">求职简历</li>
-			<li><iframe src="" id="resumeFrame" style="width:100%;padding:0" scrolling="no"  onload="resizeIFrameHeight(this)"></iframe></li>
+			<li><iframe src="" id="resumeFrame"
+					style="width: 100%; padding: 0" scrolling="no"
+					onload="resizeIFrameHeight(this)"></iframe></li>
 			<li data-role="list-divider">该用户其它求职<span class="ui-li-count">2</span></li>
 		</ul>
-		
+
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false">
-			<div data-role="navbar" data-grid="b">
-				<ul style="text-align: center; padding: 5px 0">
-					<!-- 关注 -->
-					<li id="favBtn" style="width: 20%"><a class="ui-btn">关注</a></li>
-					<!-- 分享 -->
-					<li id="shareBtn" style="width: 20%"><a class="ui-btn">咨询</a></li>
-					<!-- 联系求职者 -->
-					<li id="buyBtn" style="width: 60%;"><a data-role="button"
-						style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">联系求职者</a></li>
+			data-tap-toggle="false" id="footer">
+			<div data-role="controlgroup" data-type="horizontal">
+				<!-- 关注 -->
+				<a href="#" id="addFocusBtn" data-role="button" data-icon="plus">10
+                </a> 
+
+				<!-- 联系求职者 -->
+				<a href="#" data-role="button" data-icon="mail"
+					style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">联系求职者</a>
 
 				</ul>
 			</div>
