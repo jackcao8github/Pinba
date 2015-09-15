@@ -208,8 +208,8 @@ public class WorkManagerDAO extends AbstractDAO {
 				retJson.put("userName", userInfo.getString("userName"));//返回用户名
 				retJson.put("userCredit", userInfo.getString("userCredit"));//返回用户信用度
 				retJson.put("workName", prodBean.getProdName());
-				//retJson.put("workType", prodBean.getProdType());
-				retJson.put("workType", charSpecDao.getDisplayValue("workType",prodBean.getProdType()));
+				retJson.put("workType", prodBean.getProdType());
+				/*retJson.put("workType", charSpecDao.getDisplayValue("workType",prodBean.getProdType()));*/
 				retJson.put("workId", prodBean.getProdId());
 				retJson.put("effDate", prodBean.getEffDate());
 				retJson.put("expDate", prodBean.getExpDate());

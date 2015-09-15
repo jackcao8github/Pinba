@@ -20,6 +20,7 @@
 		closeSubPage();
 	}
 	var workId = 0;
+	var userId = 0;
 	$(document).ready(function() {
 		
 		//为关注钮增加响应事件
@@ -55,11 +56,14 @@
 		if (workId > 0) {
 			workInfo.workId = workId;
 		}
-		var cachedUserInfo = getLoginUserInfo();
+		var cachedUserInfo = str2Json(localStorage.userInfo);
 		if (cachedUserInfo != null) {
 			workInfo.userToken = cachedUserInfo.userToken;
 			workInfo.readUserId = cachedUserInfo.userId;
-			
+			userId = cachedUserInfo.userId;
+		}else{
+			userId = 0;
+		}
 			ajaxReq('workAction', {
 				method : 'getWorkInfo',
 				workInfo : json2Str(workInfo)
@@ -70,7 +74,7 @@
 					
 					//如果不是工作所有者，需要删除修改按钮
                     var workOwnerId = data.userId;
-                    if (cachedUserInfo.userId == workOwnerId) {
+                    if (userId == workOwnerId) {
                         $('#footer').remove();
                     } else {
                         $('#modBtn').remove();
@@ -80,7 +84,7 @@
 					return false;
 				}
 			});
-		}
+		
 	}
 	//绑定数据到控件
 	function bindData(jsonData) {
@@ -122,12 +126,12 @@
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
-			<h1 id="workName">求职详情</h1>
+			<h1>求职详情</h1>
 			<a onclick="modReqWork()" id="modBtn"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改求职</a>
 		</div>
-		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider"><span>基本信息</span><span
+		<ul data-role="listview" data-mini="true">
+			<li data-role="list-divider"><span id="workName">求职名称</span><span
 				class="ui-li-count">2人关注</span></li>
 			<li data-icon="false" style="padding: 0em 1em">
 				<div style="overflow: hidden">
@@ -143,7 +147,7 @@
 						<p>发布时间:</p>
 					</div>
 					<div style="float: left; width: 70%">
-						<p id="createDate"></p>
+						<p id="effDate"></p>
 					</div>
 				</div>
 				<div style="overflow: hidden">
@@ -156,15 +160,11 @@
 				</div>
 			</li>
 
-
-			<li data-role="list-divider">求职简历</li>
-			<li><iframe src="" id="resumeFrame"
-					style="width: 100%; padding: 0" scrolling="no"
-					onload="resizeIFrameHeight(this)"></iframe></li>
-			<li data-role="list-divider">该用户其它求职<span class="ui-li-count">2</span></li>
+			<li><a style="color: #a3a3a3;font-size:0.75em;background-color:white;font-weight:normal;">该用户其它求职<span class="ui-li-count">2</span></a></li>
 		</ul>
-
-
+		<iframe src="" id="resumeFrame"
+                    style="width: 100%; padding: 0" scrolling="no"
+                    onload="resizeIFrameHeight(this)"></iframe>
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">

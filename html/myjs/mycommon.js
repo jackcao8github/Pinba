@@ -171,7 +171,7 @@ function changeSubPage(newpageid, oldpageid, params) {
 				|| parent.document.documentElement.clientHeight
 				|| parent.document.body.clientHeight;
 		
-		parent.$('#' + parent.displayFrameId).css('height', newh-10 + 'px');
+		//parent.$('#' + parent.displayFrameId).css('height', newh + 'px');
 		parent.$('#footNavBar').hide();
 	}
 	if (oldpageid==null){
@@ -208,11 +208,12 @@ function changeSubPage(newpageid, oldpageid, params) {
 		// 不是同一目录下的页面
 		newsrc = '../' + newsrc;
 	}
+	var newHeight = clientWindowHeight -2;
 	// 如果没有otherpage iframe,则在body里创建一个iframe
 	if ($('#otherPage').length == 0) {
 		$(
 				'<iframe src="#" style="border:0;margin:0;display: none;width:'
-						+ clientWindowWidth + 'px;height:' + clientWindowHeight
+						+ clientWindowWidth + 'px;height:' + newHeight
 						+ 'px;" id="otherPage"/>').appendTo('body');
 		if (params != null) {
 			newsrc = newsrc + '?' + params;
@@ -228,7 +229,7 @@ function changeSubPage(newpageid, oldpageid, params) {
 			$(
 					'<iframe src="#" style="border:0;margin:0;display: none;width:'
 							+ clientWindowWidth + 'px;height:'
-							+ clientWindowHeight + 'px;" id="otherPage"/>')
+							+ newHeight + 'px;" id="otherPage"/>')
 					.appendTo('body');
 			$('#otherPage').attr('src', newsrc);
 		}
@@ -248,7 +249,7 @@ function closeSubPage(destpageid) {
 				|| parent.document.body.clientHeight;
 
 		parent.parent.$('#' + parent.parent.displayFrameId).css('height',
-				newh-10 + 'px');
+				newh + 'px');
 	}
 	parent.$('#otherPage').hide();
 	if (destpageid == null) {

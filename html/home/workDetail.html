@@ -18,6 +18,7 @@
 		closeSubPage();
 	}
 	var workId = 0;
+	var userId = 0;
 	$(document).ready(function() {
 		//为关注钮增加响应事件
 	   $('#addFocusBtn').bind('click',function() {
@@ -145,10 +146,14 @@
 		if (workId > 0) {
 			workInfo.workId = workId;
 		}
-		var cachedUserInfo = getLoginUserInfo();
+		var cachedUserInfo = str2Json(localStorage.userInfo);
 		if (cachedUserInfo != null) {
 			workInfo.userToken = cachedUserInfo.userToken;
 			workInfo.readUserId = cachedUserInfo.userId;
+			userId =  cachedUserInfo.userId;
+		}else{
+			userId = 0;
+		}
 			ajaxReq('workAction', {
 				method : 'getWorkInfo',
 				workInfo : json2Str(workInfo)
@@ -158,7 +163,7 @@
 					$('#addFocusBtn').html(data.focusNumber);
 					//如果不是工作所有者，需要删除修改按钮
 					var workOwnerId = data.userId;
-					if (cachedUserInfo.userId == workOwnerId) {
+					if (userId == workOwnerId) {
 						$('#footer').remove();
 					} else {
 						$('#modBtn').remove();
@@ -167,7 +172,7 @@
 					alert(data.msg);
 				}
 			});
-		}
+		
 	}
 	//绑定数据到控件
 	function bindData(jsonData, divId) {

@@ -24,7 +24,9 @@
 		var workId = $(obj).attr('workId');
 		changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
 	}
-
+    function pageInit(){
+    	getWorkList();
+    }
 	function getWorkList() {
 		$('#workListUL').html('');
 		var workInfo = {};
@@ -50,7 +52,7 @@
 								var lihtml = litemplate.replace('+workId+',
 										workObj.workId).replace('+workName+',
 										workObj.workName).replace('+workType+',
-										workObj.workType).replace('+effDate+',
+												getDisplayEnumValue('workType',workObj.workType)).replace('+effDate+',
 										workObj.effDate).replace('+expDate+',
 										workObj.expDate).replace(
 										'+focusNumber+', workObj.focusNumber)

@@ -19,12 +19,12 @@
 						'src',
 						getContextPath()
 								+ '/verifyImage?width=70&height=21&length=4');
-				
+
 				//初始化下拉框控件
-                $('select').each(function(index,item){
-                    fillOptions(item.id);
-                });
-				
+				$('select').each(function(index, item) {
+					fillOptions(item.id);
+				});
+
 				resumeId = getQueryString('resumeId');
 				if (resumeId > 0) {
 					$('#title').html('修改简历');
@@ -35,7 +35,7 @@
 					var cachedUserInfo = getLoginUserInfo();
 					if (cachedUserInfo != null) {
 						resumeInfo.userToken = cachedUserInfo.userToken;
-						
+
 						ajaxReq('resumeAction', {
 							method : 'getResumeInfo',
 							resumeInfo : json2Str(resumeInfo)
@@ -57,12 +57,11 @@
 			var value = jsonData[o];
 			var ctrl = $('#' + o);
 			if (ctrl.length > 0) {
-				if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
-					selectOptions(o,value);	
-				}
-				else if (o=='selfReview'){
+				if (ctrl[0].tagName == 'SELECT') {//jquery mobile 渲染了select,html完全变了
+					selectOptions(o, value);
+				} else if (o == 'selfReview') {
 					ctrl.html(value);
-				}else{
+				} else {
 					ctrl.val(value);
 				}
 			}
@@ -88,25 +87,25 @@
 			resumeInfo.age = $('#age').val();
 			resumeInfo.resumeType = $('#resumeType').val();
 			resumeInfo.expectIndustry = $('#expectIndustry').val();
-			
+
 			var expectPostStr = '';
 			var postArr = $('#expectPost').val();
-			$(postArr).each(function(inx,item){
-				if (expectPostStr!=''){
+			$(postArr).each(function(inx, item) {
+				if (expectPostStr != '') {
 					expectPostStr += ',';
 				}
 				expectPostStr += item;
 			});
 			resumeInfo.expectPost = expectPostStr;
-			
+
 			var expectWorkAreaStr = '';
-            var areaArr= $('#expectWorkArea').val();
-            $(areaArr).each(function(ind,item){
-                if (expectWorkAreaStr!=''){
-                	expectWorkAreaStr += ',';
-                }
-                expectWorkAreaStr += item;
-            });
+			var areaArr = $('#expectWorkArea').val();
+			$(areaArr).each(function(ind, item) {
+				if (expectWorkAreaStr != '') {
+					expectWorkAreaStr += ',';
+				}
+				expectWorkAreaStr += item;
+			});
 			resumeInfo.expectWorkArea = expectWorkAreaStr;
 			resumeInfo.daySallary = $('#daySallary').val();
 			resumeInfo.dayCharge = $('#dayCharge').val();
@@ -150,27 +149,27 @@
 					<label for="resumeName">简历名称:</label> <input type="text"
 						name="resumeName" id="resumeName" value="" required="required">
 				</div>
-				
+
 				<div data-role="fieldcontain">
-                    <label for="resumeType" class="select">简历类型:</label> <select
-                        name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+
-                        <option value="partTime" selected>兼职</option>
-                        <option value="fullTime">全职</option>+END+
-                    </select>
-                </div>
-				
+					<label for="resumeType" class="select">简历类型:</label> <select
+						name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+
+						<option value="partTime" selected>兼职</option>
+						<option value="fullTime">全职</option>+END+
+					</select>
+				</div>
+
 				<div data-role="fieldcontain">
-					<label for="realName">真实姓名:</label> <input type="text" name="realName"
-						id="realName" value="" required="required">
+					<label for="realName">真实姓名:</label> <input type="text"
+						name="realName" id="realName" value="" required="required">
 				</div>
 				<div data-role="fieldcontain">
-                    <label for="cellphone">联系手机:</label> <input type="text" name="cellphone"
-                        id="cellphone" value="" required="required">
-                </div>
-                <div data-role="fieldcontain">
-                    <label for="email">联系邮箱:</label> <input type="text" name="email"
-                        id="email" value="" required="required">
-                </div>
+					<label for="cellphone">联系手机:</label> <input type="text"
+						name="cellphone" id="cellphone" value="" required="required">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="email">联系邮箱:</label> <input type="text" name="email"
+						id="email" value="" required="required">
+				</div>
 				<div data-role="fieldcontain">
 					<label for="sex" class="select">性别:</label> <select name="sex"
 						id="sex" data-native-menu="false">
@@ -179,13 +178,14 @@
 					</select>
 				</div>
 				<div data-role="fieldcontain">
-                    <label for="age">年龄:</label> <input type="text" name="age"
-                        id="age" value="" required="required">
-                </div>
-				
+					<label for="age">年龄:</label> <input type="text" name="age" id="age"
+						value="" required="required">
+				</div>
+
 				<div data-role="fieldcontain">
-					<label for="expectPost" class="select">期望职位:</label> <select name="expectPost" multiple="multiple"
-						id="expectPost" data-native-menu="false">
+					<label for="expectPost" class="select">期望职位:</label> <select
+						name="expectPost" multiple="multiple" id="expectPost"
+						data-native-menu="false">
 						<option value="xuesheng" selected>学生兼职</option>
 						<option value="xiaoshigong">小时工</option>
 						<option value="shixisheng">实习生</option>
@@ -196,8 +196,9 @@
 					</select>
 				</div>
 				<div data-role="fieldcontain">
-					<label for="expectWorkArea" class="select">期望区域:</label> <select name="expectWorkArea" multiple="multiple"
-						id="expectWorkArea" data-native-menu="false">
+					<label for="expectWorkArea" class="select">期望区域:</label> <select
+						name="expectWorkArea" multiple="multiple" id="expectWorkArea"
+						data-native-menu="false">
 						<option value="njgulou" selected>鼓楼</option>
 						<option value="njqinhuai">秦淮</option>
 						<option value="njbaixia">白下</option>
@@ -345,16 +346,27 @@
 
 				<div data-role="fieldcontain">
 					<label for="verifyCode">验证码:</label>
-					<div style="display: inline-flex; width: 100%">
-						<div style="width: 70%; height: 100%;">
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required="required">
+						</div>
+						<div class="ui-block-b">
+							<img id="verifyImg" src=""
+								style="margin-top: 14px; margin-left: 5px;"></img>
+						</div>
+					</fieldset>
+					<!-- <div style="display: inline-flex; width: 100%">
+						<div style="width: 40%; height: 100%;">
 							<input type="text" name="verifyCode" id="verifyCode" value=""
 								placeholder="验证码" required="required">
 						</div>
 						<a data-mini="true" href="#"
-							style="width: 30%; height: 100%; margin-top: 8px;"><img
+							style="width: 30%; height: 100%; margin-top: 15px;margin-left:-80px;"><img
 							id="verifyImg" src=""></img></a>
-					</div>
+					</div> -->
 				</div>
+				
 				<button type="submit" class="ui-btn">提交</button>
 			</form>
 		</div>

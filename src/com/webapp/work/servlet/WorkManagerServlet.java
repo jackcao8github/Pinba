@@ -51,7 +51,7 @@ public class WorkManagerServlet extends AbstractServlet {
 					return;
 				}
 				long workId = resumeJson.getLong("workId");
-				long readUserId = resumeJson.getLong("readUserId");
+				long readUserId = getLongFromJSON(resumeJson,"readUserId",false);
 				
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
@@ -59,7 +59,7 @@ public class WorkManagerServlet extends AbstractServlet {
 				//加载用户信息
 				JSONObject retJson = workDao.getWorkInfo(workId);
 				//如果不是工作发布者来看这个工作，则记录查看日志
-				if (retJson.getLong("userId")!=readUserId){
+				if (readUserId>0&&retJson.getLong("userId")!=readUserId){
 					workDao.newLookHis(readUserId,workId);
 				}
 				returnSuccessResult(retJson, response);

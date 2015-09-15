@@ -26,7 +26,7 @@
 	$(document).bind("pagecreate", pageInit);
 	
 	function pageInit(){
-		var cachedUserInfo = getLoginUserInfo();
+		var cachedUserInfo = str2Json(localStorage.userInfo);
         if (cachedUserInfo != null) {
             var userInfo = {};
             userInfo.userId = cachedUserInfo.userId;
@@ -36,10 +36,10 @@
             }, function(data) {
                 if (data.flag == 'success') {//登陆成功后返回主页面
                 	$('#userName').html(''+data.userName);
-                    $('#authSate').html('认证状态：'+data.userAuthState);
-                    $('#balanceValue').html('余额：'+data.balance);
-                    $('#pointsValue').html('积分：'+data.points);
-                    $('#level').html('级别：' + data.userLevel);
+                    $('#authSate').html('认证状态:'+data.userAuthState);
+                    $('#balanceValue').html('余额:'+data.balance);
+                    $('#pointsValue').html('积分:'+data.points);
+                    $('#level').html('级别:' + data.userLevel);
                 } else {
                     alert(data.msg);
                     return false;
@@ -47,10 +47,10 @@
             });
         }else{
         	$('#userName').html('未登陆');
-            $('#authSate').html('认证状态：未知');
-            $('#balanceValue').html('余额：未知');
-            $('#pointsValue').html('积分：未知');
-            $('#level').html('级别：未知' );
+            $('#authSate').html('认证状态:未知');
+            $('#balanceValue').html('余额:未知');
+            $('#pointsValue').html('积分:未知');
+            $('#level').html('级别:未知' );
         }
 	}
 	
@@ -73,6 +73,10 @@
 	}
 
 	function changePage(obj) {
+		var userInfo = getLoginUserInfo();
+        if (userInfo == null) {//未登陆过，则显示登陆页面
+        	return;
+        }
 		var id = obj.id;
 		changeSubPage(id, 'wodePage');
 	}

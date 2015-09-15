@@ -17,6 +17,7 @@
 		closeSubPage();
 	}
 	var resumeId = 0;
+	var userId = 0;
 	$(document).ready(function() {
 		var mode = getQueryString('mode');
 		if (mode=='intergration'){//表示此页面被嵌入到其它页面里,header和footer要去掉
@@ -36,11 +37,14 @@
         if (resumeId > 0) {
             resumeInfo.resumeId = resumeId;
         }
-        var cachedUserInfo = getLoginUserInfo();
+        var cachedUserInfo = str2Json(localStorage.userInfo);
         if (cachedUserInfo != null) {
             resumeInfo.userToken = cachedUserInfo.userToken;
             resumeInfo.readUserId = cachedUserInfo.userId;
-
+            userId  = cachedUserInfo.userId;
+        }else{
+        	userId = 0;
+        }
             ajaxReq('resumeAction', {
                 method : 'getResumeInfo',
                 resumeInfo : json2Str(resumeInfo)
@@ -50,7 +54,7 @@
 
                     //如果不是简历所有者，需要删除修改简历按钮
                     var resumeUserId = data.userId;
-                    if (cachedUserInfo.userId == resumeUserId) {
+                    if (userId == resumeUserId) {
                         $('#footer').remove();
                     } else {
                         $('#modBtn').remove();
@@ -60,7 +64,6 @@
                     return false;
                 }
             });
-        }
 	}
 	/* 修改简历 */
 	function modResume() {
