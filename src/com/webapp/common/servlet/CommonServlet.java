@@ -7,19 +7,17 @@ import java.security.interfaces.RSAPublicKey;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.webapp.common.util.CachedMsgVerifyCodeUtil;
 import com.webapp.common.util.ExceptionUtil;
 import com.webapp.common.util.RSAUtils;
+import com.webapp.common.util.SMSSendUtil;
 import com.webapp.common.util.VerifyImage;
 
 
@@ -83,11 +81,25 @@ public class CommonServlet extends AbstractServlet
 					return;
 				}
 				String cellphone = userJson.getString("cellphone");
-				//向指定用户手机发送短信验证码
-				
-				JSONObject retJson = new JSONObject();
-				retJson.put("msg", "发送成功");
-				returnSuccessResult(retJson, response);
+				//判断该号码在5分钟内是否发送过验证码，如果已发送过则无须再次发送
+				String cachedVerifyCode = CachedMsgVerifyCodeUtil.getCachedData(cellphone);
+				if (cachedVerifyCode==null){
+					//随机生成并向指定用户手机发送短信验证码
+					VerifyImage image = new VerifyImage();
+					String verifyCode = image.createValue();
+					//存储验证码到数据库，5分钟有效
+					CachedMsgVerifyCodeUtil.addCachedData(cellphone, verifyCode);
+					JSONObject retJson = SMSSendUtil.sendSMSVerifyCode(cellphone, verifyCode);
+					
+					if ("success".equals(retJson.getString("flag"))){
+						retJson.put("msg", "发送成功!");
+						returnSuccessResult(retJson, response);
+					}else{
+						returnFailResult("发送失败:"+retJson.getString("statusMsg"), response);
+					}
+				}else{
+					returnFailResult("已发送过，请不要重复发送!", response);
+				}
 			}
 		} catch (Exception e) {
 			returnFailResult(ExceptionUtil.getMessage(e), response);

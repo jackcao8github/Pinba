@@ -16,7 +16,6 @@
 <script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
-<script type="text/javascript" src="../myjs/position.js"></script>
 
 
 <script type="text/javascript">
@@ -111,6 +110,27 @@
 		} else {
 			$("#location").html(localStorage.city);
 		}
+		
+		//上传用户当前坐标
+        if (localStorage.latitude!=null){
+        	var cachedUserInfo = str2Json(localStorage.userInfo);
+            if (cachedUserInfo != null) {
+              userInfo = {};
+                userInfo.userId = cachedUserInfo.userId;
+                userInfo.latitude = localStorage.latitude;
+                userInfo.longitude = localStorage.longitude;
+                userInfo.cityName = localStorage.city;
+                
+                ajaxReq('userAction', {
+                    method : 'logUserPosition',
+                    userInfo : json2Str(userInfo)
+                }, function(data) {
+                    if (data.flag == 'success') {//登陆成功后返回主页面
+                    } else {
+                    }
+                });
+            }
+        }
 	}
 
 	function swipeLeft() {

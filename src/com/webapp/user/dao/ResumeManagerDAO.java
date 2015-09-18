@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.util.StringUtils;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -12,10 +14,11 @@ import com.webapp.common.bean.AbstractBean;
 import com.webapp.common.dao.AbstractDAO;
 import com.webapp.common.dao.CharSpecDAO;
 import com.webapp.common.util.TimeUtil;
+import com.webapp.user.bean.UserProdCharBean;
 import com.webapp.user.bean.UserResumeBean;
 import com.webapp.user.bean.UserResumeCharBean;
 import com.webapp.user.bean.UserResumeLookHisBean;
-import com.webapp.user.bean.UserResumeSendHisBean;
+import com.webapp.user.bean.UserProdBean;
 
 public class ResumeManagerDAO extends AbstractDAO {
 	private static CharSpecDAO charSpecDao = null;
@@ -29,27 +32,42 @@ public class ResumeManagerDAO extends AbstractDAO {
 		Map<String, Object> params = new HashMap();
 		params.put("RESUME_ID", "" + resumeId);
 
-		UserResumeBean userBean = (UserResumeBean) getBean(UserResumeBean.class, params);
-		if (userBean == null) {
+		UserResumeBean resumeBean = (UserResumeBean) getBean(UserResumeBean.class, params);
+		if (resumeBean == null) {
 			throw new Exception("参数resumeId" + resumeId + "不正确!");
 		}
 		// 返回用户基本信息
 		JSONObject retJson = new JSONObject();
-		retJson.put("userId", userBean.getUserId());
-		retJson.put("resumeName", userBean.getResumeName());
-		retJson.put("resumeType", charSpecDao.getDisplayValue("resumeType",userBean.getResumeType()));
-		
+		retJson.put("userId", resumeBean.getUserId());
+		retJson.put("resumeId", resumeBean.getResumeId());
+		retJson.put("resumeName", resumeBean.getResumeName());
+		retJson.put("resumeType", charSpecDao.getDisplayValue("resumeType",resumeBean.getResumeType()));
+		retJson.put("createDate", resumeBean.getCreateDate());
 		// 返回简历特征信息
 		params.clear();
-		params.put("RESUME_ID", "" + resumeId);
-		List<AbstractBean> result = getBeans(UserResumeCharBean.class, params);
-		if (result != null && result.size() > 0) {
-			for (AbstractBean abBean : result) {
-				UserResumeCharBean userCharBean = (UserResumeCharBean) abBean;
-
-				retJson.put(charSpecDao.getCode(userCharBean.getCharId()), userCharBean.getValue());
+		params.put("RESUME_ID", "" + resumeBean.getResumeId());
+		List<AbstractBean> resumeCharResult = getBeans(UserResumeCharBean.class, params);
+		if (resumeCharResult != null && resumeCharResult.size() > 0) {
+			for (AbstractBean resumeCharAbBean : resumeCharResult) {
+				UserResumeCharBean resumeCharBean = (UserResumeCharBean) resumeCharAbBean;
+				String charCode = charSpecDao.getCode(resumeCharBean.getCharId());
+				if (!retJson.containsKey(charCode))
+					retJson.put(charCode, resumeCharBean.getValue());
 			}
 		}
+		//返回简历投递次数
+		params.clear();
+		params.put("VALUE", "" + resumeBean.getResumeId());
+		params.put("CHAR_ID", ""+charSpecDao.getCharId("resumeId"));
+		long sendNumber = super.getBeanCount(UserProdCharBean.class, params);
+		retJson.put("resumeSendNumber", sendNumber);
+		
+		
+		//返回查看次数
+		params.clear();
+		params.put("RESUME_ID", "" + resumeBean.getResumeId());
+		long lookNumber = super.getBeanCount(UserResumeLookHisBean.class, params);
+		retJson.put("lookNumber", lookNumber);
 
 		return retJson;
 	}
@@ -118,6 +136,13 @@ public class ResumeManagerDAO extends AbstractDAO {
 		}
 	}
 
+	/**
+	 * 加载用户的简历
+	 * @param userId
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
 	public JSONArray getResumeList(long userId, int page) throws Exception {
 		Map<String, Object> params = new HashMap();
 		params.put("USER_ID", "" + userId);
@@ -149,12 +174,14 @@ public class ResumeManagerDAO extends AbstractDAO {
 				}
 				//返回简历投递次数
 				params.clear();
-				params.put("RESUME_ID", "" + resumeBean.getResumeId());
-				long sendNumber = super.getBeanCount(UserResumeSendHisBean.class, params);
+				params.put("VALUE", "" + resumeBean.getResumeId());
+				params.put("CHAR_ID", ""+charSpecDao.getCharId("resumeId"));
+				long sendNumber = super.getBeanCount(UserProdCharBean.class, params);
 				retJson.put("resumeSendNumber", sendNumber);
 				
 				
 				//返回查看次数
+				params.clear();
 				params.put("RESUME_ID", "" + resumeBean.getResumeId());
 				long lookNumber = super.getBeanCount(UserResumeLookHisBean.class, params);
 				retJson.put("lookNumber", lookNumber);
@@ -167,24 +194,95 @@ public class ResumeManagerDAO extends AbstractDAO {
 		return new JSONArray();
 	}
 	
-	public long sendResume(long prodId,long resumeId) throws Exception{
+	/**
+	 * 加载工作收到的简历
+	 * @param workId 收到简历的工作id
+	 * @param resumeState 简历状态
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONArray getResumeInWorkList(long workId,String resumeState, int page) throws Exception {
 		Map<String, Object> params = new HashMap();
-		params.put("PROD_ID", "" + prodId);
+		params.put("PROD_ID", "" + workId);
+		if (!StringUtils.isEmpty(resumeState)){
+			params.put("STATE", resumeState);
+		}
+
+		List<AbstractBean> result = getBeans(UserProdBean.class, params);
+
+		if (result!=null&&result.size()>0){
+			JSONArray resumeList = new JSONArray();
+			for (AbstractBean abBean : result){
+				UserProdBean hisBean = (UserProdBean)abBean;
+				
+				params.clear();
+				params.put("USER_PROD_ID", "" + hisBean.getUserProdId());
+				params.put("CHAR_ID", charSpecDao.getCharId("resumeId"));//简历id
+				
+				UserProdCharBean charBean = (UserProdCharBean) super.getBean(UserProdCharBean.class, params);
+				
+				if (charBean==null)continue;
+				JSONObject retJson = this.getResumeInfo(Long.valueOf(charBean.getValue()));
+				if (retJson!=null){
+					
+					params.clear();
+					params.put("USER_PROD_ID", "" + hisBean.getUserProdId());
+					
+					List<AbstractBean> charList =  super.getBeans(UserProdCharBean.class, params);
+					if (charList!=null){
+						for (AbstractBean bean:charList){
+							charBean = (UserProdCharBean) bean;
+							retJson.put(charSpecDao.getCode(charBean.getCharId()),charBean.getValue());
+						}
+					}
+					
+					resumeList.add(retJson);
+				}
+			}
+			return resumeList;
+		}
+		
+		return new JSONArray();
+	}
+	
+	
+	public long sendResume(long prodId,long resumeId) throws Exception{
+		//根据resumeId取userId
+		Map<String, Object> params = new HashMap();
 		params.put("RESUME_ID", "" + resumeId);
-		UserResumeSendHisBean oldFocusBean = (UserResumeSendHisBean) super.getBean(UserResumeSendHisBean.class, params);
-		if (oldFocusBean!=null){
+		
+		UserResumeBean resumeBean = (UserResumeBean) super.getBean(UserResumeBean.class, params);
+		if (resumeBean==null){
+			throw new Exception("简历id:"+resumeId+"不存在!");
+		}
+		params.clear();
+		params.put("PROD_ID", "" + prodId);
+		params.put("USER_ID", "" + resumeBean.getUserId());
+		UserProdBean userWorkBean = (UserProdBean) super.getBean(UserProdBean.class, params);
+		if (userWorkBean!=null){
 			throw new Exception("你已投递过!");
 		}
-		UserResumeSendHisBean focusBean = new UserResumeSendHisBean();
+		
+		UserProdBean focusBean = new UserProdBean();
 		focusBean.setProdId(prodId);
-		focusBean.setResumeId(resumeId);
+		focusBean.setUserId(resumeBean.getUserId());
+		focusBean.setState("newArrived");//初始状态为新到简历，后续可变更为reserved,hired
 		focusBean.setCreateDate(TimeUtil.getLocalTimeString());
 		
-		super.insertBean(focusBean);
+		long userProdId = (long) super.insertBean(focusBean);
+		
+		UserProdCharBean charBean = new UserProdCharBean();
+		charBean.setUserProdId(userProdId);
+		charBean.setCharId(charSpecDao.getCharId("resumeId"));
+		charBean.setValue(""+resumeId);
+		charBean.setCreateDate(TimeUtil.getLocalTimeString());
+		
+		super.insertBean(charBean);
 		
 		params.clear();
 		params.put("PROD_ID", "" + prodId);
-		long count = super.getBeanCount(UserResumeSendHisBean.class, params);
+		long count = super.getBeanCount(UserProdBean.class, params);
 				
 		return count;
 	}

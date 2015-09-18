@@ -104,4 +104,31 @@ public class AbstractServlet extends HttpServlet
 			}
 		}
 	}
+	/**
+	 * 从json对象里取指定名称的取值
+	 * @param jsonObj
+	 * @param exceptionFlag 如果json中没有指定的名称则报异常
+	 * @return
+	 * @throws Exception 
+	 */
+	protected String getStringFromJSON(JSONObject jsonObj,String name,boolean exceptionFlag) throws Exception{
+		if (jsonObj.containsKey(name)){
+			String value = jsonObj.getString(name);
+			if (StringUtils.isEmpty(value)){
+				if (exceptionFlag==true){
+					throw new Exception("没有传入必须的参数:"+name);
+				}else{
+					return null;
+				}
+			}else{
+				return value;
+			}
+		} else {
+			if (exceptionFlag==true){
+				throw new Exception("没有传入必须的参数:"+name);
+			}else{
+				return null;
+			}
+		}
+	}
 }

@@ -13,7 +13,9 @@ import com.webapp.common.dao.AbstractDAO;
 import com.webapp.common.dao.CharSpecDAO;
 import com.webapp.common.util.TimeUtil;
 import com.webapp.user.bean.UserFocusBean;
-import com.webapp.user.bean.UserResumeSendHisBean;
+import com.webapp.user.bean.UserProdBean;
+import com.webapp.user.bean.UserProdCharBean;
+import com.webapp.user.bean.UserResumeBean;
 import com.webapp.user.dao.ResumeManagerDAO;
 import com.webapp.user.dao.UserManagerDAO;
 import com.webapp.work.bean.ProdBean;
@@ -27,7 +29,12 @@ public class WorkManagerDAO extends AbstractDAO {
 		charSpecDao = new CharSpecDAO();
 		charSpecDao.setDataSource(this.getDataSource());
 	}
-	// 加载简历信息
+	/**
+	 * 加载工作详情
+	 * @param workId
+	 * @return
+	 * @throws Exception
+	 */
 	public JSONObject getWorkInfo(long workId) throws Exception {
 		Map<String, Object> params = new HashMap();
 		params.put("PROD_ID", "" + workId);
@@ -78,7 +85,7 @@ public class WorkManagerDAO extends AbstractDAO {
 		
 		//返回收到简历数
 		params.put("PROD_ID", "" + workId);
-		long resumeNumber = super.getBeanCount(UserResumeSendHisBean.class, params);
+		long resumeNumber = super.getBeanCount(UserProdBean.class, params);
 		retJson.put("resumeNumber", resumeNumber);
 		//返回当前用户的其它工作数
 		params.put("USER_ID", "" + prodBean.getUserId());
@@ -87,7 +94,12 @@ public class WorkManagerDAO extends AbstractDAO {
 		return retJson;
 	}
 
-	// 新增简历
+	/**
+	 * 新增工作信息
+	 * @param workInfo
+	 * @return
+	 * @throws Exception
+	 */
 	public JSONObject newWork(JSONObject workInfo) throws Exception {
 		JSONObject retJson = new JSONObject();
 		ProdBean prodBean = new ProdBean();
@@ -126,7 +138,10 @@ public class WorkManagerDAO extends AbstractDAO {
 		return retJson;
 	}
 
-	// 修改简历
+	/**修改工作信息
+	 * @param workInfo
+	 * @throws Exception
+	 */
 	public void modWork(JSONObject workInfo) throws Exception {
 		// 更新基本信息
 		ProdBean prodBean = new ProdBean();
@@ -174,6 +189,15 @@ public class WorkManagerDAO extends AbstractDAO {
 		}
 	}
 
+	/**
+	 * 加载工作列表
+	 * @param userId
+	 * @param workTypes
+	 * @param cityName
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
 	public JSONArray getWorkList(long userId,String[] workTypes,String cityName ,int page) throws Exception {
 		ResumeManagerDAO resumeDao = new ResumeManagerDAO();
 		resumeDao.setDataSource(this.getDataSource());
@@ -247,7 +271,7 @@ public class WorkManagerDAO extends AbstractDAO {
 				
 				//返回收到简历数
 				params.put("PROD_ID", "" + prodBean.getProdId());
-				long resumeNumber = super.getBeanCount(UserResumeSendHisBean.class, params);
+				long resumeNumber = super.getBeanCount(UserProdBean.class, params);
 				retJson.put("resumeNumber", resumeNumber);
 				
 				prodList.add(retJson);
@@ -258,6 +282,11 @@ public class WorkManagerDAO extends AbstractDAO {
 		return prodList;
 	}
 	
+	/**
+	 * 记录工作查看记录
+	 * @param userId
+	 * @param workId
+	 */
 	public void newLookHis(long userId,long workId){
 		ProdLookHisBean hisBean = new ProdLookHisBean();
 		hisBean.setUserId(userId);
@@ -266,6 +295,13 @@ public class WorkManagerDAO extends AbstractDAO {
 		super.insertBean(hisBean);
 	}
 	
+	/**
+	 * 记录工作关注记录
+	 * @param userId
+	 * @param workId
+	 * @return
+	 * @throws Exception
+	 */
 	public long addFocus(long userId,long workId) throws Exception{
 		Map<String, Object> params = new HashMap();
 		params.put("USER_ID", "" + userId);
@@ -286,6 +322,125 @@ public class WorkManagerDAO extends AbstractDAO {
 		long count = super.getBeanCount(UserFocusBean.class, params);
 				
 		return count;
+	}
+	
+	/**
+	 * 记录员工录用信息
+	 * @param resumeId
+	 * @param workId
+	 * @param hireJson
+	 * @throws Exception
+	 */
+	public void hiredStaff(long resumeId,long workId,JSONObject hireJson) throws Exception{
+		Map<String, Object> params = new HashMap();
+		params.put("RESUME_ID", "" + resumeId);
+		UserResumeBean userResumeBean = (UserResumeBean) super.getBean(UserResumeBean.class, params);
+		if (userResumeBean==null){
+			throw new Exception("未找到此工作收到的简历!");
+		}
+		params.clear();
+		params.put("PROD_ID", "" + workId);
+		params.put("USER_ID", "" + userResumeBean.getUserId());
+		
+		UserProdBean userWorkBean = (UserProdBean) super.getBean(UserProdBean.class, params);
+		userWorkBean.setState("hired");
+		
+		super.updateBean(userWorkBean);
+
+		//加载已有特征
+		params.clear();
+		params.put("USER_PROD_ID", "" + userWorkBean.getUserProdId());
+		List<AbstractBean> charList = super.getBeans(UserProdCharBean.class, params);
+		
+		// 新建特征
+		Set<String> keySet = hireJson.keySet();
+		for (String key : keySet) {
+			long charId = charSpecDao.getCharId(key);
+			if (charId > 0) {
+				boolean existflag = false;
+				//如果特征已存在则更新特征值
+				if (charList!=null&&charList.size()>0){
+					for (AbstractBean abBean : charList){
+						UserProdCharBean charBean = (UserProdCharBean) abBean;
+						if (charBean.getCharId()==charId){
+							charBean.setValue(hireJson.getString(key));
+							super.updateBean(charBean);
+							existflag = true;
+							continue;
+						}
+					}
+				}
+				if (existflag==false){
+					UserProdCharBean prodCharBean = new UserProdCharBean();
+					prodCharBean.setUserProdId(userWorkBean.getUserProdId());
+					prodCharBean.setCharId(charId);
+					prodCharBean.setValue(hireJson.getString(key));
+					prodCharBean.setCreateDate(TimeUtil.getLocalTimeString());
+					super.insertBean(prodCharBean);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 记录员工预约面试信息
+	 * @param resumeId
+	 * @param workId
+	 * @param hireJson
+	 * @throws Exception
+	 */
+	public void bookInterview(long resumeId, long workId, JSONObject bookJson)
+			throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("RESUME_ID", "" + resumeId);
+		UserResumeBean userResumeBean = (UserResumeBean) super.getBean(
+				UserResumeBean.class, params);
+		if (userResumeBean == null) {
+			throw new Exception("未找到此工作收到的简历!");
+		}
+		params.clear();
+		params.put("PROD_ID", "" + workId);
+		params.put("USER_ID", "" + userResumeBean.getUserId());
+
+		UserProdBean userWorkBean = (UserProdBean) super.getBean(
+				UserProdBean.class, params);
+		userWorkBean.setState("reserved");
+
+		super.updateBean(userWorkBean);
+
+		// 加载已有特征
+		params.clear();
+		params.put("USER_PROD_ID", "" + userWorkBean.getUserProdId());
+		List<AbstractBean> charList = super.getBeans(UserProdCharBean.class,
+				params);
+		// 新建特征
+		Set<String> keySet = bookJson.keySet();
+		for (String key : keySet) {
+			long charId = charSpecDao.getCharId(key);
+			if (charId > 0) {
+				boolean existflag = false;
+				// 如果特征已存在则更新特征值
+				if (charList != null && charList.size() > 0) {
+					for (AbstractBean abBean : charList) {
+						UserProdCharBean charBean = (UserProdCharBean) abBean;
+						if (charBean.getCharId() == charId) {
+							charBean.setValue(bookJson.getString(key));
+							super.updateBean(charBean);
+							existflag = true;
+							continue;
+						}
+					}
+				}
+				if (existflag == false) {
+					UserProdCharBean prodCharBean = new UserProdCharBean();
+					prodCharBean.setUserProdId(userWorkBean.getUserProdId());
+					prodCharBean.setCharId(charId);
+					prodCharBean.setValue(bookJson.getString(key));
+					prodCharBean.setCreateDate(TimeUtil.getLocalTimeString());
+					super.insertBean(prodCharBean);
+				}
+			}
+		}
 	}
 }
 

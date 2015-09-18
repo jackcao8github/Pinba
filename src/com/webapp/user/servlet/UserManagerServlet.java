@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.ContextLoaderListener;
 
 import com.webapp.common.servlet.AbstractServlet;
+import com.webapp.common.util.CachedMsgVerifyCodeUtil;
+import com.webapp.common.util.CachedUserPostitionUtil;
 import com.webapp.common.util.ExceptionUtil;
 import com.webapp.user.dao.UserManagerDAO;
 
@@ -48,9 +50,17 @@ public class UserManagerServlet extends AbstractServlet {
 					return;
 				}
 				JSONObject userJson = JSONObject.fromObject(userInfo);
+				String msgVerifyCode = super.getStringFromJSON(userJson, "msgVerifyCode", true);
+				String cellphone = super.getStringFromJSON(userJson, "cellphone", true);
+				//将验证码和存储的验证码进行比较
+				String cachedVerifyCode = CachedMsgVerifyCodeUtil.getCachedData(cellphone);
+				if (!StringUtils.equals(msgVerifyCode, cachedVerifyCode)){
+					returnFailResult("短信验证码不正确或已超时!", response);
+					return;
+				}
 				// 新建用户
 				long userId = userDao.newUser(userJson);
-
+				
 				// 立即登陆后返回
 				JSONObject loginInfo = new JSONObject();
 				loginInfo.put("loginCode", userId);
@@ -139,7 +149,7 @@ public class UserManagerServlet extends AbstractServlet {
 				String userInfo = hreq.getParameter("userInfo");
 
 				if (StringUtils.isEmpty(userInfo)) {
-					returnFailResult("参数focusInfo不能为空", response);
+					returnFailResult("参数userInfo不能为空", response);
 					return;
 				}
 				JSONObject userJson = JSONObject.fromObject(userInfo);
@@ -150,8 +160,28 @@ public class UserManagerServlet extends AbstractServlet {
 				// 加载用户信息
 				JSONObject retJson = userDao.getUserInfo(userId);
 				returnSuccessResult(retJson, response);
+			} else if (method.equals("logUserPosition")){//记录用户坐标
+				String userInfo = hreq.getParameter("userInfo");
+
+				if (StringUtils.isEmpty(userInfo)) {
+					returnFailResult("参数userInfo不能为空", response);
+					return;
+				}
+				JSONObject userJson = JSONObject.fromObject(userInfo);
+				long userId = userJson.getLong("userId");
+				String latitude = userJson.getString("latitude");
+				String longitude = userJson.getString("longitude");
+				String cityName = userJson.getString("cityName");
+
+				CachedUserPostitionUtil.addCacheData(userId, cityName, latitude, longitude);
+				// 记录用户位置
+				userDao.logUserPosition(userId,cityName,latitude,longitude);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", "记录成功!");
+				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			returnFailResult(ExceptionUtil.getMessage(e), response);
 			return;
 		}

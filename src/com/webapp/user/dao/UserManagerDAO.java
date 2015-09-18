@@ -20,6 +20,7 @@ import com.webapp.common.util.TimeUtil;
 import com.webapp.user.bean.UserAcctBean;
 import com.webapp.user.bean.UserBean;
 import com.webapp.user.bean.UserCharBean;
+import com.webapp.user.bean.UserPositionBean;
 
 public class UserManagerDAO extends AbstractDAO {
 	private static CharSpecDAO charSpecDao = null;
@@ -310,4 +311,21 @@ public class UserManagerDAO extends AbstractDAO {
 		return userBean.getUserName();
 	}
 	
+	
+	/**记录用户位置信息
+	 * @param userId
+	 * @param latitude
+	 * @param longitude
+	 */
+	public void logUserPosition(long userId,String cityName,String latitude,String longitude){
+		UserPositionBean hisBean = new UserPositionBean();
+		
+		hisBean.setUserId(userId);
+		hisBean.setLatitude(latitude);
+		hisBean.setLongitude(longitude);
+		hisBean.setCityName(cityName);
+		hisBean.setCreateDate(TimeUtil.getLocalTimeString());
+		
+		super.insertBean(hisBean);
+	}
 }

@@ -100,13 +100,29 @@ public class ResumeManagerServlet extends AbstractServlet {
 					returnFailResult("参数resumeInfo不能为空", response);
 					return;
 				}
-				long resumeId = resumeJson.getLong("userId");
+				long userId = resumeJson.getLong("userId");
 				int page = resumeJson.getInt("page");
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载简历列表
-				JSONArray resumeList = resumeDao.getResumeList(resumeId,page);
+				JSONArray resumeList = resumeDao.getResumeList(userId,page);
+				returnSuccessResult(resumeList, response);
+			}else if (method.equals("getResumeInWorkList")){//加载工作收到的简历列表
+				String resumeInfo = hreq.getParameter("resumeInfo");
+				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
+				if (StringUtils.isEmpty(resumeInfo)) {
+					returnFailResult("参数resumeInfo不能为空", response);
+					return;
+				}
+				long workId = resumeJson.getLong("workId");
+				String resumeState = super.getStringFromJSON(resumeJson, "resumeState", false);
+				int page = resumeJson.getInt("page");
+				//String token = userJson.getString("token");
+				//先判断token是否正确，如果不正确则提示重新登陆
+
+				//加载简历列表
+				JSONArray resumeList = resumeDao.getResumeInWorkList(workId,resumeState,page);
 				returnSuccessResult(resumeList, response);
 			}else if (method.equals("sendResume")) {// 发送简历
 				String sendResumeInfo = hreq.getParameter("sendResumeInfo");
@@ -129,6 +145,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			returnFailResult(ExceptionUtil.getMessage(e), response);
 			return;
 		}

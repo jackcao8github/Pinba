@@ -33,13 +33,33 @@
 		userInfo.loginCode = userName;
 		userInfo.password = password;
 		userInfo.verifyCode = verifyCode;
-
+		
 		ajaxReq('userAction', {
 			method : 'login',
 			userInfo : json2Str(userInfo)
 		}, function(data) {
 			if (data.flag == 'success') {//登陆成功后返回主页面
 				localStorage.userInfo = json2Str(data);//
+				//上传用户当前坐标
+				if (localStorage.latitude!=null){
+					 userInfo = {};
+		                userInfo.userId = data.userId;
+		                userInfo.latitude = localStorage.latitude;
+		                userInfo.longitude = localStorage.longitude;
+		                userInfo.cityName = localStorage.city;
+		                
+		                ajaxReq('userAction', {
+		                    method : 'logUserPosition',
+		                    userInfo : json2Str(userInfo)
+		                }, function(data) {
+		                    if (data.flag == 'success') {//登陆成功后返回主页面
+		                    } else {
+		                    }
+		                });
+				}
+			   
+				
+		        //关闭登陆页面
 				closeSubPage();
 			} else {
 				alert(data.msg);

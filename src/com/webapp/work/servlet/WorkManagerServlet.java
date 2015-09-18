@@ -133,6 +133,42 @@ public class WorkManagerServlet extends AbstractServlet {
 				JSONObject retJson = new JSONObject();
 				retJson.put("focusNumber", workIdFocusNumber);
 				returnSuccessResult(retJson, response);
+			} else if (method.equals("bookInterview")) {// 记录预约面试信息
+				String bookInfo = hreq.getParameter("bookInfo");
+
+				if (StringUtils.isEmpty(bookInfo)) {
+					returnFailResult("参数bookInfo不能为空", response);
+					return;
+				}
+				JSONObject bookJson = JSONObject.fromObject(bookInfo);
+				long resumeId = super.getLongFromJSON(bookJson,"resumeId",true);
+				long workId = super.getLongFromJSON(bookJson,"workId",true);
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+				
+				// 记录预约面试信息
+				workDao.bookInterview(resumeId,workId,bookJson);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", "录用成功!");
+				returnSuccessResult(retJson, response);
+			}else if (method.equals("hiredStaff")) {// 录用员工
+				String hiredInfo = hreq.getParameter("hiredInfo");
+
+				if (StringUtils.isEmpty(hiredInfo)) {
+					returnFailResult("参数hiredInfo不能为空", response);
+					return;
+				}
+				JSONObject hireJson = JSONObject.fromObject(hiredInfo);
+				long resumeId = super.getLongFromJSON(hireJson,"resumeId",true);
+				long workId = super.getLongFromJSON(hireJson,"workId",true);
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+				
+				// 记录录用信息
+				workDao.hiredStaff(resumeId,workId,hireJson);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", "录用成功!");
+				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

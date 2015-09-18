@@ -27,7 +27,7 @@
 	}
 	function openReqWorkDetail(obj) {
         var workId = $(obj).attr('workId');
-        changeSubPage('reqWorkDetail', 'myPubPage', 'workId=' + workId);
+        changeSubPage('reqWorkDetail', 'myWorkPage', 'workId=' + workId);
     }
 	
 	
@@ -87,8 +87,8 @@
                                 var workObj = data[i];
                                 var lihtml = litemplate.replace('+workId+',
                                         workObj.workId).replace('+workName+',
-                                        workObj.workName).replace('+workType+',
-                                        workObj.workType).replace('+effDate+',
+                                        workObj.workName).replace('+workType+',getDisplayEnumValue('workType', workObj.workType)
+                                       ).replace('+effDate+',
                                         workObj.effDate).replace('+expDate+',
                                         workObj.expDate).replace(
                                         '+focusNumber+', workObj.focusNumber)

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<script src="../js/jquery-1.11.3.js"></script>
+<script src="../js/jquery.mobile-1.4.5.js"></script>
+<script src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<style>
+</style>
+
+<script type="text/javascript">
+	var workId = 0;
+	var selectedTab = 'newResumeList';
+	$(document).ready(function() {
+		workId = getQueryString('workId');
+		if (workId > 0) {
+			pageInit();
+		}
+	});
+
+	function pageInit() {
+		if (selectedTab=='newResumeList'){
+			getNewResumeList();
+		}elseif (selectedTab=='reservedResumeList'){
+			getReserveResumeList();
+		}elseif (selectedTab=='hiredResumeList'){
+			getHiredResumeList();
+		}
+		
+	}
+	function swipeRight() {
+		closeSubPage();
+	}
+
+	function openResumeDetail(obj) {
+		var resumeid = $(obj).attr('resumeId');
+		changeSubPage('resumeDetail', 'myWorkResumePage', 'resumeId='
+				+ resumeid);
+	}
+	
+	function getNewResumeList() {
+		selectedTab = 'newResumeList';
+		$('#newResumeListUL').html('');
+		var resumeInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			resumeInfo.resumeState = 'newArrived';//新到简历
+			resumeInfo.page = '1';
+			resumeInfo.workId = workId;
+
+			ajaxReq(
+					'resumeAction',
+					{
+						method : 'getResumeInWorkList',
+						resumeInfo : json2Str(resumeInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>简历名称:-resumeName-</h3><p>简历类型:-resumeType-</p><p>简历投递次数:-resumeSendNumber-&nbsp;|&nbsp;简历查看次数:-lookNumber-</p></a>';
+							litemplate += '<a href="#" resumeId="-resumeId-" onclick="popupInterviewOrHired(this)">预约</a></li>';
+
+							for ( var i = 0; data.length > i; i++) {
+								var resumeobj = data[i];
+								var replaceArr = {};
+								replaceArr['-resumeName-'] = resumeobj.resumeName;
+								replaceArr['-resumeType-'] = resumeobj.resumeType;
+								replaceArr['-resumeSendNumber-'] = resumeobj.resumeSendNumber;
+								replaceArr['-lookNumber-'] = resumeobj.lookNumber;
+								replaceArr['-resumeId-'] = resumeobj.resumeId;
+
+								var lihtml = replaceAll(litemplate, replaceArr);
+								lihtmls += lihtml;
+							}
+							$('#newResumeListUL').append(lihtmls);
+							$('#newResumeListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
+
+	function getReserveResumeList() {
+		selectedTab = 'reserveResumeList';
+		$('#reservedResumeListUL').html('');
+		var resumeInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			resumeInfo.resumeState = 'reserved';//已预约面试简历
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.page = '1';
+			resumeInfo.workId = workId;
+			ajaxReq(
+					'resumeAction',
+					{
+						method : 'getResumeInWorkList',
+						resumeInfo : json2Str(resumeInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>简历名称:-resumeName-</h3><p>简历类型:-resumeType-</p><p>简历投递次数:-resumeSendNumber-&nbsp;|&nbsp;简历查看次数:-lookNumber-</p>';
+							litemplate += '<p>预约时间:-interviewTime-&nbsp;|&nbsp;预约地点:-interviewAddress-</p>';
+							litemplate += '</a>';
+
+							litemplate += '<a href="#" resumeId="-resumeId-" onclick="gotoHiredPage(this)">录用</a></li>';
+							for ( var i = 0; data.length > i; i++) {
+
+								var resumeobj = data[i];
+								var replaceArr = {};
+								replaceArr['-resumeId-'] = resumeobj.resumeId;
+								replaceArr['-resumeName-'] = resumeobj.resumeName;
+								replaceArr['-resumeType-'] = resumeobj.resumeType;
+								replaceArr['-resumeSendNumber-'] = resumeobj.resumeSendNumber;
+								replaceArr['-lookNumber-'] = resumeobj.lookNumber;
+								replaceArr['-interviewTime-'] = resumeobj.interviewTime;
+								replaceArr['-interviewAddress-'] = resumeobj.interviewAddress;
+
+								var lihtml = replaceAll(litemplate, replaceArr);
+
+								lihtmls += lihtml;
+							}
+							$('#reservedResumeListUL').append(lihtmls);
+							$('#reservedResumeListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
+
+	function getHiredResumeList() {
+		selectedTab = 'hiredResumeList';
+		$('#hiredResumeListUL').html('');
+		var resumeInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			resumeInfo.resumeState = 'hired';//已录用面试简历
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.page = '1';
+			resumeInfo.workId = workId;
+			ajaxReq(
+					'resumeAction',
+					{
+						method : 'getResumeInWorkList',
+						resumeInfo : json2Str(resumeInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>简历名称:-resumeName-</h3><p>简历类型:-resumeType-</p><p>简历投递次数:-resumeSendNumber-&nbsp;|&nbsp;简历查看次数:-lookNumber-</p>';
+							litemplate += '<p>计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-&nbsp;|&nbsp;计划工作地点:-workAddress-</p>';
+							litemplate += '</a></li>';
+							for ( var i = 0; data.length > i; i++) {
+								var resumeobj = data[i];
+
+								var replaceArr = {};
+								replaceArr['-resumeId-'] = resumeobj.resumeId;
+								replaceArr['-resumeName-'] = resumeobj.resumeName;
+								replaceArr['-resumeType-'] = resumeobj.resumeType;
+								replaceArr['-resumeSendNumber-'] = resumeobj.resumeSendNumber;
+								replaceArr['-lookNumber-'] = resumeobj.lookNumber;
+								replaceArr['-workTimeBegin-'] = resumeobj.workTimeBegin;
+								replaceArr['-workTimeEnd-'] = resumeobj.workTimeEnd;
+								replaceArr['-workAddress-'] = resumeobj.workAddress;
+
+								var lihtml = replaceAll(litemplate, replaceArr);
+								lihtmls += lihtml;
+							}
+							$('#hiredResumeListUL').append(lihtmls);
+							$('#hiredResumeListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
+	var selectedResumeId = 0;
+	//弹出预约面试或录用菜单
+	function popupInterviewOrHired(obj) {
+		selectedResumeId = $(obj).attr('resumeId');
+		//打开简历选择框
+		$('#popupMenu').popup();
+		$('#popupMenu').popup('open');
+	}
+	//进入预约面试安排页面
+	function gotoInterviewPage() {
+		$('#popupMenu').popup('close');
+		changeSubPage('bookInterview', 'myWorkResumePage', 'resumeId='
+				+ selectedResumeId + '&workId=' + workId);
+	}
+	//进入员工录用页面
+	function gotoHiredPage(obj) {
+		if (obj != null) {
+			var curResumeId = $(obj).attr('resumeId');
+			changeSubPage('hiredStaff', 'myWorkResumePage', 'resumeId='
+					+ curResumeId + '&workId=' + workId);
+		} else {
+			$('#popupMenu').popup('close');
+			changeSubPage('hiredStaff', 'myWorkResumePage', 'resumeId='
+					+ selectedResumeId + '&workId=' + workId);
+		}
+
+	}
+</script>
+</head>
+<body>
+	<div data-role="page" id="myWorkResumePage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+
+			<h1>收到简历</h1>
+		</div>
+
+		<div id="tabs" data-role="tabs">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#newResumeList" class="ui-btn-active"
+						onclick="getNewResumeList()">未录用</a></li>
+					<li><a href="#reservedResumeList" id="messageTabLi"
+						onclick="getReserveResumeList()">已预约</a></li>
+					<li><a href="#hiredResumeList" onclick="getHiredResumeList()">已录用</a></li>
+				</ul>
+			</div>
+
+			<div id="newResumeList">
+				<ul data-role="listview" id="newResumeListUL" data-split-icon="gear">
+
+				</ul>
+			</div>
+
+			<!-- 简历选择框 -->
+			<div data-role="popup" id="popupMenu">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					id="resumeList">
+					<li data-role="list-divider"><h3>选择操作...</h3></li>
+					<li><a href="#" onclick="gotoInterviewPage()"
+						id="bookInterviewBtn">预约面试</a></li>
+					<li><a href="#" onclick="gotoHiredPage()" id="hiredBtn">录用</a></li>
+				</ul>
+			</div>
+			<div id="reservedResumeList">
+				<ul data-role="listview" id="reservedResumeListUL" data-split-icon="gear">
+					<li data-role="list-divider">当前工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>工作名称:xx酒店服务员</h2> <!-- 用人单位-->
+							<p>工作单位:臻洪</p> <!-- 兼职名称 -->
+							<p>工作时间:2015-10-1 8:00</p>
+							<p>工作地点:江宁银城皇冠</p>
+							<p>工作薪酬:100/天</p>
+					</a></li>
+					<li data-icon="false">
+						<fieldset class="ui-grid-a">
+							<div class="ui-block-a">
+								<button type="submit"
+									class="ui-btn ui-corner-all ui-btn-a ui-mini">签到</button>
+							</div>
+							<div class="ui-block-b">
+								<button type="submit"
+									class="ui-btn ui-corner-all ui-btn-a ui-mini">签退</button>
+							</div>
+						</fieldset>
+					</li>
+					<li data-role="list-divider">预约工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>预约工作:临时工</h2> <!-- 用人单位-->
+							<p>预约单位:臻洪</p> <!-- 兼职名称 -->
+							<p>预约时间:2015-10-1 8:00</p>
+							<p>预约地点:江宁银城皇冠</p>
+							<p>预约薪酬:100/天</p>
+					</a></li>
+					<li data-role="list-divider">已完成工作</li>
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>工作名称:临时工</h2>
+							<p>用人单位:zh</p> <!-- 兼职名称 -->
+							<p>签到时间:2015-9-1 8:00</p>
+							<p>签退时间:2015-9-1 18:00</p>
+							<p>酬金:100/天</p>
+					</a></li>
+
+					<li data-icon="false"><a onclick="openWork(this)" workId="12"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>工作名称:临时工</h2>
+							<p>用人单位:zh</p>
+							<p>签到时间:2015-9-11 8:00</p>
+							<p>签退时间:2015-9-11 18:00</p>
+							<p>酬金:10*10/小时</p>
+					</a></li>
+				</ul>
+			</div>
+			<div id="hiredResumeList">
+				<ul data-role="listview" id="hiredResumeListUL">
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>臻洪</h2> <!-- 用人单位-->
+							<p>临时工</p> <!-- 兼职名称 -->
+							<p>2015-8-1</p> <!-- 兼职名称 -->
+					</a></li>
+
+					<li data-icon="false"><a onclick="openWork(this)" workId="12"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>臻洪</h2> <!-- 用人单位-->
+							<p>临时工</p> <!-- 兼职名称 -->
+							<p>2015-8-1</p> <!-- 兼职名称 -->
+					</a></li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

@@ -1,5 +1,64 @@
 document.write('<script type="text/javascript" src="../js/json2.js"></script>');// 引入json库
 document.write('<script type="text/javascript" src="../myjs/charspecvalue.js"></script>');// 引入json库
+document.write('<script type="text/javascript" src="../myjs/BMap.js"></script>');
+
+//替换字符串str中所有指定的字符串
+//replaceValueArr格式为{'a':'a1','b':'b1'}
+// 元字符: (  [  {  \  ^   $  |  )   ?  *  +  任何时候要使用这些元字符 ,都必须对它们进行转义
+function replaceAll(str,replaceValueArr){
+	var newStr = ''+str;
+	for (var item in replaceValueArr){
+		var regExp = new RegExp(item,'gm');
+		
+		newStr = newStr.replace(regExp,replaceValueArr[item]);
+	}
+	return newStr;
+}
+//使用baidu api实现定位功能
+function getPosition(showPosition){
+	var geolocation = new BMap.Geolocation();
+	geolocation.getCurrentPosition(function(r) {
+		if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+			
+			//将经纬度缓存下来
+			var newlatitude =r.point.lat;
+			var newlongitude = r.point.lng;
+			localStorage.latitude = newlatitude;
+			localStorage.longitude = newlongitude;
+			
+			//alert('您的位置：'+r.point.lng+','+r.point.lat);
+			// ak = appkey 访问次数流量有限制
+			$.getJSON('http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
+									+ newlatitude
+									+ ','
+									+ newlongitude
+									+ '&output=json&pois=1',
+							function(res) {
+								//将位置缓存下来
+								localStorage.city = res.result.addressComponent.city;
+								localStorage.addressComponent = res.result.addressComponent.city+res.result.addressComponent.district+res.result.addressComponent.street+res.result.addressComponent.street_number;
+								//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"} 
+
+								showPosition();
+							});
+		} else {
+			alert('failed' + this.getStatus());
+		}
+	}, {
+		enableHighAccuracy : true
+	})
+}
+
+// 关于状态码
+// BMAP_STATUS_SUCCESS 检索成功。对应数值“0”。
+// BMAP_STATUS_CITY_LIST 城市列表。对应数值“1”。
+// BMAP_STATUS_UNKNOWN_LOCATION 位置结果未知。对应数值“2”。
+// BMAP_STATUS_UNKNOWN_ROUTE 导航结果未知。对应数值“3”。
+// BMAP_STATUS_INVALID_KEY 非法密钥。对应数值“4”。
+// BMAP_STATUS_INVALID_REQUEST 非法请求。对应数值“5”。
+// BMAP_STATUS_PERMISSION_DENIED 没有权限。对应数值“6”。(自 1.1 新增)
+// BMAP_STATUS_SERVICE_UNAVAILABLE 服务不可用。对应数值“7”。(自 1.1 新增)
+// BMAP_STATUS_TIMEOUT 超时。对应数值“8”。(自 1.1 新增)
 
 //取当前登陆用户信息
 function getLoginUserInfo(){
@@ -148,20 +207,23 @@ var idHtmlMap = {
 	"subscribeMsg" : "message/subscribeMsg.html",
 	"systemMsg" : "message/systemMsg.html",
 	"searchResult" : "home/searchResult.html",
-	"register4Private" : "my/register4Private.html",
-	"register4Company" : "my/register4Company.html",
-	"changePass" : "my/changePass.html",
-	"work" : "publish/work.html",
-	"reqwork" : "publish/reqwork.html",
-	"reqWorkDetail" : "home/reqWorkDetail.html",
-	"userContract" : "my/userContract.html",
-	"resumeDetail" : "my/resumeDetail.html",
-	"editResumeDetail" : "my/editResumeDetail.html",
-	"reqwork" : "publish/reqwork.html",
-	"changeCompanyUserInfo" : "my/changeCompanyUserInfo.html",
-	"changePrivateUserInfo" : "my/changePrivateUserInfo.html",
+	"register4Private" : "my/register4Private.html",/*个人用户注册*/
+	"register4Company" : "my/register4Company.html",/*企业用户注册*/
+	"changePass" : "my/changePass.html",/*修改密码*/
+	"work" : "publish/work.html",/*发布招聘*/
+	"reqWorkDetail" : "home/reqWorkDetail.html",/*求职展示*/
+	"userContract" : "my/userContract.html",/*用户协议*/
+	"resumeDetail" : "my/resumeDetail.html",/*简历展示*/
+	"editResumeDetail" : "my/editResumeDetail.html",/*修改简历*/
+	"reqwork" : "publish/reqwork.html",/*发布求职*/
+	"changeCompanyUserInfo" : "my/changeCompanyUserInfo.html",/*修改企业用户信息*/
+	"changePrivateUserInfo" : "my/changePrivateUserInfo.html",/*修改个人用户信息*/
+	"resumeListInWork" : "my/resumeListInWork.html",/*收到的工作简历*/
+	"bookInterview" : "my/bookInterview.html",/*预约面试*/
+	"hiredStaff" : "my/hiredStaff.html",/*员工录用*/
 	"resume" : "my/resume.html"
 };
+
 
 /* 显示子页面，隐藏原页面 */
 function changeSubPage(newpageid, oldpageid, params) {

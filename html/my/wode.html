@@ -59,16 +59,13 @@
 		//如果未登陆过，则进入登陆页面
 		//userId为用户ID
 		var userInfo = getLoginUserInfo();
-		if (userInfo == null) {//未登陆过，则显示登陆页面
-			changeSubPage('login', 'wodePage');
-		} else {//进入用户信息页面
-			
+		if (userInfo != null) {
+			//进入用户信息页面
 			if (userInfo.userType=='private'){//个人用户
 				changeSubPage('privateUserInfo', 'wodePage');
 			}else{//企业用户
 				changeSubPage('companyUserInfo', 'wodePage');
 			}
-			
 		}
 	}
 
