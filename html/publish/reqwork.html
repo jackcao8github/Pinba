@@ -26,7 +26,7 @@ var workType = 'reqPartTime';
                 });
                 
                 workType = getQueryString('workType');
-                if (workType==null){
+                if (workType==null){//默认为兼职
                     workType = 'reqPartTime';
                 }
                 workId = getQueryString('workId');
@@ -52,10 +52,45 @@ var workType = 'reqPartTime';
                             }
                         });
                     }
+                }else{
+                	//初始化简历列表
+                    initResumeSelect();
                 }
+                
             });
     function swipeRight() {
         closeSubPage();
+    }
+    
+    //初始化简历列表下拉框
+    function initResumeSelect(resumeId){
+        var cachedUserInfo = getLoginUserInfo();
+        if (cachedUserInfo != null) {
+        	var resumeInfo = {};
+        	resumeInfo.userToken = cachedUserInfo.userToken;
+        	resumeInfo.userId = cachedUserInfo.userId;
+        	resumeInfo.page = '1';
+            ajaxReq('resumeAction', {
+                method : 'getResumeList',
+                resumeInfo : json2Str(resumeInfo)
+            }, function(data) {
+                	var optionhtml = '';
+                	for(var i=0;data.length>i;i++){
+                        var resumeobj = data[i];
+                        optionhtml += '<option value="' + resumeobj.resumeId + '"';
+                        if (resumeId!=null&&resumeId==resumeobj.resumeId){//默认选中
+                        	optionhtml += ' selected';
+                        }
+                        optionhtml += ' >';
+                        optionhtml += resumeobj.resumeName+'</option>';
+                    }
+                	var ctrl= $('#resumeId');
+                	ctrl.html(optionhtml);
+                	ctrl.selectmenu();
+                	ctrl.selectmenu('refresh', true);
+            });
+        	
+        }
     }
     //绑定数据到控件
     function bindData(jsonData) {
@@ -64,7 +99,12 @@ var workType = 'reqPartTime';
             var ctrl = $('#' + o);
             if (ctrl.length > 0) {
             	if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
-                    selectOptions(o,value); 
+            		if (o=='resumeId'){//简历列表单独加载
+            			initResumeSelect(value);
+            		}else{//普通下拉框值是从char_spec_value加载
+            			selectOptions(o,value); 
+            		}
+                    
                 }if (o=='selfreview'){
                     ctrl.html(value);
                 }else{

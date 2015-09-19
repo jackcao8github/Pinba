@@ -10,54 +10,89 @@
 <script src="../myjs/mycommon.js"></script>
 
 <style>
-
 </style>
 
 <script type="text/javascript">
-function swipeRight(){
+$(document).ready(function() {
+	getWorkList();
+});
+function swipeRight() {
 	closeSubPage();
 }
-	/* 加载新消息 */
-	function loadNewMsg() {
-		//当是滚动条已在最上时，去加载新信息
-		if ($(document).scrollTop() ==0){
-			$.ajax({
-		        type: "POST",
-		        contentType: "application/json",
-		        url: "",
-		        beforeSend: function () {         
-		        	//显示加载中 
-		        	$.mobile.loading( "show", {
-		        		            text: '加载...',
-		        		            textVisible: true,
-		        		            theme: 'a',
-		        		            textonly: true,
-		        		            html: ''
-		        		    }); 
-		        },
-		        complete:function(){
-		        	//隐藏加载中
-		        	$.mobile.loading( "hide");
-		        },
-		        success: function (msg) {
-		        	//从后台返回数据
-		        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" data-ajax="false">';
-		    		newhtml += '<img src="images/login01.png">';
-		    		newhtml += '<h3>xx美食</h3>';
-		    		newhtml += '<p>免预约到店的哟</p>';
-		    		newhtml += '<p class="ui-li-aside">';
-		    		newhtml += '	<strong>9:19</strong>AM';
-		    		newhtml += '</p> </a></li>';
-
-		    		for ( var i = 0; 10 > i; i++) {
-		    			var newli = $('#messageListUL').prepend(newhtml);
-		    		}
-		    		$('#messageListUL').listview("refresh");
-		        }
-		    });
-		}
-		
+function openWorkDetail(obj) {
+	var workId = $(obj).attr('workId');
+	changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
+}
+function pageInit(){
+	getWorkList();
+}
+function delFocus(obj){
+	var workId = $(obj).attr('workId');
+	var cachedUserInfo = getLoginUserInfo();
+	if (cachedUserInfo != null) {
+		var focusInfo= {};
+		focusInfo.userId=cachedUserInfo.userId;
+		focusInfo.workId=workId;
+		ajaxReq(
+				'workAction',
+				{
+					method : 'delFocus',
+					focusInfo : json2Str(focusInfo)
+				},
+				function(data) {
+					if (data.flag != 'fail') {
+						//从列表删除当前行
+						
+					} else {
+						alert(data.msg);
+					}
+				});
 	}
+}
+function getWorkList() {
+	$('#workListUL').html('');
+	var workInfo = {};
+	var cachedUserInfo = getLoginUserInfo();
+	if (cachedUserInfo != null) {
+		workInfo.userId = cachedUserInfo.userId;
+		workInfo.userToken = cachedUserInfo.userToken;
+		workInfo.page = '1';
+		workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+
+		ajaxReq(
+				'workAction',
+				{
+					method : 'getFocusWorkList',
+					workInfo : json2Str(workInfo)
+				},
+				function(data) {
+					if (data.flag != 'fail') {
+						var lihtmls = '';
+						var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
+						litemplate += '<a href="#" onclick="delFocus(this)" workId="+workId+">删除关注</a></li>';
+						for ( var i = 0; data.length > i; i++) {
+							var workObj = data[i];
+							var lihtml = litemplate.replace(/\+workId\+/g,
+									workObj.workId).replace('+workName+',
+									workObj.workName).replace('+workType+',
+											getDisplayEnumValue('workType',workObj.workType)).replace('+effDate+',
+									workObj.effDate).replace('+expDate+',
+									workObj.expDate).replace(
+									'+focusNumber+', workObj.focusNumber)
+									.replace('+lookNumber+',
+											workObj.lookNumber).replace(
+											'+resumeNumber+',
+											workObj.resumeNumber);
+							lihtmls += lihtml;
+						}
+						$('#workListUL').append(lihtmls);
+						$('#workListUL').listview("refresh");
+					} else {
+						alert(data.msg);
+					}
+				});
+	}
+}
 </script>
 </head>
 <body>
@@ -73,52 +108,28 @@ function swipeRight(){
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#messageList" class="ui-btn-active"
-						id="messageTabLi">招聘</a></li>
+					<li><a href="#workList" class="ui-btn-active"
+						id="workListBtn">招聘</a></li>
 					<li><a href="#friendList">求职者</a></li>
-					<li><a href="#messageList"
-						id="messageTabLi">企业</a></li>
+					<li><a href="#messageList" id="messageTabLi">公司</a></li>
 				</ul>
 			</div>
-			<div id="messageList">
-				<ul data-role="listview" id="messageListUL" data-split-icon="delete" data-inset="true">
-					<!-- 聊天信息 -->
-					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 聊天对象头像 -->
-							<h3>xx美食</h3> <!-- 聊天对象昵称 -->
-							<p>免预约到店的哟</p> <!-- 最新聊天内容 -->
-							
-					</a>
-					<a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Purchase album</a>
-					</li>
-					<!-- 业务通知 -->
-					<li data-icon="false"><a href="servNoticeMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 业务通知图标 -->
-							<h3>积分到帐通知</h3> <!-- 通知标题 -->
-							<p>1个签到积分到帐</p> <!-- 通知内容 -->
-							
-					</a></li>
-					<!-- 业务提醒 -->
-					<li data-icon="false"><a href="servRemindMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 业务提醒 图标 -->
-							<h3>面试通知</h3> <!-- 业务提醒 标题 -->
-							<p>到xx酒店参加面试</p> <!-- 业务提醒 内容 -->
-							
-					</a></li>
-					<!-- 订阅 -->
-					<li data-icon="false"><a href="subscribeMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 订阅 图标 -->
-							<h3>优惠信息订阅</h3> <!-- 订阅 标题 -->
-							<p>xx美食店：新推出满100优惠10块活动</p> <!-- 订阅 内容 -->
-							
+			<div id="workList">
+				<ul data-role="listview" id="workListUL" data-split-icon="delete">
+					<li data-icon="false"><a onclick="openWork(this)" workId="1"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>臻洪</h2> <!-- 用人单位-->
+							<p>临时工</p> <!-- 兼职名称 -->
+							<p>2015-8-1</p> <!-- 兼职名称 -->
 					</a></li>
 
-					<!-- 系统公告 -->
-					<li data-icon="false"><a href="systemMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 系统公告图标 -->
-							<h3>系统升级公告</h3> <!-- 系统公告标题 -->
-							<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p> <!-- 系统公告内容 -->
-							
+					<li data-icon="false"><a onclick="openWork(this)" workId="12"
+						style="padding-top: 0px; padding-bottom: 0px;"> <img
+							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
+							<h2>臻洪</h2> <!-- 用人单位-->
+							<p>临时工</p> <!-- 兼职名称 -->
+							<p>2015-8-1</p> <!-- 兼职名称 -->
 					</a></li>
 				</ul>
 			</div>

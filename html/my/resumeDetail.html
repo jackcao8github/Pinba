@@ -20,54 +20,54 @@
 	var userId = 0;
 	$(document).ready(function() {
 		var mode = getQueryString('mode');
-		if (mode=='intergration'){//表示此页面被嵌入到其它页面里,header和footer要去掉
+		if (mode == 'intergration') {//表示此页面被嵌入到其它页面里,header和footer要去掉
 			$('#header').remove();
 			$('#footer').remove();
 		}
 		pageInit();
 	});
-	
-	function pageInit(){
-		resumeId = getQueryString('resumeId');
-        if ( resumeId == null ) {
-            alert('参数reusmeId为空!');
-            return;
-        }
-        var resumeInfo = {};
-        if (resumeId > 0) {
-            resumeInfo.resumeId = resumeId;
-        }
-        var cachedUserInfo = str2Json(localStorage.userInfo);
-        if (cachedUserInfo != null) {
-            resumeInfo.userToken = cachedUserInfo.userToken;
-            resumeInfo.readUserId = cachedUserInfo.userId;
-            userId  = cachedUserInfo.userId;
-        }else{
-        	userId = 0;
-        }
-            ajaxReq('resumeAction', {
-                method : 'getResumeInfo',
-                resumeInfo : json2Str(resumeInfo)
-            }, function(data) {
-                if (data.flag == 'success') {
-                    bindData(data);
 
-                    //如果不是简历所有者，需要删除修改简历按钮
-                    var resumeUserId = data.userId;
-                    if (userId == resumeUserId) {
-                        $('#footer').remove();
-                    } else {
-                        $('#modBtn').remove();
-                    }
-                } else {
-                    alert(data.msg);
-                    return false;
-                }
-            });
+	function pageInit() {
+		resumeId = getQueryString('resumeId');
+		if (resumeId == null) {
+			alert('参数reusmeId为空!');
+			return;
+		}
+		var resumeInfo = {};
+		if (resumeId > 0) {
+			resumeInfo.resumeId = resumeId;
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.readUserId = cachedUserInfo.userId;
+			userId = cachedUserInfo.userId;
+		} else {
+			userId = 0;
+		}
+		ajaxReq('resumeAction', {
+			method : 'getResumeInfo',
+			resumeInfo : json2Str(resumeInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
+				bindData(data);
+
+				//如果不是简历所有者，需要删除修改简历按钮
+				var resumeUserId = data.userId;
+				if (userId == resumeUserId) {
+					$('#footer').remove();
+				} else {
+					$('#modBtn').remove();
+				}
+			} else {
+				alert(data.msg);
+				return false;
+			}
+		});
 	}
 	/* 修改简历 */
 	function modResume() {
-		changeSubPage('resume','workdetailPage','resumeId='+resumeId);
+		changeSubPage('resume', 'workdetailPage', 'resumeId=' + resumeId);
 	}
 	/* 增加关注 */
 	function addFocus() {
@@ -81,10 +81,10 @@
 			if (ctrl.length > 0) {
 				//处理下拉框采集的数据
 				var realValue = jsonData[o];
-				var displayValue = getDisplayEnumValue(o,realValue);
-				if (displayValue==realValue){//没有显示值则用realValue显示
+				var displayValue = getDisplayEnumValue(o, realValue);
+				if (displayValue == realValue) {//没有显示值则用realValue显示
 					ctrl.html(realValue);
-				}else{
+				} else {
 					ctrl.html(displayValue);
 				}
 			}
@@ -134,13 +134,13 @@ li {
 					</div>
 				</div>
 				<div style="overflow: hidden">
-                    <div style="float: left; width: 30%; color: #a3a3a3">
-                        <p>年龄:</p>
-                    </div>
-                    <div style="float: left; width: 70%">
-                        <p id="age"></p>
-                    </div>
-                </div>
+					<div style="float: left; width: 30%; color: #a3a3a3">
+						<p>年龄:</p>
+					</div>
+					<div style="float: left; width: 70%">
+						<p id="age"></p>
+					</div>
+				</div>
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>工作经验:</p>
@@ -165,7 +165,7 @@ li {
 						<p id="expectWorkArea"></p>
 					</div>
 				</div>
-				
+
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>期望职位:</p>
@@ -220,28 +220,12 @@ li {
 			</li>
 			<li data-role="list-divider">工作经历</li>
 			<li data-icon="false" style="padding: 0em 1em">
-				<p>2015-1~2015-7 | xx公司</p>
-				<p>所属行业：培训行业</p>
-				<p>岗位：培训师</p>
-				<p style="white-space: pre-line;">工作内容：xxxx</p>
-			</li>
-			<li data-icon="false" style="padding: 0em 1em">
-				<p>2015-7~ | yy公司</p>
-				<p>所属行业：培训行业</p>
-				<p>岗位：培训师</p>
-				<p style="white-space: pre-line;">工作内容：xxxx</p>
+				<p style="white-space: pre-line;" id="workHisList"></p>
 			</li>
 
 			<li data-role="list-divider">教育经历</li>
 			<li data-icon="false" style="padding: 0em 1em">
-				<p>2015-1~2015-7 | xx学校</p>
-				<p>所学专业：培训师</p>
-				<p>学历：大学</p>
-			</li>
-			<li data-icon="false" style="padding: 0em 1em">
-				<p>2015-1~2015-7 | xx学校</p>
-				<p>所学专业：培训师</p>
-				<p>学历：大学</p>
+				<p style="white-space: pre-line;" id="eduHisList"></p>
 			</li>
 			<li data-role="list-divider">自我评价</li>
 			<li data-icon="false" style="padding: 0em 1em">
@@ -252,17 +236,8 @@ li {
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
-			<fieldset class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="focusBtn" style="width: 80%; text-align: left"
-						onclick="addFocus()"
-						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-heart" id="focusNumber"></a>
-				</div>
-				<div class="ui-block-b"><!-- <a href="tel:+120">报警!</a> -->
-					<a id="contactBtn" style="width: 80%; text-align: left"
-						class="ui-btn  ui-corner-all ui-btn-icon-left  ui-icon-phone" id="cellphone"></a>
-				</div>
-			</fieldset>
+			<a href="#" data-role="button" data-icon="plus" onclick="addFocus()">关注</a>
+			<a href="#" data-role="button" data-icon="phone" id="cellphone">联系方式</a>
 		</div>
 	</div>
 </body>

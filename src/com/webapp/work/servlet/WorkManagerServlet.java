@@ -15,6 +15,7 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import com.webapp.common.servlet.AbstractServlet;
 import com.webapp.common.util.ExceptionUtil;
+import com.webapp.common.util.TimeUtil;
 import com.webapp.work.dao.WorkManagerDAO;
 
 public class WorkManagerServlet extends AbstractServlet {
@@ -115,6 +116,50 @@ public class WorkManagerServlet extends AbstractServlet {
 				//加载简历列表
 				JSONArray resumeList = workDao.getWorkList(userId,workTypes,cityName,page);
 				returnSuccessResult(resumeList, response);
+			} else if (method.equals("getFocusWorkList")){//加载关注工作列表
+				String workInfo = hreq.getParameter("workInfo");
+				JSONObject resumeJson = JSONObject.fromObject(workInfo);
+				if (StringUtils.isEmpty(workInfo)) {
+					returnFailResult("参数workInfo不能为空", response);
+					return;
+				}
+				long userId = resumeJson.containsKey("userId")==true?resumeJson.getLong("userId"):0;
+				int page = resumeJson.getInt("page");
+				String workType = resumeJson.getString("workType");
+				
+				String[] workTypes =null;
+				if (workType!=null){
+					workTypes = workType.split(",");
+				}
+				//从session中取用户当前所在城市
+				//String token = userJson.getString("token");
+				//先判断token是否正确，如果不正确则提示重新登陆
+
+				//加载简历列表
+				JSONArray resumeList = workDao.getFocusWorkList(userId,workTypes,page);
+				returnSuccessResult(resumeList, response);
+			} else if (method.equals("getLookedWorkList")){//加载查看过的工作列表
+				String workInfo = hreq.getParameter("workInfo");
+				JSONObject resumeJson = JSONObject.fromObject(workInfo);
+				if (StringUtils.isEmpty(workInfo)) {
+					returnFailResult("参数workInfo不能为空", response);
+					return;
+				}
+				long userId = resumeJson.containsKey("userId")==true?resumeJson.getLong("userId"):0;
+				int page = resumeJson.getInt("page");
+				String workType = resumeJson.getString("workType");
+				
+				String[] workTypes =null;
+				if (workType!=null){
+					workTypes = workType.split(",");
+				}
+				//从session中取用户当前所在城市
+				//String token = userJson.getString("token");
+				//先判断token是否正确，如果不正确则提示重新登陆
+
+				//加载简历列表
+				JSONArray resumeList = workDao.getLookedWorkList(userId,workTypes,page);
+				returnSuccessResult(resumeList, response);
 			} else if (method.equals("addFocus")) {// 增加关注
 				String focusInfo = hreq.getParameter("focusInfo");
 
@@ -168,6 +213,79 @@ public class WorkManagerServlet extends AbstractServlet {
 				workDao.hiredStaff(resumeId,workId,hireJson);
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "录用成功!");
+				returnSuccessResult(retJson, response);
+			}else if (method.equals("getWorkListByStaffId")) {// 用员工id加载工作列表，包括已完成的工作，预约面试的的工作，已录用的工作
+				String workInfo = hreq.getParameter("workInfo");
+
+				if (StringUtils.isEmpty(workInfo)) {
+					returnFailResult("参数workInfo不能为空", response);
+					return;
+				}
+				JSONObject condJson = JSONObject.fromObject(workInfo);
+				long staffUserId = super.getLongFromJSON(condJson,"staffUserId",true);
+				String state = super.getStringFromJSON(condJson, "state", false);
+				int page = 1;
+				//long workId = super.getLongFromJSON(hireJson,"workId",true);
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+				
+				// 记录录用信息
+				JSONArray resumeList = workDao.getWorkListByStaffId(staffUserId,state,page);
+				returnSuccessResult(resumeList, response);
+			}else if (method.equals("checkInOrOut")) {// 员工签到
+				String workInfo = hreq.getParameter("workInfo");
+
+				if (StringUtils.isEmpty(workInfo)) {
+					returnFailResult("参数workInfo不能为空", response);
+					return;
+				}
+				JSONObject condJson = JSONObject.fromObject(workInfo);
+				long userId = super.getLongFromJSON(condJson,"userId",true);//用户id
+				long workId = super.getLongFromJSON(condJson,"workId",true);//工作id
+				String checkType = super.getStringFromJSON(condJson, "checkType", true);//签到or签退
+				String positionInfo = null;
+				
+				if ("checkIn".equals(checkType)){
+					positionInfo = super.getStringFromJSON(condJson, "checkInPosition", false);//位置信息
+				}else{
+					positionInfo = super.getStringFromJSON(condJson, "checkOutPosition", false);//位置信息
+				}
+				
+				
+				JSONObject positionJsonObj = null;
+				if (!StringUtils.isEmpty(positionInfo)){
+					positionJsonObj = JSONObject.fromObject(positionInfo);
+				}
+				//long workId = super.getLongFromJSON(hireJson,"workId",true);
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+				
+				// 记录录用信息
+				workDao.checkInOrOut(userId,workId,checkType,positionJsonObj);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", checkType+"成功");
+				retJson.put("checkTime", TimeUtil.getLocalTimeString());//返回签到退时间
+
+				returnSuccessResult(retJson, response);
+			}else if (method.equals("delFocus")) {// 删除关注
+				String focusInfo = hreq.getParameter("focusInfo");
+
+				if (StringUtils.isEmpty(focusInfo)) {
+					returnFailResult("参数focusInfo不能为空", response);
+					return;
+				}
+				JSONObject condJson = JSONObject.fromObject(focusInfo);
+				long userId = super.getLongFromJSON(condJson,"userId",true);
+				long workId = super.getLongFromJSON(condJson,"workId",true);
+				
+				// String token = userJson.getString("token");
+				// 先判断token是否正确，如果不正确则提示重新登陆
+				
+				// 删除关注
+				workDao.delFocus(userId,workId);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", "删除成功");
+				
 				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {

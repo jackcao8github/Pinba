@@ -24,9 +24,9 @@
 	function pageInit() {
 		if (selectedTab=='newResumeList'){
 			getNewResumeList();
-		}elseif (selectedTab=='reservedResumeList'){
+		}else if (selectedTab=='reservedResumeList'){
 			getReserveResumeList();
-		}elseif (selectedTab=='hiredResumeList'){
+		}else if (selectedTab=='hiredResumeList'){
 			getHiredResumeList();
 		}
 		
@@ -240,85 +240,14 @@
 			<div data-role="popup" id="popupMenu">
 				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
 					id="resumeList">
-					<li data-role="list-divider"><h3>选择操作...</h3></li>
-					<li><a href="#" onclick="gotoInterviewPage()"
-						id="bookInterviewBtn">预约面试</a></li>
-					<li><a href="#" onclick="gotoHiredPage()" id="hiredBtn">录用</a></li>
 				</ul>
 			</div>
 			<div id="reservedResumeList">
 				<ul data-role="listview" id="reservedResumeListUL" data-split-icon="gear">
-					<li data-role="list-divider">当前工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>工作名称:xx酒店服务员</h2> <!-- 用人单位-->
-							<p>工作单位:臻洪</p> <!-- 兼职名称 -->
-							<p>工作时间:2015-10-1 8:00</p>
-							<p>工作地点:江宁银城皇冠</p>
-							<p>工作薪酬:100/天</p>
-					</a></li>
-					<li data-icon="false">
-						<fieldset class="ui-grid-a">
-							<div class="ui-block-a">
-								<button type="submit"
-									class="ui-btn ui-corner-all ui-btn-a ui-mini">签到</button>
-							</div>
-							<div class="ui-block-b">
-								<button type="submit"
-									class="ui-btn ui-corner-all ui-btn-a ui-mini">签退</button>
-							</div>
-						</fieldset>
-					</li>
-					<li data-role="list-divider">预约工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>预约工作:临时工</h2> <!-- 用人单位-->
-							<p>预约单位:臻洪</p> <!-- 兼职名称 -->
-							<p>预约时间:2015-10-1 8:00</p>
-							<p>预约地点:江宁银城皇冠</p>
-							<p>预约薪酬:100/天</p>
-					</a></li>
-					<li data-role="list-divider">已完成工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>工作名称:临时工</h2>
-							<p>用人单位:zh</p> <!-- 兼职名称 -->
-							<p>签到时间:2015-9-1 8:00</p>
-							<p>签退时间:2015-9-1 18:00</p>
-							<p>酬金:100/天</p>
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workId="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>工作名称:临时工</h2>
-							<p>用人单位:zh</p>
-							<p>签到时间:2015-9-11 8:00</p>
-							<p>签退时间:2015-9-11 18:00</p>
-							<p>酬金:10*10/小时</p>
-					</a></li>
 				</ul>
 			</div>
 			<div id="hiredResumeList">
 				<ul data-role="listview" id="hiredResumeListUL">
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workId="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
 				</ul>
 			</div>
 		</div>

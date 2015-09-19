@@ -25,9 +25,9 @@
 }
 /* 头部登陆 */
 .login {
-	height: 200px;
+	height: 180px;
 	widht: 100%;
-	background-image: url(../image/personal_bkg.jpg);
+	background-color:#3388cc;
 	background-repeat: no-repeat center;
 	text-align: center;
 }
@@ -38,7 +38,7 @@
 }
 
 .login .personal_logo {
-	margin-top: 10%;
+	margin-top: 5%;
 	width: 80px;
 	height:80px;
 	border-radius:50px;

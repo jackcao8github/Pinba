@@ -12,6 +12,9 @@
 </style>
 
 <script type="text/javascript">
+	$(document).ready(function() {
+		getWorkList();
+	});
 	function swipeRight() {
 		closeSubPage();
 	}
@@ -26,84 +29,296 @@
 		changeSubPage('workDetail', 'myWorkPage', 'workId=' + workId);
 	}
 	function openReqWorkDetail(obj) {
-        var workId = $(obj).attr('workId');
-        changeSubPage('reqWorkDetail', 'myWorkPage', 'workId=' + workId);
-    }
-	
-	
-	function getWorkHisList() {
+		var workId = $(obj).attr('workId');
+		changeSubPage('reqWorkDetail', 'myWorkPage', 'workId=' + workId);
+	}
 
+	function getWorkList() {
+		$('#hiredWorkList').html('');
+		$('#hiredWorkList').listview("refresh");
+		$('#interviewWorkList').html('');
+		$('#interviewWorkList').listview("refresh");
+		$('#completeWorkList').html('');
+		$('#completeWorkList').listview("refresh");
+		
+		var workInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.staffUserId = cachedUserInfo.userId;//员工用户
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.page = '1';
+
+			ajaxReq(
+					'workAction',
+					{
+						method : 'getWorkListByStaffId',
+						workInfo : json2Str(workInfo)
+					},
+					function(data) {
+						if (data.length >0) {
+							var hiredWorkArr = [];
+							var interviewWorkArr = [];
+							var completedWorkArr = [];
+							
+							for ( var i = 0; data.length > i; i++) {
+								if (data[i].state=='hired'||data[i].state=='checkIn'){//已录用
+									hiredWorkArr.push(data[i]);
+								}else if (data[i].state=='reserved'){//已预约面试
+									interviewWorkArr.push(data[i]);
+								}else if (data[i].state=='checkOut'){//已完成
+									completedWorkArr.push(data[i]);
+								}
+							}
+							if (hiredWorkArr.length>0){
+								fillHiredWorkList(hiredWorkArr);
+							}
+							
+							if (interviewWorkArr.length>0){
+								fillInterviewedWorkList(interviewWorkArr);
+							}
+							
+							if (completedWorkArr.length>0){
+								fillCompletedWorkList(completedWorkArr);
+							}
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
+	/* 签到 ，签退*/
+	function check(obj) {
+		var workId = $(obj).attr('workId');
+		var checkType='';
+		if (obj.id=="checkInBtn"){
+			checkType='checkIn';
+		}else{
+			checkType='checkOut';
+		}
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			var workInfo = {};
+			workInfo.userId = cachedUserInfo.userId;//员工用户
+			workInfo.workId = workId;//工作id
+			workInfo.checkType = checkType;
+			
+			if (checkType=='checkIn'){
+				workInfo.checkInPosition = {};
+				workInfo.checkInPosition.latitude = localStorage.latitude;
+				workInfo.checkInPosition.longitue = localStorage.longitude;
+				workInfo.checkInPosition.cityName = localStorage.city;
+			}else{
+				workInfo.checkOutPosition = {};
+				workInfo.checkOutPosition.latitude = localStorage.latitude;
+				workInfo.checkOutPosition.longitue = localStorage.longitude;
+				workInfo.checkOutPosition.cityName = localStorage.city;
+			}
+			
+			
+			ajaxReq('workAction', {
+				method : 'checkInOrOut',
+				workInfo : json2Str(workInfo)
+			}, function(data) {
+				if (data.flag == 'success') {//签到成功
+					if (checkType=='checkIn'){
+						$('#checkInBtn').attr({"disabled":"disabled"});
+						$('#checkInBtn').html('签到时间:'+data.checkTime);
+					}else{
+						$('#checkOutBtn').attr({"disabled":"disabled"});
+						$('#checkOutBtn').html('签退时间:'+data.checkTime);
+					}
+				} else {
+					alert(data.msg);
+				}
+			});
+		}
+	}
+	function fillHiredWorkList(arr) {
+		$('#hiredWorkList').html('');//清除已有li
+		
+		var ulHtml = '<li data-role="list-divider">未完成</li>';
+		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+			style="padding-top: 0px; padding-bottom: 0px;"> \
+				<h2>工作名称:-workName-</h2>\
+				<p>工作单位:-userName-</p> \
+				<p>工作时间:-workTimeBegin-至-workTimeEnd-</p> \
+				<p>工作地点:-workAddress-</p> \
+		</a></li>';
+
+		var liTemplate2 = '<li data-icon="false">\
+			<fieldset class="ui-grid-a">\
+				<div class="ui-block-a">\
+					<button \
+						class="ui-btn ui-corner-all ui-btn-a ui-mini" workId="-workId-" onclick="check(this)" id="checkInBtn" -disabled->签到-checkInTime-</button>\
+				</div><div class="ui-block-b">\
+					<button \
+						class="ui-btn ui-corner-all ui-btn-a ui-mini"  workId="-workId-" onclick="check(this)" id="checkOutBtn">签退</button>\
+				</div></fieldset></li>';
+
+		for ( var i = 0; arr.length > i; i++) {
+			var repValueArr = {};
+			repValueArr['-workId-'] = arr[i].workId;
+			repValueArr['-workName-'] = arr[i].workName;
+			repValueArr['-userName-'] = arr[i].userName;
+			repValueArr['-workTimeBegin-'] = arr[i].workTimeBegin;
+			repValueArr['-workTimeEnd-'] = arr[i].workTimeEnd;
+			repValueArr['-workAddress-'] = arr[i].workAddress;
+			if (arr[i].state=="checkIn"){//如果是已签到则显示签到时间并将签到按钮置灰
+				repValueArr['-disabled-'] = 'disabled';
+				repValueArr['-checkInTime-'] = '时间:'+arr[i].checkInTime;
+			}else{
+				repValueArr['-disabled-'] = '';
+				repValueArr['-checkInTime-'] = '';
+			}
+			
+			var liHtml = replaceAll(liTemplate, repValueArr);
+			ulHtml += liHtml;
+
+			var liHtml2 = replaceAll(liTemplate2, repValueArr);
+			ulHtml += liHtml2;
+			
+			
+		}
+		
+		$('#hiredWorkList').append(ulHtml);
+		$('#hiredWorkList').listview("refresh");
+	}
+
+	function fillInterviewedWorkList(arr) {
+		var ulHtml = '<li data-role="list-divider">预约面试</li>';
+		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+			style="padding-top: 0px; padding-bottom: 0px;"> \
+				<h2>工作名称:-workName-</h2>\
+				<p>工作单位:-userName-</p> \
+				<p>面试时间:-interviewTime-</p> \
+				<p>面试地点:-interviewAddress-</p> \
+		</a></li>';
+
+		for ( var i = 0; arr.length > i; i++) {
+			var repValueArr = {};
+			repValueArr['-workId-'] = arr[i].workId;
+			repValueArr['-workName-'] = arr[i].workName;
+			repValueArr['-userName-'] = arr[i].userName;
+			repValueArr['-interviewTime-'] = arr[i].interviewTime;
+			repValueArr['-interviewAddress-'] = arr[i].interviewAddress;
+
+			var liHtml = replaceAll(liTemplate, repValueArr);
+			ulHtml += liHtml;
+		}
+		$('#interviewWorkList').html('');
+		$('#interviewWorkList').append(ulHtml);
+		$('#interviewWorkList').listview("refresh");
+	}
+	function fillCompletedWorkList(arr) {
+		var ulHtml = '<li data-role="list-divider">已完成</li>';
+		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+			style="padding-top: 0px; padding-bottom: 0px;"> \
+				<h2>工作名称:-workName-</h2>\
+				<p>工作单位:-userName-</p> \
+				<p>签到时间:-checkInTime-</p> \
+				<p>签退时间:-checkOutTime-</p> \
+		</a></li>';
+
+		for ( var i = 0; arr.length > i; i++) {
+			var repValueArr = {};
+			repValueArr['-workId-'] = arr[i].workId;
+			repValueArr['-workName-'] = arr[i].workName;
+			repValueArr['-userName-'] = arr[i].userName;
+			repValueArr['-checkInTime-'] = arr[i].checkInTime;
+			repValueArr['-checkOutTime-'] = arr[i].checkOutTime;
+
+			var liHtml = replaceAll(liTemplate, repValueArr);
+			ulHtml += liHtml;
+		}
+		$('#completeWorkList').html('');
+		$('#completeWorkList').append(ulHtml);
+		$('#completeWorkList').listview("refresh");
 	}
 	function getResumeList() {
 		$('#resumeListUL').html('');
 		var resumeInfo = {};
-        var cachedUserInfo = getLoginUserInfo();
-        if (cachedUserInfo != null) {
-            resumeInfo.userId = cachedUserInfo.userId;
-            resumeInfo.userToken = cachedUserInfo.userToken;
-            resumeInfo.page = '1';
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			resumeInfo.userId = cachedUserInfo.userId;
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.page = '1';
 
-            ajaxReq('resumeAction', {
-                method : 'getResumeList',
-                resumeInfo : json2Str(resumeInfo)
-            }, function(data) {
-                if (data.flag != 'fail') {
-                    var lihtmls = '';
-                    for(var i=0;data.length>i;i++){
-                        var resumeobj = data[i];
-                        var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'+resumeobj.resumeId+'"><h3>简历名称:'+resumeobj.resumeName+'</h3><p>简历类型:'+resumeobj.resumeType+'</p><p>简历投递次数:'+resumeobj.resumeSendNumber+'&nbsp;|&nbsp;简历查看次数:'+resumeobj.lookNumber+'</p></a></li>';
-                        lihtmls += lihtml;
-                    }
-                    $('#resumeListUL').append(lihtmls);
-                    $('#resumeListUL').listview("refresh");
-                } else {
-                    alert(data.msg);
-                }
-            });
-        }
+			ajaxReq(
+					'resumeAction',
+					{
+						method : 'getResumeList',
+						resumeInfo : json2Str(resumeInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							for ( var i = 0; data.length > i; i++) {
+								var resumeobj = data[i];
+								var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'
+										+ resumeobj.resumeId
+										+ '"><h3>简历名称:'
+										+ resumeobj.resumeName
+										+ '</h3><p>简历类型:'
+										+ resumeobj.resumeType
+										+ '</p><p>简历投递次数:'
+										+ resumeobj.resumeSendNumber
+										+ '&nbsp;|&nbsp;简历查看次数:'
+										+ resumeobj.lookNumber
+										+ '</p></a></li>';
+								lihtmls += lihtml;
+							}
+							$('#resumeListUL').append(lihtmls);
+							$('#resumeListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
 	}
 
 	function getReqWorkList() {
-        $('#reqWorkListUL').html('');
-        var workInfo = {};
-        var cachedUserInfo = getLoginUserInfo();
-        if (cachedUserInfo != null) {
-            workInfo.userId = cachedUserInfo.userId;
-            workInfo.userToken = cachedUserInfo.userToken;
-            workInfo.page = '1';
-            workInfo.workType = 'reqPartTime,reqFullTime';//兼职/全职类求职
+		$('#reqWorkListUL').html('');
+		var workInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userId = cachedUserInfo.userId;
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.page = '1';
+			workInfo.workType = 'reqPartTime,reqFullTime';//兼职/全职类求职
 
-            ajaxReq(
-                    'workAction',
-                    {
-                        method : 'getWorkList',
-                        workInfo : json2Str(workInfo)
-                    },
-                    function(data) {
-                        if (data.flag != 'fail') {
-                            var lihtmls = '';
-                            var litemplate = '<li><a onclick="openReqWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+</p></a></li>';
-                            for ( var i = 0; data.length > i; i++) {
-                                var workObj = data[i];
-                                var lihtml = litemplate.replace('+workId+',
-                                        workObj.workId).replace('+workName+',
-                                        workObj.workName).replace('+workType+',getDisplayEnumValue('workType', workObj.workType)
-                                       ).replace('+effDate+',
-                                        workObj.effDate).replace('+expDate+',
-                                        workObj.expDate).replace(
-                                        '+focusNumber+', workObj.focusNumber)
-                                        .replace('+lookNumber+',
-                                                workObj.lookNumber);
-                                lihtmls += lihtml;
-                            }
-                            $('#reqWorkListUL').append(lihtmls);
-                            $('#reqWorkListUL').listview("refresh");
-                        } else {
-                            alert(data.msg);
-                        }
-                    });
-        }
-    }
+			ajaxReq(
+					'workAction',
+					{
+						method : 'getWorkList',
+						workInfo : json2Str(workInfo)
+					},
+					function(data) {
+						if (data.flag != 'fail') {
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openReqWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+</p></a></li>';
+							for ( var i = 0; data.length > i; i++) {
+								var workObj = data[i];
+								var lihtml = litemplate.replace('+workId+',
+										workObj.workId).replace('+workName+',
+										workObj.workName).replace(
+										'+workType+',
+										getDisplayEnumValue('workType',
+												workObj.workType)).replace(
+										'+effDate+', workObj.effDate).replace(
+										'+expDate+', workObj.expDate).replace(
+										'+focusNumber+', workObj.focusNumber)
+										.replace('+lookNumber+',
+												workObj.lookNumber);
+								lihtmls += lihtml;
+							}
+							$('#reqWorkListUL').append(lihtmls);
+							$('#reqWorkListUL').listview("refresh");
+						} else {
+							alert(data.msg);
+						}
+					});
+		}
+	}
 </script>
 </head>
 <body>
@@ -120,8 +335,8 @@
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#wrokHisList" class="ui-btn-active"
-						onclick="getWorkHisList()">工作记录</a></li>
+					<li><a href="#wrokList" class="ui-btn-active"
+						onclick="getWorkList()">工作记录</a></li>
 					<li><a href="#resumeList" id="messageTabLi"
 						onclick="getResumeList()">简历</a></li>
 					<li><a href="#reqworkList" onclick="getReqWorkList()">求职记录</a></li>
@@ -130,7 +345,7 @@
 
 			<div id="resumeList">
 				<ul data-role="listview" id="resumeListUL">
-					
+
 				</ul>
 				<a data-role="button" data-mini="true" data-icon="plus"
 					onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
@@ -148,83 +363,20 @@
 					class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">取消</a>
 			</div>
 
-			<div id="wrokHisList">
-				<ul data-role="listview">
-					<li data-role="list-divider">当前工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-                        style="padding-top: 0px; padding-bottom: 0px;"> <img
-                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-                            <h2>工作名称:xx酒店服务员</h2> <!-- 用人单位-->
-                            <p>工作单位:臻洪</p> <!-- 兼职名称 -->
-                            <p>工作时间:2015-10-1 8:00</p>
-                            <p>工作地点:江宁银城皇冠</p>
-                            <p>工作薪酬:100/天</p>
-                    </a></li>
-					<li data-icon="false">
-						<fieldset class="ui-grid-a">
-							<div class="ui-block-a">
-								<button type="submit"
-									class="ui-btn ui-corner-all ui-btn-a ui-mini">签到</button>
-							</div>
-							<div class="ui-block-b">
-								<button type="submit"
-									class="ui-btn ui-corner-all ui-btn-a ui-mini">签退</button>
-							</div>
-						</fieldset>
-					</li>
-					<li data-role="list-divider">预约工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>预约工作:临时工</h2> <!-- 用人单位-->
-							<p>预约单位:臻洪</p> <!-- 兼职名称 -->
-							<p>预约时间:2015-10-1 8:00</p>
-							<p>预约地点:江宁银城皇冠</p>
-							<p>预约薪酬:100/天</p>
-					</a></li>
-					<li data-role="list-divider">已完成工作</li>
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>工作名称:临时工</h2>
-							<p>用人单位:zh</p> <!-- 兼职名称 -->
-							<p>签到时间:2015-9-1 8:00</p>
-							<p>签退时间:2015-9-1 18:00</p>
-							<p>酬金:100/天</p>
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workId="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>工作名称:临时工</h2>
-							<p>用人单位:zh</p>
-							<p>签到时间:2015-9-11 8:00</p>
-							<p>签退时间:2015-9-11 18:00</p>
-							<p>酬金:10*10/小时</p>
-					</a></li>
+			<div id="wrokList">
+				<ul data-role="listview" id="hiredWorkList">
+				</ul>
+				<ul data-role="listview" id="interviewWorkList">
+				</ul>
+				<ul data-role="listview" id="completeWorkList">
 				</ul>
 			</div>
 			<div id="reqworkList">
-                <ul data-role="listview" id="reqWorkListUL">
-                    <li data-icon="false"><a onclick="openWork(this)" workId="1"
-                        style="padding-top: 0px; padding-bottom: 0px;"> <img
-                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-                            <h2>臻洪</h2> <!-- 用人单位-->
-                            <p>临时工</p> <!-- 兼职名称 -->
-                            <p>2015-8-1</p> <!-- 兼职名称 -->
-                    </a></li>
-
-                    <li data-icon="false"><a onclick="openWork(this)" workId="12"
-                        style="padding-top: 0px; padding-bottom: 0px;"> <img
-                            src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-                            <h2>臻洪</h2> <!-- 用人单位-->
-                            <p>临时工</p> <!-- 兼职名称 -->
-                            <p>2015-8-1</p> <!-- 兼职名称 -->
-                    </a></li>
-                </ul>
-                <a data-role="button" data-mini="true" data-icon="plus"
-                    onclick="changeSubPage('reqwork', 'myWorkPage')">发布求职信息</a>
-            </div>
+				<ul data-role="listview" id="reqWorkListUL">
+				</ul>
+				<a data-role="button" data-mini="true" data-icon="plus"
+					onclick="changeSubPage('reqwork', 'myWorkPage')">发布求职信息</a>
+			</div>
 		</div>
 
 	</div>

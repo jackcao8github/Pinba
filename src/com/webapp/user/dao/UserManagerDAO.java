@@ -244,6 +244,28 @@ public class UserManagerDAO extends AbstractDAO {
 		return userId;
 	}
 
+	public JSONObject getUserBasicInfo(long userId) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+
+		UserBean userBean = (UserBean) getBean(UserBean.class, params);
+		if (userBean == null) {
+			throw new Exception("参数userId" + userId + "不正确!");
+		}
+
+		// 返回用户基本信息
+		JSONObject retJson = new JSONObject();
+		retJson.put("userId", userBean.getUserId());
+		retJson.put("userCode", userBean.getUserCode());
+		retJson.put("userCredit", userBean.getUserCredit());
+		retJson.put("userLevel", userBean.getUserLevel());
+		retJson.put("userName", userBean.getUserName());
+		retJson.put("userType", userBean.getUserType());
+		retJson.put("userAuthState", userBean.getAuthState());
+		
+		return retJson;
+	}
+	
 	public JSONObject getUserInfo(long userId) throws Exception {
 		Map<String, Object> params = new HashMap();
 		params.put("USER_ID", "" + userId);

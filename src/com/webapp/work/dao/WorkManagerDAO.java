@@ -1,9 +1,12 @@
 package com.webapp.work.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.util.StringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -283,6 +286,192 @@ public class WorkManagerDAO extends AbstractDAO {
 	}
 	
 	/**
+	 * 加载关注的工作列表
+	 * @param userId
+	 * @param workTypes
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONArray getFocusWorkList(long userId,String[] workTypes,int page) throws Exception {
+		ResumeManagerDAO resumeDao = new ResumeManagerDAO();
+		resumeDao.setDataSource(this.getDataSource());
+		
+		Map<String, Object> params = new HashMap();
+		if (userId>0){
+			params.put("USER_ID", "" + userId);
+		}
+		JSONArray prodList = new JSONArray();
+		List<AbstractBean> result = getBeans(UserFocusBean.class, params);
+
+		if (result!=null&&result.size()>0){
+			UserManagerDAO userDao = new UserManagerDAO();
+			userDao.setDataSource(this.getDataSource());
+			
+			
+			for (AbstractBean abBean : result){
+				UserFocusBean focusBean = (UserFocusBean) abBean;
+				params.clear();
+				params.put("PROD_ID", focusBean.getProdId());
+				
+				ProdBean prodBean = (ProdBean) super.getBean(ProdBean.class, params);
+				if (prodBean==null){
+					continue;
+				}
+				// 返回用户基本信息
+				JSONObject retJson = new JSONObject();
+				retJson.put("userId", prodBean.getUserId());
+				
+				JSONObject userInfo = userDao.getUserInfo(prodBean.getUserId());
+				retJson.put("userName", userInfo.getString("userName"));//返回用户名
+				retJson.put("userCredit", userInfo.getString("userCredit"));//返回用户信用度
+				retJson.put("workName", prodBean.getProdName());
+				retJson.put("workType", prodBean.getProdType());
+				/*retJson.put("workType", charSpecDao.getDisplayValue("workType",prodBean.getProdType()));*/
+				retJson.put("workId", prodBean.getProdId());
+				retJson.put("effDate", prodBean.getEffDate());
+				retJson.put("expDate", prodBean.getExpDate());
+				retJson.put("content", prodBean.getContent());
+				retJson.put("createDate", prodBean.getCreateDate());
+				// 返回简历特征信息
+				params.clear();
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				List<AbstractBean> prodCharResult = getBeans(ProdCharBean.class, params);
+				if (prodCharResult != null && prodCharResult.size() > 0) {
+					for (AbstractBean prodCharAbBean : prodCharResult) {
+						ProdCharBean prodCharBean = (ProdCharBean) prodCharAbBean;
+
+						retJson.put(charSpecDao.getCode(prodCharBean.getCharId()), prodCharBean.getValue());
+					}
+				}
+				
+				//如果是求职则同时返回简历信息
+				if (retJson.containsKey("resumeId")){
+					JSONObject resumeInfo = resumeDao.getResumeInfo(retJson.getLong("resumeId"));
+					if (resumeInfo!=null){
+						retJson.put("resumeInfo", resumeInfo);
+					}
+				}
+				
+				//返回关注次数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long focusNumber = super.getBeanCount(UserFocusBean.class, params);
+				retJson.put("focusNumber", focusNumber);
+				
+				//返回查看次数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long lookNumber = super.getBeanCount(ProdLookHisBean.class, params);
+				retJson.put("lookNumber", lookNumber);
+				
+				//返回收到简历数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long resumeNumber = super.getBeanCount(UserProdBean.class, params);
+				retJson.put("resumeNumber", resumeNumber);
+				
+				prodList.add(retJson);
+			}
+			
+		}
+		
+		return prodList;
+	}
+	/**
+	 * 加载查看过的工作列表
+	 * @param userId
+	 * @param workTypes
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONArray getLookedWorkList(long userId,String[] workTypes,int page) throws Exception {
+		ResumeManagerDAO resumeDao = new ResumeManagerDAO();
+		resumeDao.setDataSource(this.getDataSource());
+		
+		Map<String, Object> params = new HashMap();
+		if (userId>0){
+			params.put("USER_ID", "" + userId);
+		}
+		JSONArray prodList = new JSONArray();
+		List<AbstractBean> result = getBeans(ProdLookHisBean.class, params);
+
+		if (result!=null&&result.size()>0){
+			UserManagerDAO userDao = new UserManagerDAO();
+			userDao.setDataSource(this.getDataSource());
+			
+			Set<Long> prodIdSet = new HashSet();//过滤重复的工作
+			
+			for (AbstractBean abBean : result){
+				ProdLookHisBean focusBean = (ProdLookHisBean) abBean;
+				
+				if (prodIdSet.contains(focusBean.getProdId())){
+					continue;
+				}
+				prodIdSet.add(focusBean.getProdId());
+				params.clear();
+				params.put("PROD_ID", focusBean.getProdId());
+				
+				ProdBean prodBean = (ProdBean) super.getBean(ProdBean.class, params);
+				if (prodBean==null){
+					continue;
+				}
+				// 返回用户基本信息
+				JSONObject retJson = new JSONObject();
+				retJson.put("userId", prodBean.getUserId());
+				
+				JSONObject userInfo = userDao.getUserInfo(prodBean.getUserId());
+				retJson.put("userName", userInfo.getString("userName"));//返回用户名
+				retJson.put("userCredit", userInfo.getString("userCredit"));//返回用户信用度
+				retJson.put("workName", prodBean.getProdName());
+				retJson.put("workType", prodBean.getProdType());
+				/*retJson.put("workType", charSpecDao.getDisplayValue("workType",prodBean.getProdType()));*/
+				retJson.put("workId", prodBean.getProdId());
+				retJson.put("effDate", prodBean.getEffDate());
+				retJson.put("expDate", prodBean.getExpDate());
+				retJson.put("content", prodBean.getContent());
+				retJson.put("createDate", prodBean.getCreateDate());
+				// 返回简历特征信息
+				params.clear();
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				List<AbstractBean> prodCharResult = getBeans(ProdCharBean.class, params);
+				if (prodCharResult != null && prodCharResult.size() > 0) {
+					for (AbstractBean prodCharAbBean : prodCharResult) {
+						ProdCharBean prodCharBean = (ProdCharBean) prodCharAbBean;
+
+						retJson.put(charSpecDao.getCode(prodCharBean.getCharId()), prodCharBean.getValue());
+					}
+				}
+				
+				//如果是求职则同时返回简历信息
+				if (retJson.containsKey("resumeId")){
+					JSONObject resumeInfo = resumeDao.getResumeInfo(retJson.getLong("resumeId"));
+					if (resumeInfo!=null){
+						retJson.put("resumeInfo", resumeInfo);
+					}
+				}
+				
+				//返回关注次数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long focusNumber = super.getBeanCount(UserFocusBean.class, params);
+				retJson.put("focusNumber", focusNumber);
+				
+				//返回查看次数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long lookNumber = super.getBeanCount(ProdLookHisBean.class, params);
+				retJson.put("lookNumber", lookNumber);
+				
+				//返回收到简历数
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				long resumeNumber = super.getBeanCount(UserProdBean.class, params);
+				retJson.put("resumeNumber", resumeNumber);
+				
+				prodList.add(retJson);
+			}
+			
+		}
+		
+		return prodList;
+	}
+	/**
 	 * 记录工作查看记录
 	 * @param userId
 	 * @param workId
@@ -323,6 +512,24 @@ public class WorkManagerDAO extends AbstractDAO {
 				
 		return count;
 	}
+	
+	/**删除关注的工作
+	 * @param userId
+	 * @param workId
+	 * @throws Exception
+	 */
+	public void delFocus(long userId,long workId) throws Exception{
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+		params.put("PROD_ID", "" + workId);
+		UserFocusBean oldFocusBean = (UserFocusBean) super.getBean(UserFocusBean.class, params);
+		if (oldFocusBean==null){
+			return;
+		}
+
+		super.deleteBean(oldFocusBean);
+	}
+	
 	
 	/**
 	 * 记录员工录用信息
@@ -439,6 +646,135 @@ public class WorkManagerDAO extends AbstractDAO {
 					prodCharBean.setCreateDate(TimeUtil.getLocalTimeString());
 					super.insertBean(prodCharBean);
 				}
+			}
+		}
+	}
+	
+	/**
+	 * 查询员工投过简历的工作
+	 * @param userId
+	 * @param state
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONArray getWorkListByStaffId(long userId,String state,int page) throws Exception {
+		ResumeManagerDAO resumeDao = new ResumeManagerDAO();
+		resumeDao.setDataSource(this.getDataSource());
+		
+		Map<String, Object> params = new HashMap();
+		if (userId>0){
+			params.put("USER_ID", "" + userId);
+		}
+		if (!StringUtils.isEmpty(state)){
+			params.put("STATE", state);
+		}
+		
+		JSONArray prodList = new JSONArray();
+		List<AbstractBean> result = getBeans(UserProdBean.class, params);
+
+		if (result!=null&&result.size()>0){
+			UserManagerDAO userDao = new UserManagerDAO();
+			userDao.setDataSource(this.getDataSource());
+			
+			
+			for (AbstractBean abBean : result){
+				UserProdBean userWorkBean = (UserProdBean) abBean;
+				
+				params.clear();
+				params.put("PROD_ID", "" + userWorkBean.getProdId());
+				
+				ProdBean prodBean = (ProdBean) super.getBean(ProdBean.class, params);
+				
+				// 返回用户基本信息
+				JSONObject retJson = new JSONObject();
+				retJson.put("state", userWorkBean.getState());
+				
+				retJson.put("userId", prodBean.getUserId());
+				
+				JSONObject userInfo = userDao.getUserBasicInfo(prodBean.getUserId());
+				retJson.put("userName", userInfo.getString("userName"));//返回用户名
+				retJson.put("workName", prodBean.getProdName());
+				retJson.put("workType", prodBean.getProdType());
+				retJson.put("workId", prodBean.getProdId());
+				retJson.put("effDate", prodBean.getEffDate());
+				retJson.put("expDate", prodBean.getExpDate());
+				retJson.put("content", prodBean.getContent());
+				retJson.put("createDate", prodBean.getCreateDate());
+				// 返回工作特征信息
+				params.clear();
+				params.put("PROD_ID", "" + prodBean.getProdId());
+				List<AbstractBean> prodCharResult = getBeans(ProdCharBean.class, params);
+				if (prodCharResult != null && prodCharResult.size() > 0) {
+					for (AbstractBean prodCharAbBean : prodCharResult) {
+						ProdCharBean prodCharBean = (ProdCharBean) prodCharAbBean;
+
+						retJson.put(charSpecDao.getCode(prodCharBean.getCharId()), prodCharBean.getValue());
+					}
+				}
+				
+				//返回员工工作信息
+				params.clear();
+				params.put("USER_PROD_ID", "" + userWorkBean.getUserProdId());
+				List<AbstractBean> useProdCharList = super.getBeans(UserProdCharBean.class, params);
+				
+				if (useProdCharList!=null&&useProdCharList.size()>0){
+					for (AbstractBean abUserProdCharBean:useProdCharList){
+						UserProdCharBean userProdCharBean = (UserProdCharBean) abUserProdCharBean;
+						
+						retJson.put(charSpecDao.getCode(userProdCharBean.getCharId()), userProdCharBean.getValue());
+					}
+				}
+				
+				prodList.add(retJson);
+			}
+		}
+		
+		return prodList;
+	}
+	
+	/**员工签到或签退
+	 * @param userId
+	 * @param workId
+	 * @param checkType 取值：checkIn签到，checkOut签退
+	 * @param positionJsonObj
+	 * @throws Exception
+	 */
+	public void checkInOrOut(long userId, long workId,String checkType, JSONObject positionJsonObj)
+			throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+		params.put("PROD_ID", "" + workId);
+
+		UserProdBean userWorkBean = (UserProdBean) super.getBean(
+				UserProdBean.class, params);
+		if (userWorkBean == null) {
+			throw new Exception("根据userid和workId未找到数据!");
+		}
+		userWorkBean.setState(checkType);
+		super.updateBean(userWorkBean);
+		
+		JSONObject charJson = new JSONObject();
+		//生成签到和签退时间
+		if ("checkIn".equals(checkType)){
+			charJson.put("checkInTime", TimeUtil.getLocalTimeString());
+			charJson.put("checkInPosition", positionJsonObj.toString());
+		}else{
+			charJson.put("checkOutTime", TimeUtil.getLocalTimeString());
+			charJson.put("checkOutPosition", positionJsonObj.toString());
+		}
+		
+		// 记录时间和位置信息
+		Set<String> keySet = charJson.keySet();
+		for (String key : keySet) {
+			long charId = charSpecDao.getCharId(key);
+			if (charId > 0) {
+				UserProdCharBean prodCharBean = new UserProdCharBean();
+				prodCharBean.setUserProdId(userWorkBean.getUserProdId());
+				prodCharBean.setCharId(charId);
+				prodCharBean.setValue(charJson.getString(key));
+				prodCharBean.setCreateDate(TimeUtil.getLocalTimeString());
+				super.insertBean(prodCharBean);
 			}
 		}
 	}
