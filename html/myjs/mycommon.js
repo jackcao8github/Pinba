@@ -340,7 +340,7 @@ function showTipDialog(tipMsg) {
 	// 1秒后关闭
 	setTimeout(function() {
 		$('#tipMsgDialog').popup("close");
-	}, 2000);
+	}, 1000);
 }
 
 /*

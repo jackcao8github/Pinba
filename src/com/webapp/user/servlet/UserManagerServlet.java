@@ -179,6 +179,22 @@ public class UserManagerServlet extends AbstractServlet {
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "记录成功!");
 				returnSuccessResult(retJson, response);
+			}else if (method.equals("saveHeadPic")){//保存用户头像
+				String userInfo = hreq.getParameter("userInfo");
+
+				if (StringUtils.isEmpty(userInfo)) {
+					returnFailResult("参数userInfo不能为空", response);
+					return;
+				}
+				JSONObject userJson = JSONObject.fromObject(userInfo);
+				long userId = userJson.getLong("userId");
+				String userHeadPicData = userJson.getString("userHeadPicData");
+
+				// 保存用户头像
+				//userDao.saveUserHeadPic(userId,userHeadPicData);
+				JSONObject retJson = new JSONObject();
+				retJson.put("msg", "记录成功!");
+				returnSuccessResult(retJson, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

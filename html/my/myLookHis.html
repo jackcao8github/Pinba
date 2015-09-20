@@ -21,7 +21,7 @@ function swipeRight() {
 }
 function openWorkDetail(obj) {
 	var workId = $(obj).attr('workId');
-	changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
+	changeSubPage('workDetail', 'lookHisPage', 'workId=' + workId);
 }
 function pageInit(){
 	getWorkList();
@@ -69,7 +69,7 @@ function getWorkList() {
 					if (data.flag != 'fail') {
 						var lihtmls = '';
 						var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
-						litemplate += '<a href="#" onclick="delFocus(this)" workId="+workId+">删除关注</a></li>';
+						litemplate += '</li>';
 						for ( var i = 0; data.length > i; i++) {
 							var workObj = data[i];
 							var lihtml = litemplate.replace(/\+workId\+/g,
@@ -96,7 +96,7 @@ function getWorkList() {
 </script>
 </head>
 <body>
-	<div data-role="page" id="messagePage">
+	<div data-role="page" id="lookHisPage">
 		<div data-role="header" data-position="fixed" data-fullscreen="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
@@ -107,7 +107,7 @@ function getWorkList() {
 		</div>
 		<div id="tabs" data-role="tabs">
 			<div id="workList">
-				<ul data-role="listview" id="workListUL" data-split-icon="delete">
+				<ul data-role="listview" id="workListUL">
 					<li data-icon="false"><a onclick="openWork(this)" workId="1"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">

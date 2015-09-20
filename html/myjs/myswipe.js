@@ -45,75 +45,108 @@ var touchEvents = {
 		}
 	}
 };
-var startX, startY;//滑动起始的xy坐标
-//滑动弄1�7�1�7�事件发生时的处琄1�7�1�7
+var startX, startY;// 滑动起始的xy坐标
+// 滑动弄1�7�1�7�事件发生时的处琄1�7�1�7
 document.addEventListener(touchEvents.touchstart, function(ev) {
 	console.log("touchstart");
 	startX = ev.touches[0].pageX;
 	startY = ev.touches[0].pageY;
-	
-	console.log("touchstart,startX="+startX+"startY="+startY);
+
+	console.log("touchstart,startX=" + startX + "startY=" + startY);
 }, false);
 
-var endX, endY;//滑动结束的xy坐标
-var direction;//根据起始结束坐标计算得到的滑动方各1�7�1�7
-var distanceX;//横向滑动距离
-var distanceY;//纵向滑动距离
+var endX, endY;// 滑动结束的xy坐标
+var direction;// 根据起始结束坐标计算得到的滑动方各1�7�1�7
+var distanceX;// 横向滑动距离
+var distanceY;// 纵向滑动距离
 
-//滑动结束事件发生时的处理
+function emulateDistanceAndDirection(endX, endY) {
+	direction = GetSlideDirection(startX, startY, endX, endY);
+	if (endX > startX) {
+		distanceX = endX - startX;
+	} else {
+		distanceX = startX - endX;
+	}
+
+	if (endY > startY) {
+		distanceY = endY - startY;
+	} else {
+		distanceY = startY - endY;
+	}
+}
+// 滑动结束事件发生时的处理
 function swipeOver(ev) {
 	endX = ev.changedTouches[0].pageX;
 	endY = ev.changedTouches[0].pageY;
-	direction = GetSlideDirection(startX, startY, endX, endY);
-	if (endX>startX){
-		distanceX = endX-startX;
-	}else{
-		distanceX = startX-endX;
-	}
-	
-	if (endY>startY){
-		distanceY = endY-startY;
-	}else{
-		distanceY = startY-endY;
-	}
+
 	console.log("touchend,endX=" + endX + "endY=" + endY);
-	if (distanceX>100){//水平滑动距离
-		//滑动结束时的业务处理回调
-		//myTouchEnd(ev);
+	emulateDistanceAndDirection(endX, endY);
+	if (distanceX > 100) {// 水平滑动距离
+		// 滑动结束时的业务处理回调
+		// myTouchEnd(ev);
 		switch (direction) {
 		case 3:
 			console.log("向左");
-			//向左滑动时的回调处理
-			if (window.swipeLeft!=null)
-			swipeLeft();
+			// 向左滑动时的回调处理
+			if (window.swipeLeft != null)
+				swipeLeft();
 			break;
 		case 4:
 			console.log("向右");
-			//向右滑动时的回调处理
-			if (window.swipeRight!=null)
-			swipeRight();
+			// 向右滑动时的回调处理
+			if (window.swipeRight != null)
+				swipeRight();
 			break;
 		default:
 		}
-	}else if (distanceY>30){//垂直滑动距离
+	} else if (distanceY > 30) {// 垂直滑动距离
 		switch (direction) {
 		case 1:
 			console.log("向上");
-			//向上滑动时的回调处理
-			if (window.swipeUp!=null)
-			swipeUp();
+			 $("#pullDownRefreshDiv").slideDown("slow");
+			// 向上滑动时的回调处理
+			if (window.swipeUp != null)
+				swipeUp();
 			break;
 		case 2:
 			console.log("向下");
-			//向下滑动时的回调处理
-			if (window.swipeDown!=null)
-			swipeDown();
+			// 向下滑动时的回调处理
+			 $("#pullDownRefreshDiv").slideUp("slow");
+			 
+			if (window.swipeDown != null) {
+				swipeDown();
+			}
+
 			break;
 		default:
 		}
 	}
-	
 }
-document.addEventListener(touchEvents.touchend,swipeOver , false);
-document.addEventListener(touchEvents.toucancel,swipeOver, false);
-//document.addEventListener(touchEvents.touchmove, function (e) { if (swipeUp!=null) swipeUp();e.preventDefault(); }, false);
+document.addEventListener(touchEvents.touchend, swipeOver, false);
+document.addEventListener(touchEvents.toucancel, swipeOver, false);
+document.addEventListener(touchEvents.touchmove, function(ev) {
+	endX = ev.changedTouches[0].pageX;
+	endY = ev.changedTouches[0].pageY;
+
+	emulateDistanceAndDirection(endX, endY);
+	console.log('distanceX='+distanceX);
+	console.log('distanceY='+distanceY);
+	console.log(ev.touches[0].pageY);
+
+	switch (direction) {
+	case 1:
+		console.log("向上");
+		// 向上滑动时的回调处理
+
+		break;
+	case 2:
+		console.log("向下");
+		// 向下滑动时的回调处理
+		$('#pullDownRefreshDiv').show();
+		$('#pullDownRefreshDiv').css('height', distanceY);
+		//$('#pullDownRefreshDiv').css('line-height', distanceY);
+		break;
+	default:
+	}
+	//ev.preventDefault();
+}, false);
