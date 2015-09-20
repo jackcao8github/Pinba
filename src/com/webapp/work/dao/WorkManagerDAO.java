@@ -217,6 +217,9 @@ public class WorkManagerDAO extends AbstractDAO {
 			String cityId = charSpecDao.getRealValue("workCity", cityName);
 			params.put("CITY_ID", "" + cityId);
 		}
+		if (page>0){
+			params.put("PAGE", "" + page);
+		}
 		JSONArray prodList = new JSONArray();
 		List<AbstractBean> result = getBeans(ProdBean.class, params);
 

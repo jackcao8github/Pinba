@@ -72,12 +72,29 @@ public abstract class AbstractDAO {
 	}
 
 	private Map<Class, AbstractBean> cachedBeans = new HashMap();
+	
+	
+	public AbstractBean newBean(Class clazz) throws Exception{
+        AbstractBean retBean = null;
+         if (cachedBeans .containsKey(clazz)) {
+               AbstractBean cachedBean = cachedBeans.get(clazz);
+               retBean = cachedBean.deepCopy();
+        } else {
+               AbstractBean newbean = (AbstractBean) clazz.newInstance();
+                cachedBeans.put(clazz, newbean);
+
+               retBean = (AbstractBean) newbean.deepCopy();//深拷贝生成新对象，提高效效率
+        }
+        
+         return retBean;
+	}
+
 
 	protected List<AbstractBean> getBeans(final Class clazz, Map<String, Object> params, boolean forupdate) {
 		PreparedSqlAndParams sqlAndParams = null;
 		List result = null;
 		try {
-			sqlAndParams = ((AbstractBean) clazz.newInstance()).getBeansSql(params, forupdate);
+			sqlAndParams = ((AbstractBean) newBean(clazz)).getBeansSql(params, forupdate);
 			log.debug(sqlAndParams.sql);
 			log.debug(sqlAndParams.args);
 			JdbcTemplate jt = new JdbcTemplate(getDataSource());
@@ -86,16 +103,7 @@ public abstract class AbstractDAO {
 				public Object mapRow(ResultSet resultset, int i) throws SQLException {
 					AbstractBean bean = null;
 					try {
-						//深拷贝生成新对象，提高效率
-						if (cachedBeans.containsKey(clazz)) {
-							AbstractBean cachedBean = cachedBeans.get(clazz);
-							bean = cachedBean.deepCopy();
-						} else {
-							AbstractBean newbean = (AbstractBean) clazz.newInstance();
-							cachedBeans.put(clazz, newbean);
-
-							bean = (AbstractBean) newbean.deepCopy();
-						}
+						bean = newBean(clazz);
 						int count = resultset.getMetaData().getColumnCount();
 						for (int ii = 1; ii <= count; ii++) {
 							String colName = resultset.getMetaData().getColumnName(ii);
@@ -121,6 +129,9 @@ public abstract class AbstractDAO {
 		} catch (IllegalAccessException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -128,7 +139,7 @@ public abstract class AbstractDAO {
 	public long getBeanCount(final Class clazz, Map<String, Object> params){
 		PreparedSqlAndParams sqlAndParams = null;
 		try {
-			sqlAndParams = ((AbstractBean) clazz.newInstance()).getBeanCountSql(params);
+			sqlAndParams = ((AbstractBean) newBean(clazz)).getBeanCountSql(params);
 			log.debug(sqlAndParams.sql);
 			log.debug(sqlAndParams.args);
 			JdbcTemplate jt = new JdbcTemplate(getDataSource());
@@ -143,6 +154,9 @@ public abstract class AbstractDAO {
 		} catch (IllegalAccessException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return 0;
 	}

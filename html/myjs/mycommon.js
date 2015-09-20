@@ -333,8 +333,7 @@ function showTipDialog(tipMsg) {
 		$('#tipMsgDialog').remove();
 	}
 	// 创建新提示枉
-	$(
-			'<div data-role="popup" id="tipMsgDialog" class="ui-content"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><p style="color: red;">'
+	$('<div data-role="popup" id="tipMsgDialog" class="ui-content" data-theme="c"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><p style="color:red">'
 					+ tipMsg + '</p></div>').appendTo('body');
 	$('#tipMsgDialog').popup();
 	$('#tipMsgDialog').popup("open");

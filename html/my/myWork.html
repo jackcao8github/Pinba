@@ -81,7 +81,7 @@
 								fillCompletedWorkList(completedWorkArr);
 							}
 						} else {
-							alert(data.msg);
+							showTipDialog('没有数据了!');
 						}
 					});
 		}
@@ -250,7 +250,7 @@
 						resumeInfo : json2Str(resumeInfo)
 					},
 					function(data) {
-						if (data.flag != 'fail') {
+						if (data.length >0 ) {
 							var lihtmls = '';
 							for ( var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
@@ -270,7 +270,7 @@
 							$('#resumeListUL').append(lihtmls);
 							$('#resumeListUL').listview("refresh");
 						} else {
-							alert(data.msg);
+							showTipDialog('没有数据了!');
 						}
 					});
 		}
@@ -293,7 +293,7 @@
 						workInfo : json2Str(workInfo)
 					},
 					function(data) {
-						if (data.flag != 'fail') {
+						if (data.length>0) {
 							var lihtmls = '';
 							var litemplate = '<li><a onclick="openReqWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+</p></a></li>';
 							for ( var i = 0; data.length > i; i++) {
@@ -314,7 +314,7 @@
 							$('#reqWorkListUL').append(lihtmls);
 							$('#reqWorkListUL').listview("refresh");
 						} else {
-							alert(data.msg);
+							showTipDialog('没有数据了!');
 						}
 					});
 		}

@@ -3,7 +3,7 @@ function GetSlideAngle(dx, dy) {
 	return Math.atan2(dy, dx) * 180 / Math.PI;
 }
 
-// 根据起点和终点返回方向 1：向上，2：向下，3：向左，4：向右,0：未滑动
+// 根据起点和终点返回方各1�7�1�71：向上，2：向下，3：向左，4：向叄1�7�1�70：未滑动
 
 function GetSlideDirection(startX, startY, endX, endY) {
 	var dy = startY - endY;
@@ -46,7 +46,7 @@ var touchEvents = {
 	}
 };
 var startX, startY;//滑动起始的xy坐标
-//滑动开始事件发生时的处理
+//滑动弄1�7�1�7�事件发生时的处琄1�7�1�7
 document.addEventListener(touchEvents.touchstart, function(ev) {
 	console.log("touchstart");
 	startX = ev.touches[0].pageX;
@@ -54,11 +54,9 @@ document.addEventListener(touchEvents.touchstart, function(ev) {
 	
 	console.log("touchstart,startX="+startX+"startY="+startY);
 }, false);
-/*document.addEventListener(touchEvents.touchmove, function (e) { e.preventDefault(); }, false);
-*/
 
 var endX, endY;//滑动结束的xy坐标
-var direction;//根据起始结束坐标计算得到的滑动方向
+var direction;//根据起始结束坐标计算得到的滑动方各1�7�1�7
 var distanceX;//横向滑动距离
 var distanceY;//纵向滑动距离
 
@@ -118,3 +116,4 @@ function swipeOver(ev) {
 }
 document.addEventListener(touchEvents.touchend,swipeOver , false);
 document.addEventListener(touchEvents.toucancel,swipeOver, false);
+//document.addEventListener(touchEvents.touchmove, function (e) { if (swipeUp!=null) swipeUp();e.preventDefault(); }, false);

@@ -157,9 +157,11 @@
 			}
 		//}
 	}
+	
+	var workPage = 1;
 	function loadWorkList() {
 		var workInfo = {};
-			workInfo.page = '1';
+			workInfo.page = workPage;
 			workInfo.cityName = localStorage.city;
 			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
 
@@ -168,7 +170,12 @@
 				workInfo : json2Str(workInfo)
 			}, function(data) {
 				if (data.flag != 'fail') {
-					fillWorkList(data);
+					if (data.length>0){
+						workPage ++;
+	                    fillWorkList(data);
+					}else{
+						showTipDialog('没有数据了!');
+					}
 				} else {
 					alert(data.msg);
 				}
@@ -238,9 +245,11 @@
 
 	    return strArr.join('');
 	}
+	
+	var reqWorkPage = 1;
 	function loadReqWorkList() {
 		var workInfo = {};
-            workInfo.page = '1';
+            workInfo.page = reqWorkPage;
             workInfo.cityName = localStorage.city;
             workInfo.workType = 'reqPartTime,reqFullTime';//兼职求职/全职求职
 
@@ -249,7 +258,12 @@
                 workInfo : json2Str(workInfo)
             }, function(data) {
                 if (data.flag != 'fail') {
-                	fillReqWorkList(data);
+                	if (data.length>0){
+                		reqWorkPage ++;
+                        fillReqWorkList(data);
+                    }else{
+                        showTipDialog('没有数据了!');
+                    }
                 } else {
                     alert(data.msg);
                 }

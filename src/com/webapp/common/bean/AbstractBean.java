@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.StringUtils;
 
 import com.webapp.common.dao.SysSeqDAO;
 
@@ -210,8 +211,18 @@ public abstract class AbstractBean implements Serializable {
 		} else {
 			sqlAndParams.sql.append(colNames).append(" FROM ").append(this.tableName);
 		}
-
+		
 		if (params != null && params.size() > 0) {
+			String orderByCol = null;
+			if (params.containsKey("ORDERBY")){//排序条件
+				orderByCol = (String) params.get("ORDERBY");
+				params.remove("ORDERBY");
+			}
+			String pageNo = null;
+			if (params.containsKey("PAGE")){//分页条件
+				pageNo = (String) params.get("PAGE");
+				params.remove("PAGE");
+			}
 			StringBuffer wherecolNames = new StringBuffer();
 			Iterator it2 = params.entrySet().iterator();
 
@@ -241,7 +252,14 @@ public abstract class AbstractBean implements Serializable {
 				}
 			}
 			sqlAndParams.sql.append(" WHERE ").append(wherecolNames);
-
+			
+			if (!StringUtils.isEmpty(orderByCol)){
+				sqlAndParams.sql.append(" ORDER BY ").append(orderByCol);
+			}
+			if (!StringUtils.isEmpty(pageNo)){//每页20条数据
+				long startLineNo = (Long.valueOf(pageNo)-1)*20;//计算起始行数
+				sqlAndParams.sql.append(" LIMIT ").append(startLineNo).append(",").append("20");
+			}
 			sqlAndParams.args = argList.toArray();
 		}
 
