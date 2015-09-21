@@ -16,14 +16,10 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-				$('li').click(
-						function() {
-							/* 历史查询关键字 */
-							var searchKey = this.innerHTML;
-							/* 进入查询结果展示页面 */
-							changeSubPage('searchResult', 'searchPage',
-									'searchKey=' + searchKey);
-						});
+				//页面初始化
+				pageInit();
+				
+				//为查询按钮绑定事件处理
 				$('#searchBtn').click(
 						function() {
 							var searchKey = $('#keyword').val();
@@ -31,13 +27,52 @@
 								/* 关键字不能为空 */
 								showTipDialog('关键字不能为空 !');
 							} else {
+								//将key写到历史
+								var hisArra = {};
+								if (localStorage.searchKeyHis!=null){
+									hisArra = str2Json(localStorage.searchKeyHis);
+								}
+								if (hisArra[searchKey]!=null){
+									var num = parseInt(hisArra[searchKey]);
+									hisArra[searchKey] = num+1;
+								}else{
+									hisArra[searchKey] = 1;
+								}
+								//按key使用次数进行倒排序，使用次数最多的放前面
+								
+								localStorage.searchKeyHis=json2Str(hisArra);
 								/* 进入查询结果展示页面 */
 								changeSubPage('searchResult', 'searchPage',
 										'searchKey=' + searchKey);
 							}
 						});
 			});
-	function swipeRight(){
+	
+	function pageInit(){
+		//显示查询历史关键字
+        $('#searchHisList').html('');
+        if (localStorage.searchKeyHis!=null){
+            var hisArra = str2Json(localStorage.searchKeyHis);
+            
+            var ulHtml = '<li data-role="list-divider">搜索历史</li>';
+            var liTemplate = '<li onclick="searchByOldKey(this)">-key-</li>';
+            for (var item in hisArra){
+                var liHtml = liTemplate.replace('-key-',item);
+                ulHtml += liHtml;
+            }
+            $('#searchHisList').html(ulHtml);
+            $('#searchHisList').listview("refresh");
+        }
+	}
+	
+	//按照历史关键字查询
+	function searchByOldKey(obj) {
+		/* 历史查询关键字 */
+		var searchKey = $(obj).html();
+		/* 进入查询结果展示页面 */
+		changeSubPage('searchResult', 'searchPage', 'searchKey=' + searchKey);
+	}
+	function swipeRight() {
 		closeSubPage();
 	}
 </script>
@@ -70,14 +105,12 @@
 
 		<!-- 显示查询历史 -->
 		<div class="firstblock">
-			<div class="item" onclick="">
-				<i class="fa fa-street-view fa-lg"></i> <span>历史搜索</span>
-			</div>
-			<ul data-role="listview">
-				<li data-icon="false">hilton</li>
-				<li data-icon="false">银城皇冠</li>
-				<li data-icon="false">万达</li>
-				<li data-icon="false">江宁</li>
+			<ul data-role="listview" id="searchHisList">
+			    <li data-role="list-divider">搜索历史</li>
+				<li >hilton</li>
+				<li >银城皇冠</li>
+				<li >万达</li>
+				<li >江宁</li>
 			</ul>
 		</div>
 	</div>

@@ -146,7 +146,7 @@
 		/* var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
-		if (scrolltop / (docHeight - winHeight) >= 0.9) { *///滚动到距底部20%时 
+		if (scrolltop / (docHeight - winHeight) >= 0.9) {//滚动到距底部20%时 */
 			/* 正在查看的是工作列表 */
 			if ($('a[class*="ui-btn-active"]').attr('href') == "#workDiv") {
 
@@ -159,27 +159,30 @@
 	}
 	
 	var workPage = 1;
+	
 	function loadWorkList() {
+		$('#pullUpFreshText').html('加载中...');
 		var workInfo = {};
-			workInfo.page = workPage;
-			workInfo.cityName = localStorage.city;
-			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+		workInfo.page = workPage;
+		workInfo.cityName = localStorage.city;
+		workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
 
-			ajaxReq('workAction', {
-				method : 'getWorkList',
-				workInfo : json2Str(workInfo)
-			}, function(data) {
-				if (data.flag != 'fail') {
-					if (data.length>0){
-						workPage ++;
-	                    fillWorkList(data);
-					}else{
-						showTipDialog('没有数据了!');
-					}
-				} else {
-					alert(data.msg);
+		ajaxReq('workAction', {
+			method : 'getWorkList',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.flag != 'fail') {
+				if (data.length > 0) {
+					workPage++;
+					fillWorkList(data);
 				}
-			});
+			} else {
+				alert(data.msg);
+			}
+			
+			$('#pullUpFreshText').html('加载完成');
+            $('#pullUpFresh').slideUp('slow');
+		});
 	}
 
 	function fillWorkList(data) {
@@ -208,119 +211,123 @@
 			conditionStr += '&nbsp;|&nbsp;';
 			conditionStr += getDisplayEnumValue('expectAge', workObj.expectAge)
 					+ '年龄';
-			
+
 			var userCreditHtml = createCreditHtml(workObj.userCredit);
 
-			var html = newhtml.replace('+username+', workObj.userName)
-					.replace('+title+', workObj.workName).replace('+time+',
-							workObj.effDate).replace('+condition+',
-							conditionStr).replace('+daymoney+',
-							workObj.daySallary).replace('+workId+',workObj.workId).replace('+userCredit+',userCreditHtml);
+			var html = newhtml.replace('+username+', workObj.userName).replace(
+					'+title+', workObj.workName).replace('+time+',
+					workObj.effDate).replace('+condition+', conditionStr)
+					.replace('+daymoney+', workObj.daySallary).replace(
+							'+workId+', workObj.workId).replace('+userCredit+',
+							userCreditHtml);
 
 			$('#workList').append(html);
 		}
 
 		$('#workList').listview("refresh");
 	}
-	
-	function createCreditHtml(userCredit){
+
+	function createCreditHtml(userCredit) {
 		var strArr = [];
-		var mod = userCredit/100;
+		var mod = userCredit / 100;
 		mod = parseInt(mod);
-		var left =  userCredit%100;
-		if (mod>0){
-			for (var i=0;mod>i;i++){
+		var left = userCredit % 100;
+		if (mod > 0) {
+			for ( var i = 0; mod > i; i++) {
 				strArr.push('<i class="fa fa-star"></i>');
 			}
 		}
-		if (left>50){
+		if (left > 50) {
 			strArr.push('<i class="fa fa-star-o"></i>');
 		}
-	    if (strArr.length!=5)
-		{
-	    	var c = 5-strArr.length;
-	    	for (var j=0;c>j;j++)
-	    	    strArr.push('<i class="fa fa-star-o"></i>');
+		if (strArr.length != 5) {
+			var c = 5 - strArr.length;
+			for ( var j = 0; c > j; j++)
+				strArr.push('<i class="fa fa-star-o"></i>');
 		}
 
-	    return strArr.join('');
+		return strArr.join('');
 	}
-	
+
 	var reqWorkPage = 1;
 	function loadReqWorkList() {
+		$('#pullUpFreshText2').html('加载中...');
 		var workInfo = {};
-            workInfo.page = reqWorkPage;
-            workInfo.cityName = localStorage.city;
-            workInfo.workType = 'reqPartTime,reqFullTime';//兼职求职/全职求职
+		workInfo.page = reqWorkPage;
+		workInfo.cityName = localStorage.city;
+		workInfo.workType = 'reqPartTime,reqFullTime';//兼职求职/全职求职
 
-            ajaxReq('workAction', {
-                method : 'getWorkList',
-                workInfo : json2Str(workInfo)
-            }, function(data) {
-                if (data.flag != 'fail') {
-                	if (data.length>0){
-                		reqWorkPage ++;
-                        fillReqWorkList(data);
-                    }else{
-                        showTipDialog('没有数据了!');
-                    }
-                } else {
-                    alert(data.msg);
-                }
-            });
+		ajaxReq('workAction', {
+			method : 'getWorkList',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.flag != 'fail') {
+				if (data.length > 0) {
+					reqWorkPage++;
+					fillReqWorkList(data);
+				}
+			} else {
+				alert(data.msg);
+			}
+			$('#pullUpFreshText2').html('加载完成');
+            $('#pullUpFresh2').slideUp('slow');
+		});
 	}
-	
-	function fillReqWorkList(data){
-        var newhtml = '<li data-icon="false" onclick="openReqWorkDetail(this)" workId="+workId+"><a\
+
+	function fillReqWorkList(data) {
+		var newhtml = '<li data-icon="false" onclick="openReqWorkDetail(this)" workId="+workId+"><a\
             href="#" class="ui-btn ui-mini">\
         <div style="overflow: hidden;">\
             <p style="float: left; font-weight: bold;">+workName+</p>\
             <p style="color: black; float: right">+time+</p>\
         </div><p>+basicInfo+</p><p>+condition+</p><p >+req+</p></a></li>';
 
-        for ( var i = 0; data.length > i; i++) {
-            var workObj = data[i];
-            var basicInfo = '';
-            basicInfo +=  workObj.resumeInfo.realName;
-            basicInfo += '&nbsp;|&nbsp;';
-            basicInfo +=  getDisplayEnumValue('sex',
-                    workObj.resumeInfo.sex);
-            basicInfo += '&nbsp;|&nbsp;';
-            basicInfo += workObj.resumeInfo.age;
-            
-            var conditionStr = '';
-            conditionStr += getDisplayEnumValue('degree',
-                    workObj.resumeInfo.degree)
-                    + '学历';
-            conditionStr += '&nbsp;|&nbsp;';
-            conditionStr += getDisplayEnumValue('experience',
-                    workObj.resumeInfo.experience)
-                    + '年工作经验';
-           
+		for ( var i = 0; data.length > i; i++) {
+			var workObj = data[i];
+			var basicInfo = '';
+			basicInfo += workObj.resumeInfo.realName;
+			basicInfo += '&nbsp;|&nbsp;';
+			basicInfo += getDisplayEnumValue('sex', workObj.resumeInfo.sex);
+			basicInfo += '&nbsp;|&nbsp;';
+			basicInfo += workObj.resumeInfo.age;
 
-            var reqInfo = '';
-            reqInfo += '期望日薪:'+workObj.resumeInfo.daySallary;
-            reqInfo += '&nbsp;|&nbsp;';
-            reqInfo += '期望工作地:'+getDisplayEnumValue('expectWorkArea',workObj.resumeInfo.expectWorkArea);
-            
-            //'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员'
-            //'学历：本科&nbsp;|&nbsp;工作经验：3年'
-            //'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁'
-            var html = newhtml.replace('+basicInfo+',basicInfo).replace('+workId+',workObj.workId).replace('+workName+',workObj.workName)
-                    .replace('+time+', workObj.createDate).replace('+condition+',conditionStr).replace('+req+',reqInfo );
-            $('#reqworkList').append(html);
-        }
+			var conditionStr = '';
+			conditionStr += getDisplayEnumValue('degree',
+					workObj.resumeInfo.degree)
+					+ '学历';
+			conditionStr += '&nbsp;|&nbsp;';
+			conditionStr += getDisplayEnumValue('experience',
+					workObj.resumeInfo.experience)
+					+ '年工作经验';
 
-        $('#reqworkList').listview("refresh");
+			var reqInfo = '';
+			reqInfo += '期望日薪:' + workObj.resumeInfo.daySallary;
+			reqInfo += '&nbsp;|&nbsp;';
+			reqInfo += '期望工作地:'
+					+ getDisplayEnumValue('expectWorkArea',
+							workObj.resumeInfo.expectWorkArea);
+
+			//'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员'
+			//'学历：本科&nbsp;|&nbsp;工作经验：3年'
+			//'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁'
+			var html = newhtml.replace('+basicInfo+', basicInfo).replace(
+					'+workId+', workObj.workId).replace('+workName+',
+					workObj.workName).replace('+time+', workObj.createDate)
+					.replace('+condition+', conditionStr).replace('+req+',
+							reqInfo);
+			$('#reqworkList').append(html);
+		}
+
+		$('#reqworkList').listview("refresh");
 	}
 	function openWork(obj) {
 		var workid = $(obj).attr('workId');
 		changeSubPage('workDetail', 'homePage', 'workid=' + workid);
 	}
 
-	function openReqWorkDetail(obj){
-	    var workId = $(obj).attr('workId');
-	    changeSubPage('reqWorkDetail', 'homePage', 'workId=' + workId);
+	function openReqWorkDetail(obj) {
+		var workId = $(obj).attr('workId');
+		changeSubPage('reqWorkDetail', 'homePage', 'workId=' + workId);
 	}
 </script>
 
@@ -545,7 +552,7 @@
 							</div>
 					</a></li>
 				</ul>
-
+                <div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullUpFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;top:0;left:0" id="pullUpFreshText">上拉刷新</div></div>
 			</div>
 			<div id="reqWorkDiv">
 				<ul data-role="listview" id="reqworkList">
@@ -595,6 +602,7 @@
 							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
 					</a></li>
 				</ul>
+				<div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullUpFresh2"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;top:0;left:0" id="pullUpFreshText2">上拉刷新</div></div>
 			</div>
 		</div>
 		<!-- 显示返回到页面顶端浮动按钮-->

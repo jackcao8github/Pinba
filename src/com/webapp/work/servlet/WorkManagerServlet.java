@@ -95,16 +95,16 @@ public class WorkManagerServlet extends AbstractServlet {
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("getWorkList")){//加载工作列表
 				String workInfo = hreq.getParameter("workInfo");
-				JSONObject resumeJson = JSONObject.fromObject(workInfo);
+				JSONObject condJson = JSONObject.fromObject(workInfo);
 				if (StringUtils.isEmpty(workInfo)) {
 					returnFailResult("参数workInfo不能为空", response);
 					return;
 				}
-				long userId = resumeJson.containsKey("userId")==true?resumeJson.getLong("userId"):0;
-				int page = resumeJson.getInt("page");
-				String workType = resumeJson.getString("workType");
-				String cityName = resumeJson.containsKey("cityName")==true?resumeJson.getString("cityName"):"";
-				
+				long userId = condJson.containsKey("userId")==true?condJson.getLong("userId"):0;
+				int page = condJson.getInt("page");
+				String workType = condJson.getString("workType");
+				String cityName = condJson.containsKey("cityName")==true?condJson.getString("cityName"):"";
+				String workName = super.getStringFromJSON(condJson, "workName", false);
 				String[] workTypes =null;
 				if (workType!=null){
 					workTypes = workType.split(",");
@@ -114,7 +114,7 @@ public class WorkManagerServlet extends AbstractServlet {
 				//先判断token是否正确，如果不正确则提示重新登陆
 
 				//加载简历列表
-				JSONArray resumeList = workDao.getWorkList(userId,workTypes,cityName,page);
+				JSONArray resumeList = workDao.getWorkList(userId,workName,workTypes,cityName,page);
 				returnSuccessResult(resumeList, response);
 			} else if (method.equals("getFocusWorkList")){//加载关注工作列表
 				String workInfo = hreq.getParameter("workInfo");

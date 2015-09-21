@@ -201,7 +201,7 @@ public class WorkManagerDAO extends AbstractDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public JSONArray getWorkList(long userId,String[] workTypes,String cityName ,int page) throws Exception {
+	public JSONArray getWorkList(long userId,String workName,String[] workTypes,String cityName ,int page) throws Exception {
 		ResumeManagerDAO resumeDao = new ResumeManagerDAO();
 		resumeDao.setDataSource(this.getDataSource());
 		
@@ -209,11 +209,15 @@ public class WorkManagerDAO extends AbstractDAO {
 		if (userId>0){
 			params.put("USER_ID", "" + userId);
 		}
+		if (!StringUtils.isEmpty(workName)){
+			params.put("PROD_NAME", workName);
+			params.put("LIKECOL", "PROD_NAME");
+		}
 		
-		if (workTypes!=null&&workTypes.length>0){
+		if (!StringUtils.isEmpty(workTypes)){
 			params.put("PROD_TYPE", workTypes);
 		}
-		if (cityName!=null&&cityName.length()>0){
+		if (!StringUtils.isEmpty(cityName)){
 			String cityId = charSpecDao.getRealValue("workCity", cityName);
 			params.put("CITY_ID", "" + cityId);
 		}

@@ -19,6 +19,10 @@ $(document).ready(function() {
 function swipeRight() {
 	closeSubPage();
 }
+
+function swipeDown(){
+    getWorkList();
+}
 function openWorkDetail(obj) {
 	var workId = $(obj).attr('workId');
 	changeSubPage('workDetail', 'lookHisPage', 'workId=' + workId);
@@ -26,29 +30,6 @@ function openWorkDetail(obj) {
 function pageInit(){
 	getWorkList();
 }
-/* function delFocus(obj){
-	var workId = $(obj).attr('workId');
-	var cachedUserInfo = getLoginUserInfo();
-	if (cachedUserInfo != null) {
-		var focusInfo= {};
-		focusInfo.userId=cachedUserInfo.userId;
-		focusInfo.workId=workId;
-		ajaxReq(
-				'workAction',
-				{
-					method : 'delFocus',
-					focusInfo : json2Str(focusInfo)
-				},
-				function(data) {
-					if (data.flag != 'fail') {
-						//从列表删除当前行
-						
-					} else {
-						alert(data.msg);
-					}
-				});
-	}
-} */
 function getWorkList() {
 	$('#workListUL').html('');
 	var workInfo = {};
@@ -58,7 +39,7 @@ function getWorkList() {
 		workInfo.userToken = cachedUserInfo.userToken;
 		workInfo.page = '1';
 		workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
-
+		$('#pullDownFreshText').html('加载中...');
 		ajaxReq(
 				'workAction',
 				{
@@ -90,6 +71,8 @@ function getWorkList() {
 					} else {
 						alert(data.msg);
 					}
+					$('#pullDownFreshText').html('加载完成');
+                    $('#pullDownFresh').slideUp('slow');
 				});
 	}
 }
@@ -107,7 +90,8 @@ function getWorkList() {
 		</div>
 		<div id="tabs" data-role="tabs">
 			<div id="workList">
-				<ul data-role="listview" id="workListUL">
+			<div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullDownFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;bottom:0;left:0" id="pullDownFreshText">下拉刷新</div></div>
+				<ul data-role="listview" id="workListUL" data-split-icon="delete">
 					<li data-icon="false"><a onclick="openWork(this)" workId="1"
 						style="padding-top: 0px; padding-bottom: 0px;"> <img
 							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">

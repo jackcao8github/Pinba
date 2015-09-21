@@ -2,6 +2,11 @@ document.write('<script type="text/javascript" src="../js/json2.js"></script>');
 document.write('<script type="text/javascript" src="../myjs/charspecvalue.js"></script>');// 引入json库
 document.write('<script type="text/javascript" src="../myjs/BMap.js"></script>');
 
+//生成图片url
+function createImageUrl(imageId){
+	return getContextPath()+'/image?imageId='+imageId;
+}
+
 //替换字符串str中所有指定的字符串
 //replaceValueArr格式为{'a':'a1','b':'b1'}
 // 元字符: (  [  {  \  ^   $  |  )   ?  *  +  任何时候要使用这些元字符 ,都必须对它们进行转义
@@ -91,7 +96,7 @@ function getQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var r = window.location.search.substr(1).match(reg);
 	if (r != null)
-		return unescape(r[2]);
+		return decodeURI(r[2]);
 	return null;
 }
 

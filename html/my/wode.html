@@ -40,12 +40,14 @@
                     $('#balanceValue').html('余额:'+data.balance);
                     $('#pointsValue').html('积分:'+data.points);
                     $('#level').html('级别:' + data.userLevel);
+        			$('#image').attr('src',createImageUrl(data.headPicId));
                 } else {
                     alert(data.msg);
                     return false;
                 }
             });
         }else{
+        	$('#image').attr('src',createImageUrl(1));//默认头像id
         	$('#userName').html('未登陆');
             $('#authSate').html('认证状态:未知');
             $('#balanceValue').html('余额:未知');
@@ -94,7 +96,7 @@
 	<div data-role="page" id="wodePage" data-dom-cache="true">
 		<div data-role="none">
 			<div class="login">
-				<img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg" alt="" class="personal_logo"
+				<img id="image" src="" alt="" class="personal_logo"
 					onclick="viewUserInfo()">
 				<div class="userinfo">
 					<div class="title" id="userName">用户A</div>

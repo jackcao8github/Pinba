@@ -1,7 +1,9 @@
 package com.webapp.user.servlet;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +37,6 @@ public class UserManagerServlet extends AbstractServlet {
 		HttpServletRequest hreq = (HttpServletRequest) request;
 		response.setContentType("text/html;charset=utf-8");
 		String method = hreq.getParameter("method");
-
 		if (StringUtils.isEmpty(method)) {
 			returnFailResult("参数method不能为空", response);
 			return;
@@ -191,7 +192,7 @@ public class UserManagerServlet extends AbstractServlet {
 				String userHeadPicData = userJson.getString("userHeadPicData");
 
 				// 保存用户头像
-				//userDao.saveUserHeadPic(userId,userHeadPicData);
+				userDao.saveHeadPic(userId,userHeadPicData);
 				JSONObject retJson = new JSONObject();
 				retJson.put("msg", "记录成功!");
 				returnSuccessResult(retJson, response);

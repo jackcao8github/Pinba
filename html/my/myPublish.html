@@ -27,6 +27,9 @@
     function pageInit(){
     	getWorkList();
     }
+    function swipeDown(){
+    	getWorkList();
+    }
     //进入简历列表页面
     function openResumeInWork(obj){
     	var workId = $(obj).attr('workId');
@@ -42,6 +45,7 @@
 			workInfo.page = '1';
 			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
 
+			$('#pullDownFreshText').html('加载中...');
 			ajaxReq(
 					'workAction',
 					{
@@ -73,13 +77,10 @@
 						} else {
 							alert(data.msg);
 						}
+						$('#pullDownFreshText').html('加载完成');
+						$('#pullDownFresh').slideUp('slow');
 					});
 		}
-	}
-	
-	//向下滑动刷新
-	function swipeDown(){
-		getWorkList();
 	}
 </script>
 </head>
@@ -95,7 +96,7 @@
 		</div>
 
 		<div id="workList">
-			<div style="width:100%;height:0;background:#98bf21;text-align:center;" id="pullDownRefreshDiv">下拉刷新</div>
+		    <div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullDownFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;bottom:0;left:0" id="pullDownFreshText">下拉刷新</div></div>
 			<ul data-role="listview" id="workListUL" data-split-icon="gear">
 				<li data-icon="false"><a onclick="openWork(this)" workId="1"
 					style="padding-top: 0px; padding-bottom: 0px;"> <img

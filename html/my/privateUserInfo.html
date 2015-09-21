@@ -42,7 +42,7 @@
 						if (cachedUserInfo != null) {
 							userInfo.userId = cachedUserInfo.userId;
 							userInfo.userToken = cachedUserInfo.userToken;
-							userInfo.userHeadPicData = e.target.result;
+							userInfo.userHeadPicData = encodeURIComponent(encodeURIComponent(e.target.result));
 				
 							ajaxReq(
 									'userAction',
@@ -51,7 +51,7 @@
 										userInfo : json2Str(userInfo)
 									},
 									function(data) {
-										alert(data);
+										//alert(data);
 									});
 						 }  
 		        }})(f);  
@@ -83,10 +83,14 @@
 	//绑定数据到控件
 	function bindData(jsonData, divId) {
 		for ( var o in jsonData) {
+			var realValue = jsonData[o];
+			if (o=='headPicId'){//头像图片id需要特殊处理
+				$('#image').attr('src',createImageUrl(realValue));
+				continue;
+			}
 			var ctrl = $('#' + divId + ' #' + o);
 			if (ctrl.length > 0) {
 				//处理下拉框采集的数据
-				var realValue = jsonData[o];
 				var displayValue = getDisplayEnumValue(o, realValue);
 				ctrl.html(displayValue);
 			}
@@ -134,7 +138,7 @@
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改用户信息</a>
 		</div>
 		<div class="login">
-			<img src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg"
+			<img src="/PinBa/image?imageId=34"
 				id="image" alt="" class="personal_logo" onclick="changeHeadPic()">
 			<div class="userinfo">
 				<div class="title" id="userName">点击图片设置头像</div>

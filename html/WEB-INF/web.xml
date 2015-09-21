@@ -26,7 +26,16 @@
 		<url-pattern>/verifyImage</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>image</servlet-name>
+		<servlet-class>com.webapp.common.servlet.ImageServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
 	
+	<servlet-mapping>
+		<servlet-name>image</servlet-name>
+		<url-pattern>/image</url-pattern>
+	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>commonAction</servlet-name>

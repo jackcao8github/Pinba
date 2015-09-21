@@ -18,9 +18,12 @@ import com.webapp.common.util.CharSpecConsts;
 import com.webapp.common.util.MD5Util;
 import com.webapp.common.util.TimeUtil;
 import com.webapp.user.bean.UserAcctBean;
+import com.webapp.user.bean.UserAlbumBean;
+import com.webapp.user.bean.UserAlbumPhotoBean;
 import com.webapp.user.bean.UserBean;
 import com.webapp.user.bean.UserCharBean;
 import com.webapp.user.bean.UserPositionBean;
+import com.webapp.user.bean.VUserHeadPicBean;
 
 public class UserManagerDAO extends AbstractDAO {
 	private static CharSpecDAO charSpecDao = null;
@@ -317,7 +320,15 @@ public class UserManagerDAO extends AbstractDAO {
 				retJson.put(this.charSpecDao.getCode(userCharBean.getCharId()), userCharBean.getValue());
 			}
 		}
-
+		//返回用户头像图片id
+		params.clear();
+		params.put("USER_ID", "" + userBean.getUserId());
+		VUserHeadPicBean userHeadPicBean = (VUserHeadPicBean) super.getBean(VUserHeadPicBean.class, params);
+		if (userHeadPicBean!=null){
+			retJson.put("headPicId", userHeadPicBean.getPhotoId());
+		}else{
+			retJson.put("headPicId", 1);//默认返回imageId=1
+		}
 		return retJson;
 	}
 	
@@ -349,5 +360,95 @@ public class UserManagerDAO extends AbstractDAO {
 		hisBean.setCreateDate(TimeUtil.getLocalTimeString());
 		
 		super.insertBean(hisBean);
+	}
+	
+	
+	/**
+	 * 保存用户头像数据
+	 * @param userId
+	 * @param picData
+	 * @throws Exception
+	 */
+	public void saveHeadPic(long userId,String picData) throws Exception{
+		//判断是否已有头像,如果有则更新，没有则新建
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+		params.put("ALBUM_TYPE", "default");
+		
+		UserAlbumBean userAlbumBean = (UserAlbumBean) super.getBean(UserAlbumBean.class, params);
+		if (userAlbumBean==null){
+			//新建默认相册后在相册内增加照片
+			userAlbumBean = (UserAlbumBean) super.newBean(UserAlbumBean.class);
+			userAlbumBean.setUserId(userId);
+			userAlbumBean.setAlbumName("default");//类型为默认相册
+			userAlbumBean.setAlbumType("default");//类型为默认相册
+			userAlbumBean.setCreateDate(TimeUtil.getLocalTimeString());
+			
+			long albumId = (long) super.insertBean(userAlbumBean);
+			
+			UserAlbumPhotoBean photoBean =  (UserAlbumPhotoBean) super.newBean(UserAlbumPhotoBean.class);
+			photoBean.setAlbumId(albumId);
+			photoBean.setPhotoData(picData);
+			photoBean.setCreateDate(TimeUtil.getLocalTimeString());
+			
+			super.insertBean(photoBean);
+		}else{
+			//更新相册内的照片
+			params.clear();
+			params.put("ALBUM_ID", userAlbumBean.getAlbumId());
+			
+			UserAlbumPhotoBean photoBean = (UserAlbumPhotoBean) super.getBean(UserAlbumPhotoBean.class, params);
+			if (photoBean!=null){
+				photoBean.setPhotoData(picData);
+				
+				super.updateBean(photoBean);
+			}else{
+				photoBean =  (UserAlbumPhotoBean) super.newBean(UserAlbumPhotoBean.class);
+				photoBean.setAlbumId(userAlbumBean.getAlbumId());
+				photoBean.setPhotoData(picData);
+				photoBean.setCreateDate(TimeUtil.getLocalTimeString());
+				
+				super.insertBean(photoBean);
+			}
+		}
+	}
+	
+	/**
+	 * 加载用户头像图片数据
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getHeadPic(long userId) throws Exception{
+		//判断是否已有头像,如果有则更新，没有则新建
+		Map<String, Object> params = new HashMap();
+		params.put("USER_ID", "" + userId);
+		params.put("ALBUM_TYPE", "default");
+		
+		UserAlbumBean userAlbumBean = (UserAlbumBean) super.getBean(UserAlbumBean.class, params);
+		if (userAlbumBean!=null){
+			//更新相册内的照片
+			params.clear();
+			params.put("ALBUM_ID", userAlbumBean.getAlbumId());
+			
+			UserAlbumPhotoBean photoBean = (UserAlbumPhotoBean) super.getBean(UserAlbumPhotoBean.class, params);
+			if (photoBean!=null){
+				return photoBean.getPhotoData();
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getPhotoData(long photoId) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put("PHOTO_ID", photoId);
+
+		UserAlbumPhotoBean photoBean = (UserAlbumPhotoBean) super.getBean(
+				UserAlbumPhotoBean.class, params);
+		if (photoBean != null) {
+			return photoBean.getPhotoData();
+		}
+		return null;
 	}
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
@@ -223,6 +224,14 @@ public abstract class AbstractBean implements Serializable {
 				pageNo = (String) params.get("PAGE");
 				params.remove("PAGE");
 			}
+			
+			String[] likeColArr = null;
+			if (params.containsKey("LIKECOL")) {// 分页条件
+				String likeColstr = (String) params.get("LIKECOL");
+				likeColArr = likeColstr.split(",");
+				params.remove("LIKECOL");
+			}
+			
 			StringBuffer wherecolNames = new StringBuffer();
 			Iterator it2 = params.entrySet().iterator();
 
@@ -247,8 +256,16 @@ public abstract class AbstractBean implements Serializable {
 
 					wherecolNames.append(")");
 				} else {
-					wherecolNames.append(ent.getKey().toString()).append("=?");
-					argList.add(ent.getValue());
+					wherecolNames.append(ent.getKey().toString());
+					if (likeColArr!=null&&ArrayUtils.contains(likeColArr, ent.getKey().toString())){
+						wherecolNames.append(" like ? ");
+						argList.add("%"+ent.getValue()+"%");
+					}else{
+						wherecolNames.append(" = ? ");
+						argList.add(ent.getValue());
+					}
+					
+					
 				}
 			}
 			sqlAndParams.sql.append(" WHERE ").append(wherecolNames);

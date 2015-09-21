@@ -10,99 +10,118 @@
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 
 <style>
-.msgStatus {
-	background: #26c281;
-	border-radius: 50%;
-	width: 9px;
-	height: 9px;
-	position: absolute;
-	top: 31px;
-	right: 17px;
-}
 
-.msgStatus.active {
-	background: #26c281;
-}
-
-.msgStatus.inactive {
-	background: #eaeef0;
-}
 </style>
 
 <script type="text/javascript">
 function swipeRight(){
 	closeSubPage();
 }
-	document.addEventListener(touchEvents.touchend, function(ev) {
-		var endX, endY;
-		endX = ev.changedTouches[0].pageX;
-		endY = ev.changedTouches[0].pageY;
-		var direction = GetSlideDirection(startX, startY, endX, endY);
-		switch (direction) {
-		case 0:
-			console.log("没滑动");
-			break;
-		case 1:
-			console.log("向上");
-			break;
-		case 2:
-			console.log("向下");
-			//当前是在消息列表页面，需要加载新消息
-			var messageTabLi = $('#messageTabLi[class*="ui-btn-active"]');
-			if (messageTabLi.length > 0) {
-				loadNewMsg();
-			}
-			break;
-		case 3:
-			console.log("向左");
-			break;
-		case 4:
-			console.log("向右");
-			break;
-		default:
-		}
-	}, false);
-	/* 加载新消息 */
-	function loadNewMsg() {
-		//当是滚动条已在最上时，去加载新信息
-		if ($(document).scrollTop() ==0){
-			$.ajax({
-		        type: "POST",
-		        contentType: "application/json",
-		        url: "",
-		        beforeSend: function () {         
-		        	//显示加载中 
-		        	$.mobile.loading( "show", {
-		        		            text: '加载...',
-		        		            textVisible: true,
-		        		            theme: 'a',
-		        		            textonly: true,
-		        		            html: ''
-		        		    }); 
-		        },
-		        complete:function(){
-		        	//隐藏加载中
-		        	$.mobile.loading( "hide");
-		        },
-		        success: function (msg) {
-		        	//从后台返回数据
-		        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" data-ajax="false">';
-		    		newhtml += '<img src="images/login01.png">';
-		    		newhtml += '<h3>xx美食</h3>';
-		    		newhtml += '<p>免预约到店的哟</p>';
-		    		newhtml += '<p class="ui-li-aside">';
-		    		newhtml += '	<strong>9:19</strong>AM';
-		    		newhtml += '</p> </a></li>';
+var searchKey = '';
+$(document).on("pageinit",function(event){
+	searchKey = getQueryString('searchKey');
+	 $('#workList').html('');
+	   loadWorkList();
+	});
+	
+	
+var workPage = 1;
+function swipeUp() {
+   loadWorkList();
+}
+function loadWorkList() {
+    $('#pullUpFreshText').html('加载中...');
+    var workInfo = {};
+    workInfo.page = workPage;
+    workInfo.cityName = localStorage.city;
+    workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+    workInfo.workName = searchKey;
 
-		    		for ( var i = 0; 10 > i; i++) {
-		    			var newli = $('#messageListUL').prepend(newhtml);
-		    		}
-		    		$('#messageListUL').listview("refresh");
-		        }
-		    });
-		}
-		
-	}
+    ajaxReq('workAction', {
+        method : 'getWorkList',
+        workInfo : json2Str(workInfo)
+    }, function(data) {
+        if (data.flag != 'fail') {
+            if (data.length > 0) {
+                workPage++;
+                fillWorkList(data);
+            }
+        } else {
+            alert(data.msg);
+        }
+        
+        $('#pullUpFreshText').html('加载完成');
+        $('#pullUpFresh').slideUp('slow');
+    });
+}
+
+function fillWorkList(data) {
+    var newhtml = '<li data-icon="false" onclick="openWork(this)" workId="+workId+"><a href="#" class="ui-btn ui-mini">\
+        <div style="overflow: hidden;">\
+        <p style="float: left;font-weight:bold;">+title+</p>\
+        <p style="color: black; float: right">+time+</p>\
+        </div><div style="overflow: hidden;">\
+                    <p style="float: left">+condition+</p>\
+                    <p style="color: red; float: right">时薪:+daymoney+</p>\
+                </div><div style="overflow: hidden;">\
+                    <p style="float: left">+username+</p>\
+                    <div style="float: right; color: #f63">+userCredit+\
+                    </div></div></a></li>';
+
+    for ( var i = 0; data.length > i; i++) {
+        var workObj = data[i];
+        var conditionStr = '';
+        conditionStr += getDisplayEnumValue('expectDegree',
+                workObj.expectDegree)
+                + '学历';
+        conditionStr += '&nbsp;|&nbsp;';
+        conditionStr += getDisplayEnumValue('expectExperience',
+                workObj.expectExperience)
+                + '经验';
+        conditionStr += '&nbsp;|&nbsp;';
+        conditionStr += getDisplayEnumValue('expectAge', workObj.expectAge)
+                + '年龄';
+
+        var userCreditHtml = createCreditHtml(workObj.userCredit);
+
+        var html = newhtml.replace('+username+', workObj.userName).replace(
+                '+title+', workObj.workName).replace('+time+',
+                workObj.effDate).replace('+condition+', conditionStr)
+                .replace('+daymoney+', workObj.daySallary).replace(
+                        '+workId+', workObj.workId).replace('+userCredit+',
+                        userCreditHtml);
+
+        $('#workList').append(html);
+    }
+
+    $('#workList').listview("refresh");
+}
+
+function createCreditHtml(userCredit) {
+    var strArr = [];
+    var mod = userCredit / 100;
+    mod = parseInt(mod);
+    var left = userCredit % 100;
+    if (mod > 0) {
+        for ( var i = 0; mod > i; i++) {
+            strArr.push('<i class="fa fa-star"></i>');
+        }
+    }
+    if (left > 50) {
+        strArr.push('<i class="fa fa-star-o"></i>');
+    }
+    if (strArr.length != 5) {
+        var c = 5 - strArr.length;
+        for ( var j = 0; c > j; j++)
+            strArr.push('<i class="fa fa-star-o"></i>');
+    }
+
+    return strArr.join('');
+}
+function openWork(obj) {
+    var workid = $(obj).attr('workId');
+    changeSubPage('workDetail', 'homePage', 'workid=' + workid);
+}
 </script>
 </head>
 <body>
@@ -114,94 +133,124 @@ function swipeRight(){
 
 			<h1>工作</h1>
 		</div>
-		<div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#messageList" class="ui-btn-active"
-						id="messageTabLi">招聘</a></li>
-					<li><a href="#friendList">求职</a></li>
-				</ul>
-			</div>
-
-			<div id="messageList">
-				<ul data-role="listview" id="messageListUL">
-					<!-- 聊天信息 -->
-					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 聊天对象头像 -->
-							<h3>xx美食</h3> <!-- 聊天对象昵称 -->
-							<p>免预约到店的哟</p> <!-- 最新聊天内容 -->
-							<p class="ui-li-aside">
-								<strong>9:18</strong>AM
-							</p> <!-- 最新消息时间 -->
-							<div class="msgStatus active"></div>
-					</a></li>
-					<!-- 业务通知 -->
-					<li data-icon="false"><a href="servNoticeMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 业务通知图标 -->
-							<h3>积分到帐通知</h3> <!-- 通知标题 -->
-							<p>1个签到积分到帐</p> <!-- 通知内容 -->
-							<p class="ui-li-aside">
-								<strong>9:18</strong>AM
-							</p> <!-- 通知时间 -->
-							<div class="msgStatus active"></div>
-					</a></li>
-					<!-- 业务提醒 -->
-					<li data-icon="false"><a href="servRemindMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 业务提醒 图标 -->
-							<h3>面试通知</h3> <!-- 业务提醒 标题 -->
-							<p>到xx酒店参加面试</p> <!-- 业务提醒 内容 -->
-							<p class="ui-li-aside">
-								<strong>9:18</strong>AM
-							</p> <!-- 业务提醒 时间 -->
-							<div class="msgStatus active"></div>
-					</a></li>
-					<!-- 订阅 -->
-					<li data-icon="false"><a href="subscribeMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 订阅 图标 -->
-							<h3>优惠信息订阅</h3> <!-- 订阅 标题 -->
-							<p>xx美食店：新推出满100优惠10块活动</p> <!-- 订阅 内容 -->
-							<p class="ui-li-aside">
-								<strong>9:18</strong>AM
-							</p> <!-- 订阅 时间 -->
-							<div class="msgStatus inactive"></div>
-					</a></li>
-
-					<!-- 系统公告 -->
-					<li data-icon="false"><a href="systemMsg.html"
-						data-ajax="false"> <img src="images/login01.png"> <!-- 系统公告图标 -->
-							<h3>系统升级公告</h3> <!-- 系统公告标题 -->
-							<p>计划在2015-09-01 10：00：00进行系统升级，请做好保存工作。</p> <!-- 系统公告内容 -->
-							<p class="ui-li-aside">
-								<strong>9:18</strong>AM
-							</p> <!-- 系统公告时间 -->
-							<div class="msgStatus inactive"></div>
-					</a></li>
-				</ul>
-			</div>
-			<div id="friendList">
-				<ul data-role="listview">
-					<li data-icon="false"><a href="friendsMsg.html?friendId=101"
-						data-ajax="false" style="padding-top: 0px; padding-bottom: 0px;">
-							<img src="image/firstcover02.png">
-							<h2>Hilton</h2> <!-- 名字 -->
-							<p>life is beaultiful.</p> <!-- 签名 -->
-							<div style="float: left;">
-								<!-- 性别 -->
-								<img style="height: 0.8em; width: 0.8em;"
-									src="image/main_index_home_pressed.png"><span
-									style="font-size: 0.8em">335</span> </img>
-							</div>
-
-							<div style="margin-left: 10px; float: right;">
-								<!-- 距离 -->
-								<img style="height: 0.8em; width: 0.8em;"
-									src="image/my_favorite_user_icon_normal.png"><span
-									style="font-size: 0.8em">3350米</span> </img>
-							</div>
-					</a></li>
-				</ul>
-			</div>
-		</div>
+		<ul data-role="listview" id="workList">
+                    <li data-icon="false" onclick="openWork(this)" workId="1"><a
+                        href="#" class="ui-btn ui-mini">
+                            <div style="overflow: hidden;">
+                                <p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+                                <!--招聘标题-->
+                                <p style="color: black; float: right">22:23 PM</p>
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
+                                <!--要求-->
+                                <p style="color: red; float: right">日薪:100-200</p>
+                                <!--待遇-->
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">KFC-欧尚超市店</p>
+                                <!--招聘用户名称-->
+                                <p style="float: right; color: #f63">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star-half-full"></i>
+                                </p>
+                            </div>
+                    </a></li>
+                    <li data-icon="false" onclick="openWork(this)" workId="1"><a
+                        href="#" class="ui-btn ui-mini">
+                            <div style="overflow: hidden;">
+                                <p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+                                <!--招聘标题-->
+                                <p style="color: black; float: right">22:23 PM</p>
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
+                                <!--要求-->
+                                <p style="color: red; float: right">日薪:100-200</p>
+                                <!--待遇-->
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">KFC-欧尚超市店</p>
+                                <!--招聘用户名称-->
+                                <p style="float: right; color: #f63">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star-half-full"></i>
+                                </p>
+                            </div>
+                    </a></li>
+                    <li data-icon="false" onclick="openWork(this)" workId="1"><a
+                        href="#" class="ui-btn ui-mini">
+                            <div style="overflow: hidden;">
+                                <p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+                                <!--招聘标题-->
+                                <p style="color: black; float: right">22:23 PM</p>
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
+                                <!--要求-->
+                                <p style="color: red; float: right">日薪:100-200</p>
+                                <!--待遇-->
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">KFC-欧尚超市店</p>
+                                <!--招聘用户名称-->
+                                <p style="float: right; color: #f63">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star-half-full"></i>
+                                </p>
+                            </div>
+                    </a></li>
+                    <li data-icon="false" onclick="openWork(this)" workId="1"><a
+                        href="#" class="ui-btn ui-mini">
+                            <div style="overflow: hidden;">
+                                <p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+                                <!--招聘标题-->
+                                <p style="color: black; float: right">22:23 PM</p>
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
+                                <!--要求-->
+                                <p style="color: red; float: right">日薪:100-200</p>
+                                <!--待遇-->
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">KFC-欧尚超市店</p>
+                                <!--招聘用户名称-->
+                                <p style="float: right; color: #f63">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star-half-full"></i>
+                                </p>
+                            </div>
+                    </a></li>
+                    <li data-icon="false" onclick="openWork(this)" workId="1"><a
+                        href="#" class="ui-btn ui-mini">
+                            <div style="overflow: hidden;">
+                                <p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
+                                <!--招聘标题-->
+                                <p style="color: black; float: right">22:23 PM</p>
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
+                                <!--要求-->
+                                <p style="color: red; float: right">日薪:100-200</p>
+                                <!--待遇-->
+                            </div>
+                            <div style="overflow: hidden;">
+                                <p style="float: left">KFC-欧尚超市店</p>
+                                <!--招聘用户名称-->
+                                <p style="float: right; color: #f63">
+                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                        class="fa fa-star-half-full"></i>
+                                </p>
+                            </div>
+                    </a></li>
+                </ul>
+                <div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullUpFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;top:0;left:0" id="pullUpFreshText">上拉刷新</div></div>
 
 	</div>
 </body>
