@@ -89,7 +89,12 @@
 				//图片滚动处理 ------------------------------end
 
 				//定位
-				getPosition(showPosition);
+				if(navigator.onLine){
+					getPosition(showPosition);
+				}else{
+					showPosition();
+				}
+				
 
 				//阻止在图片上滑动时引起的翻页行为
 				$(".main_visual").bind(touchEvents.touchend, function() {

@@ -32,8 +32,9 @@ public abstract class AbstractDAO {
 	protected Object insertBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.insertSql();
-		log.debug(sqlAndParams.sql);
-		log.debug(sqlAndParams.args);
+		log.info(sqlAndParams.sql);
+		if (sqlAndParams.args != null)
+			log.info(getParamsStr(sqlAndParams.args));
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 		return abstractBean.getKeyColValue();
 	}
@@ -44,20 +45,23 @@ public abstract class AbstractDAO {
 		if (sqlAndParams == null) {
 			return;
 		}
-		log.debug(sqlAndParams.sql);
-		log.debug(sqlAndParams.args);
+		log.info(sqlAndParams.sql);
+		if (sqlAndParams.args != null)
+			log.info(getParamsStr(sqlAndParams.args));
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
 	protected void deleteBean(AbstractBean abstractBean) {
 		JdbcTemplate jt = new JdbcTemplate(getDataSource());
 		PreparedSqlAndParams sqlAndParams = abstractBean.deleteSql();
-		log.debug(sqlAndParams.sql);
-		log.debug(sqlAndParams.args);
+		log.info(sqlAndParams.sql);
+		if (sqlAndParams.args != null)
+			log.info(getParamsStr(sqlAndParams.args));
 		jt.update(sqlAndParams.sql.toString(), sqlAndParams.args);
 	}
 
-	protected List<AbstractBean> getBeans(final Class clazz, Map<String, Object> params) {
+	protected List<AbstractBean> getBeans(final Class clazz,
+			Map<String, Object> params) {
 		return getBeans(clazz, params, false);
 	}
 
@@ -72,57 +76,63 @@ public abstract class AbstractDAO {
 	}
 
 	private Map<Class, AbstractBean> cachedBeans = new HashMap();
-	
-	
-	public AbstractBean newBean(Class clazz) throws Exception{
-        AbstractBean retBean = null;
-         if (cachedBeans .containsKey(clazz)) {
-               AbstractBean cachedBean = cachedBeans.get(clazz);
-               retBean = cachedBean.deepCopy();
-        } else {
-               AbstractBean newbean = (AbstractBean) clazz.newInstance();
-                cachedBeans.put(clazz, newbean);
 
-               retBean = (AbstractBean) newbean.deepCopy();//深拷贝生成新对象，提高效效率
-        }
-        
-         return retBean;
+	public AbstractBean newBean(Class clazz) throws Exception {
+		AbstractBean retBean = null;
+		if (cachedBeans.containsKey(clazz)) {
+			AbstractBean cachedBean = cachedBeans.get(clazz);
+			retBean = cachedBean.deepCopy();
+		} else {
+			AbstractBean newbean = (AbstractBean) clazz.newInstance();
+			cachedBeans.put(clazz, newbean);
+
+			retBean = (AbstractBean) newbean.deepCopy();// 深拷贝生成新对象，提高效效率
+		}
+
+		return retBean;
 	}
 
-
-	protected List<AbstractBean> getBeans(final Class clazz, Map<String, Object> params, boolean forupdate) {
+	protected List<AbstractBean> getBeans(final Class clazz,
+			Map<String, Object> params, boolean forupdate) {
 		PreparedSqlAndParams sqlAndParams = null;
 		List result = null;
 		try {
-			sqlAndParams = ((AbstractBean) newBean(clazz)).getBeansSql(params, forupdate);
-			log.debug(sqlAndParams.sql);
-			log.debug(sqlAndParams.args);
+			sqlAndParams = ((AbstractBean) newBean(clazz)).getBeansSql(params,
+					forupdate);
+			log.info(sqlAndParams.sql);
+			if (sqlAndParams.args != null)
+				log.info(getParamsStr(sqlAndParams.args));
 			JdbcTemplate jt = new JdbcTemplate(getDataSource());
-			result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args, new RowMapper() {
-				@Override
-				public Object mapRow(ResultSet resultset, int i) throws SQLException {
-					AbstractBean bean = null;
-					try {
-						bean = newBean(clazz);
-						int count = resultset.getMetaData().getColumnCount();
-						for (int ii = 1; ii <= count; ii++) {
-							String colName = resultset.getMetaData().getColumnName(ii);
+			result = jt.query(sqlAndParams.sql.toString(), sqlAndParams.args,
+					new RowMapper() {
+						@Override
+						public Object mapRow(ResultSet resultset, int i)
+								throws SQLException {
+							AbstractBean bean = null;
+							try {
+								bean = newBean(clazz);
+								int count = resultset.getMetaData()
+										.getColumnCount();
+								for (int ii = 1; ii <= count; ii++) {
+									String colName = resultset.getMetaData()
+											.getColumnName(ii);
 
-							bean.setAttrValue(colName.toUpperCase(), resultset.getObject(ii));
+									bean.setAttrValue(colName.toUpperCase(),
+											resultset.getObject(ii));
+								}
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (CloneNotSupportedException e) {
+								e.printStackTrace();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return bean;
 						}
-					} catch (InstantiationException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (CloneNotSupportedException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-					return bean;
-				}
-			});
+					});
 		} catch (InstantiationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -135,16 +145,19 @@ public abstract class AbstractDAO {
 		}
 		return result;
 	}
-	
-	public long getBeanCount(final Class clazz, Map<String, Object> params){
+
+	public long getBeanCount(final Class clazz, Map<String, Object> params) {
 		PreparedSqlAndParams sqlAndParams = null;
 		try {
-			sqlAndParams = ((AbstractBean) newBean(clazz)).getBeanCountSql(params);
-			log.debug(sqlAndParams.sql);
-			log.debug(sqlAndParams.args);
+			sqlAndParams = ((AbstractBean) newBean(clazz))
+					.getBeanCountSql(params);
+			log.info(sqlAndParams.sql);
+			if (sqlAndParams.args != null)
+				log.info(getParamsStr(sqlAndParams.args));
 			JdbcTemplate jt = new JdbcTemplate(getDataSource());
-			SqlRowSet rowSet = jt.queryForRowSet(sqlAndParams.sql.toString(),sqlAndParams.args);
-			if (rowSet!=null){
+			SqlRowSet rowSet = jt.queryForRowSet(sqlAndParams.sql.toString(),
+					sqlAndParams.args);
+			if (rowSet != null) {
 				rowSet.first();
 				return rowSet.getLong("RESULT");
 			}
@@ -159,5 +172,18 @@ public abstract class AbstractDAO {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	private String getParamsStr(Object[] parms){
+		StringBuffer str = new StringBuffer();
+		if (parms!=null){
+			for (int i=0;i<parms.length;i++){
+				if (str.length()>0){
+					str.append(",");
+				}
+				str.append(parms[i].toString());
+			}
+		}
+		return str.toString();
 	}
 }
