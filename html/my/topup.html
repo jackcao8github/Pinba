@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div id="regPage" data-role="page">
+		<div data-role="header" id="header" data-position="fixed"
+			data-fullscreen="false" data-tap-toggle="false">
+
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>充值</h1>
+
+		</div>
+		<div data-role="content" class="ui-mini">
+			<div id="form">
+				<div data-role="fieldcontain">
+					<label for="value">金额:</label> <input type="text" name="value"
+						id="value" value="" required placeholder="充值金额支持小数点2位，只能包含数字和."
+						pattern="">
+				</div>
+				<fieldset data-role="controlgroup" data-mini="true">
+					<legend>充值方式:</legend>
+					<label for="alipay">支付宝</label> <input type="radio" name="alipay"
+						id="alipay" value="alipay" checked="checked">
+				</fieldset>
+				<a data-role="button" class="submmitBtn" data-icon="check" data-mini="true" onclick="submmit()"
+					data-icon="check">提交</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	});
+	function swipeRight() {
+		closeSubPage();
+	}
+	function submmit() {
+		//form表单校验不通过
+		if (checkFormNullable('form') == false) {
+			return;
+		}
+		var value = $('#value').val();
+		var reg = new RegExp("^[0-9]+(.[0-9]{2})?$", "g");
+		if (!reg.test(value)) {
+			showTipDialog('请输入正确的充值金额!');
+			return;
+		}
+		var topupType = getQueryString('topupType');//从参数中取充值类型，prepay为预存款，deposit为保证金
+		if (topupType != 'prepay' && topupType != 'deposit') {
+			showTipDialog('错误的参数取值!');
+			return;
+		}
+		var resultCode = window.payUtil.pay(topupType, value);
+		if (resultCode == '9000') {//充值成功
+			//修改账户金额后回到上级页面
+			var acctInfo = {};
+			var cachedUserInfo = getLoginUserInfo();
+	        if (cachedUserInfo != null) {
+	        	acctInfo.userId = cachedUserInfo.userId;
+	        }
+	        acctInfo.acctType=topupType;
+	        acctInfo.acctOpType='topup';
+	        acctInfo.value = value;
+	        
+	        ajaxReq('userAction', {
+	            method : 'topup',
+	            acctInfo : json2Str(acctInfo)
+	        }, function(data) {
+	            if (data.flag == 'success') {
+	                //充值成功，转向主页面
+	                closeSubPage();
+	            } else {
+	                showTipDialog(data.msg);
+	            }
+	        });
+		} else {//充值失败
+			showTipDialog('充值失败,请联系客服人员!');
+		}
+		return false;
+	}
+</script>
+</html>

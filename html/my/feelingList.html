@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="feelingListPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>心情历史</h1>
+		</div>
+		<!-- <div data-role="content"> -->
+		<div class="swipe">
+			<div class="pullDownFresh">
+				<div class="pullDownFreshText">下拉刷新</div>
+			</div>
+			<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+			<ul data-role="listview" id="feelingList" style="margin:0" data-split-icon="delete">
+
+			</ul>
+		</div>
+		<a data-role="button" data-mini="true" data-icon="plus" class="submmitBtn"
+			onclick="changeSubPage('addFeeling','feelingListPage')">增加心情</a>
+			<!-- </div> -->
+	</div>
+</body>
+
+
+<script src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../myjs/mobileFix.mini.js"></script>
+<script src="../myjs/exif.js"></script>
+<script src="../myjs/lrz.js"></script>
+
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {
+						//绑定控件滑动事件
+						bindSwipeEvent();
+						loadFeelingList();
+					});
+	function swipeDown() {
+		loadFeelingList();
+	}
+	function loadFeelingList() {
+		$('#feelingList').html('');
+		var userInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.page = 1;
+			ajaxReq('userAction', {
+				method : 'getUserFeelingList',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.length>0){
+					fillList(data);
+				}
+				else {
+					$('.pullNoData').show();
+				}
+			});
+		}
+	}
+
+	//删除一条心情
+	function delFeeling(feelId){
+		var userInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.feelingId = feelId;
+			ajaxReq('userAction', {
+				method : 'delFeeling',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.flag=='success'){
+					
+				}
+				else {
+				}
+				//从列表删除
+				$('li[feelingId="'+feelId+'"]').remove();
+			});
+		}
+	}
+	function fillList(data) {
+		var litemplate = '<li style="padding:0" feelingId="-feelingId-"><a>-image-<h2 style="white-space:pre-wrap">-feelingText-</h2><p>-createDate-</p></a><a onclick="delFeeling(\'-feelingId-\')"></a></li>';
+
+		var ulHtml = '';
+		for ( var i = 0; data.length > i; i++) {
+
+			var params = {};
+			params['-feelingId-'] = data[i].feelingId;
+			params['-feelingText-'] = data[i].feelingText;
+			params['-createDate-'] = data[i].createDate;
+			
+			var imgNode = '<img style="background-size:contain;"src="-imageId-">';
+			
+			if(data[i].feelingImage!=null){
+				imgNode = imgNode.replace('-imageId-',createImageUrl(data[i].feelingImage))
+			}
+			params['-image-'] = imgNode;
+
+			var liHtml = replaceAll(litemplate, params);
+
+			$('#feelingList').append(liHtml);
+			$('#feelingList').listview("refresh");
+		}
+
+	}
+	function swipeRight() {
+		closeSubPage();
+	}
+</script>
+</html>

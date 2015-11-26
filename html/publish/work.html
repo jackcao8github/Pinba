@@ -2,10 +2,10 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<script src="../js/jquery-1.11.3.js"></script>
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery.mobile-1.4.5.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
@@ -14,22 +14,33 @@
 <script type="text/javascript">
 	var workId = 0;
 	var workType = 'partTime';
-	$(document).ready(
-			function() {
-				$('#verifyImg').attr(
-						'src',
-						getContextPath()
-								+ '/verifyImage?width=70&height=21&length=4');
-				
+	var postCode = '';
+	$(document).on("pageinit",function(){pageInit()});
+			function pageInit() {
+				//加载验证码
+                loadVerifyImage('verifyImg');
+
 				//初始化下拉框控件
-				$('select').each(function(index,item){
-					fillOptions(item.id);
+				$('select').each(function(index, item) {
+					if (item.id == "workArea") {
+						fillOptions(item.id, localStorage.city);
+					} else {
+						fillOptions(item.id);
+					}
 				});
 				workType = getQueryString('workType');
 				if (workType == null) {
 					workType = 'partTime';
 				}
 				workId = getQueryString('workId');
+				if (workId == null) {
+					workId = 0;
+				}
+				postCode = getQueryString('postCode');
+				if (postCode == null) {
+					postCode = '';
+				}
+
 				if (workId > 0) {
 					$('#title').html('修改工作');
 					var workInfo = {};
@@ -47,13 +58,25 @@
 							if (data.flag == 'success') {
 								bindData(data);
 							} else {
-								alert(data.msg);
+								showTipDialog(data.msg);
 								return false;
 							}
 						});
 					}
+				} else {
+					if (postCode != '') {
+						//如果postCode不为空，则默认选中
+						selectOptions('post', postCode);
+					}
 				}
-			});
+
+				$('#hour').bind("click", function(event) {
+					showHourSallary();
+				});
+				$('#day').bind("click", function(event) {
+					showDaySallary();
+				});
+			}
 	function swipeRight() {
 		closeSubPage();
 	}
@@ -61,11 +84,28 @@
 	function bindData(jsonData) {
 		for ( var o in jsonData) {
 			var value = jsonData[o];
+			if (o == 'sallaryType') {
+				if (value == 'day') {
+					showDaySallary();
+				} else {
+					showHourSallary();
+				}
+				continue;
+			}
 			var ctrl = $('#' + o);
 			if (ctrl.length > 0) {
-				if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
-                    selectOptions(o,value); 
-                }if (o == 'selfreview') {
+				if (ctrl[0].id == 'workArea') {
+					var cityName = '';
+					if (workId > 0) {
+						cityName = getDisplayEnumValue('workCity',
+								jsonData.cityId);
+					} else {
+						cityName = localStorage.city;
+					}
+					selectOptions(o, value, cityName);//根据城市加载行政区域
+				} else if (ctrl[0].tagName == 'SELECT') {//jquery mobile 渲染了select,html完全变了
+					selectOptions(o, value);
+				} else if (o == 'selfreview') {
 					ctrl.html(value);
 				} else {
 					ctrl.val(value);
@@ -74,6 +114,11 @@
 		}
 	}
 	function publish() {
+		//form表单校验不通过
+		if (checkFormNullable('form') == false) {
+			return;
+		}
+		$('#pubBtn').attr('disabled',true);
 		var workInfo = {};
 		var method = 'newWork';
 		if (workId > 0) {
@@ -90,36 +135,62 @@
 			workInfo.workArea = $('#workArea').val();
 			workInfo.post = $('#post').val();
 			workInfo.address = $('#address').val();
-			workInfo.daySallary = $('#daySallary').val();
-			workInfo.dayCharge = $('#dayCharge').val();
-			workInfo.foodAndLodging = $('#foodAndLodging').val();
+			workInfo.sallaryValue = $('#sallaryValue').val();
+			workInfo.sallaryPeriod = $('#sallaryPeriod').val();
+			workInfo.food = $('#food').val();
+			workInfo.lodging = $('#lodging').val();
 			workInfo.expectDegree = $('#expectDegree').val();
 			workInfo.expectExperience = $('#expectExperience').val();
 			workInfo.expectAge = $('#expectAge').val();
 			workInfo.expDate = $('#expDate').val();
 			workInfo.effDate = $('#effDate').val();
 			workInfo.verifyCode = $('#verifyCode').val();
+			workInfo.cityName = localStorage.city;
+			workInfo.sallaryType = $('[name="sallaryType"]:checked').val();
+			workInfo.sallaryChargeType = $('#sallaryChargeType').val();
 
 			ajaxReq('workAction', {
 				method : method,
 				workInfo : json2Str(workInfo)
 			}, function(data) {
 				if (data.flag == 'success') {
-					alert(data.msg);
-					closeSubPage();
+					showConfirmDialog(data.msg+'是否继续发布工作?',initPage,closeSubPage);
 				} else {
-					alert(data.msg);
+					showTipDialog(data.msg);
+					$('#pubBtn').removeAttr("disabled");
 					return false;
 				}
 			});
 		}
 		return false;
 	}
+	
+	//清空控件内容
+	function initPage(){
+		$('#pubBtn').removeAttr("disabled");
+		$('#workName').val('');
+		$('#content').val('');
+		$('#verifyCode').val('');
+		//刷新验证码
+        loadVerifyImage('verifyImg');
+	}
+
+	function showHourSallary() {
+		$('[name="sallaryType"][value="hour"]').eq(0).attr('checked', true);
+		$('[for="hour"]').addClass('ui-btn-active');
+		$('[for="day"]').removeClass('ui-btn-active');
+	}
+
+	function showDaySallary() {
+		$('[name="sallaryType"][value="day"]').eq(0).attr('checked', true);
+		$('[for="day"]').addClass('ui-btn-active');
+		$('[for="hour"]').removeClass('ui-btn-active');
+	}
 </script>
 </head>
 <body>
 	<div id="workPage" data-role="page">
-		<div data-role="header" id="header">
+		<div data-role="header" id="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
 
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
@@ -128,118 +199,108 @@
 
 		</div>
 		<div data-role="content" class="ui-mini">
-			<form method="post" action="" onsubmit="return publish()">
+			<div id="form">
 				<div data-role="fieldcontain">
 					<label for="workName">标题:</label> <input type="text"
-						name="workName" id="workName" value="" required="required"
+						name="workName" id="workName" value="" required
 						placeholder="工作简介">
 				</div>
 				<div data-role="fieldcontain">
 					<label for="content">工作内容:</label>
 					<textarea cols="40" rows="8" name="content" id="content"
-						data-mini="true" required="required" placeholder="工作详细内容">工作内容</textarea>
+						data-mini="true" required placeholder="工作详细内容">工作内容</textarea>
 				</div>
 				<div data-role="fieldcontain">
 					<label for="numberOfRecruit">人数:</label> <input type="text"
-						name="numberOfRecruit" id="numberOfRecruit" value=""
-						required="required" placeholder="招聘人数" pattern="[0-9]{1,3}"
+						name="numberOfRecruit" id="numberOfRecruit" value="10"
+						required placeholder="招聘人数" pattern="[0-9]{1,3}"
 						title="必须是整数">
 				</div>
 
 				<div data-role="fieldcontain">
 					<label for="post" class="select">职位:</label> <select name="post"
-						id="post" data-native-menu="false">
-						<option value="xuesheng" selected>学生兼职</option>
-						<option value="xiaoshigong">小时工</option>
-						<option value="shixisheng">实习生</option>
-						<option value="chuxiao">促销</option>
-						<option value="jiajiao">家教</option>
-						<option value="chuangdan">传单派发</option>
-						<option value="mote">模特</option>
+						id="post" >
+
 					</select>
 				</div>
 
 
 				<div data-role="fieldcontain">
 					<label for="workArea" class="select">区域:</label> <select
-						name="workArea" id="workArea" data-native-menu="false"
-						required="required">
-						<option value="njgulou" selected>鼓楼</option>
-						<option value="njqinhuai">秦淮</option>
-						<option value="njbaixia">白下</option>
-						<option value="njqixia">栖霞</option>
-						<option value="njjianye">建邺</option>
-						<option value="njyuhua">雨花</option>
-						<option value="njjiangning">江宁</option>
-						<option value="njpukou">浦口</option>
-						<option value="njdachang">大厂</option>
-						<option value="njliuhe">六合</option>
-						<option value="njgaochun">高淳</option>
-						<option value="njlishui">溧水</option>
+						name="workArea" id="workArea"
+						required>
+
 					</select>
 				</div>
 				<div data-role="fieldcontain">
 					<label for="address">详细地址:</label> <input type="text"
-						name="address" id="address" value="" required="required">
+						name="address" id="address" value="" required>
 				</div>
 
 
 				<div data-role="fieldcontain">
 					<label for="expectDegree" class="select">学历要求:</label> <select
-						name="expectDegree" id="expectDegree" data-native-menu="false">
-						<option value="gaozhong" selected>高中</option>
-						<option value="bengke">本科</option>
-						<option value="suoshi">硕士</option>
+						name="expectDegree" id="expectDegree" >
+
 					</select>
 				</div>
 
 				<div data-role="fieldcontain">
 					<label for="expectExperience" class="select">工作经验要求:</label> <select
-						name="expectExperience" id="expectExperience"
-						data-native-menu="false">
-						<option value="1-3" selected>1-3年</option>
-						<option value="4-6">4-6</option>
-						<option value="6plus">6年以上</option>
+						name="expectExperience" id="expectExperience">
+
 					</select>
 				</div>
 				<div data-role="fieldcontain">
 					<label for="expectAge" class="select">年龄要求:</label> <select
-						name="expectAge" id="expectAge" data-native-menu="false">
-						<option value="18-30" selected>18-30</option>
-						<option value="31-40">31-40</option>
-						<option value="nolimit">不限</option>
+						name="expectAge" id="expectAge" >
+
+					</select>
+				</div>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+					<legend>薪资</legend>
+					<input type="radio" name="sallaryType" id="hour" value="hour"
+						checked="checked"> <label for="hour">小时</label><input
+						type="radio" name="sallaryType" id="day" value="day"> <label
+						for="day">天</label>
+				</fieldset>
+				<div data-role="fieldcontain" id="daySallaryDiv">
+					<input type="range" name="sallaryValue" id="sallaryValue"
+						value="10" min="0" max="200">
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="sallaryPeriod">工资结算周期:</label> <select name="sallaryPeriod"
+						id="sallaryPeriod"  data-mini="true">
 					</select>
 				</div>
 
 				<div data-role="fieldcontain">
-					<label for="daySallary">日薪:</label><input type="range"
-						name="daySallary" id="daySallary" value="100" min="0" max="1000">
-				</div>
-				<div data-role="fieldcontain">
-					<label for="dayCharge">工资当天结算:</label> <select name="dayCharge"
-						id="dayCharge" data-native-menu="false" data-mini="true">
-						<option value="no">No</option>
-						<option value="yes" selected="">Yes</option>
+					<label for="sallaryChargeType">工资结算方式:</label> <select name="sallaryChargeType"
+						id="sallaryChargeType"  data-mini="true">
 					</select>
 				</div>
 
 				<div data-role="fieldcontain">
-					<label for="foodAndLodging">提供食宿:</label><select
-						name="foodAndLodging" id="foodAndLodging" data-native-menu="false"
+					<label for="food">提供饮食:</label><select
+						name="food" id="food" 
 						data-mini="true">
-						<option value="no">No</option>
-						<option value="yes" selected="">Yes</option>
 					</select>
 				</div>
-
+				<div data-role="fieldcontain">
+					<label for="lodging">提供住宿:</label><select
+						name="lodging" id="lodging" 
+						data-mini="true">
+					</select>
+				</div>
 				<div data-role="fieldcontain">
 					<label for="effDate">生效时间:</label> <input type="date"
-						name="effDate" id="effDate" value="" required="required"
+						name="effDate" id="effDate" value="" required
 						placeholder="别人在此时间后才能看到你的求职">
 				</div>
 				<div data-role="fieldcontain">
 					<label for="expDate">失效时间:</label> <input type="date"
-						name="expDate" id="expDate" value="" required="required"
+						name="expDate" id="expDate" value="" required
 						placeholder="别人在此时间后将不再能看不到你的求职">
 				</div>
 				<div data-role="fieldcontain">
@@ -247,15 +308,15 @@
 					<div style="display: inline-flex; width: 100%">
 						<div style="width: 70%; height: 100%;">
 							<input type="text" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required="required">
+								placeholder="验证码" required>
 						</div>
 						<a data-mini="true" href="#"
 							style="width: 30%; height: 100%; margin-top: 8px;"><img
 							src="" id="verifyImg"></img></a>
 					</div>
 				</div>
-				<button type="submit" class="ui-btn" onclick=""  id="pubBtn">发布</button>
-			</form>
+				<a data-role="button" class="submmitBtn" onclick="publish()" data-icon="check"  id="pubBtn">发布</a>
+			</div>
 		</div>
 	</div>
 </body>

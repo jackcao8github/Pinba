@@ -3,12 +3,97 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-<script src="js/jquery-1.11.3.js"></script>
-<script src="js/jquery.mobile-1.4.5.js"></script>
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1,user-scalable=no" />
+
+<link href="css/font-awesome.min.css" rel="stylesheet">
+
+<style type="text/css">
+html,body{
+margin:0;
+}
+.location2 {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	margin:0;
+}
+
+#footNavBar > a {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 0;
+  -moz-flex: 1 1 0;
+  -ms-flex: 1 1 0;
+  flex: 1 1 0;
+  text-align: center;
+  color:#4390ee;
+}
+.active{
+color:orange!important;
+}
+</style>
+
+</head>
+
+<body>
+	<div style="position:absolute;" id="indexPage">
+		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
+			style="width: 100%; border: 0;max-height:100%;" scrolling="auto" frameborder="0"
+			></iframe>
+
+		<!-- <iframe id="pinleFrame" name="pinleFrame" 
+			style="width:100%;display: none;" scrolling="auto"
+			frameborder="0" ></iframe> -->
+
+		<iframe id="fabuFrame" name="fabuFrame"
+			style="width: 100%; display: none; border: 0;max-height:100%;" scrolling="auto"
+			frameborder="0"></iframe>
+
+		<!-- <iframe id="faxianFrame" name="faxianFrame"
+			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe> -->
+
+		<iframe id="wodeFrame" name="wodeFrame"
+			style="width: 100%; display: none; border: 0;max-height:100%;" scrolling="auto"
+			frameborder="0"></iframe>
+		<iframe id="messageFrame" name="messageFrame"
+			style="width: 100%; display: none;border: 0;max-height:100%;" scrolling="auto" frameborder="0"></iframe>
+		<div class="location2">
+			<a href="#" onclick="showFooter()" style="display: none"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
+			<div
+				style="postion: absolute; width: 100%; left: 0; bottom: 0;display:flex;display:-webkit-flex;border-top:1px solid red;"
+				id="footNavBar">
+					<a id="home" data-role="none"
+							onclick="switchIframe(this)" class="active"><i class="fa fa-home fa-2x"></i><br>首页</a>
+						<!-- <li><a id="pinle" href="#" data-icon="bars"
+						onclick="switchIframe(this)" >拼乐</a></li> -->
+						<!-- <li><a id="faxian" href="#" data-icon="eye"
+							onclick="switchIframe(this)">发现</a></li> -->
+						<a id="fabu" data-role="none"
+							onclick="switchIframe(this)"><i class="fa fa-pencil fa-2x"></i><br>发布</a>
+						<a id="message" data-role="none"
+							onclick="switchIframe(this)"><i class="fa fa-comments-o fa-2x"></i><br>消息</a>
+						<a id="wode" data-role="none"
+							onclick="switchIframe(this)"><i class="fa fa-user fa-2x"></i><br>我的</a>
+			</div>
+		</div>
+	</div>
+	
+	<script src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="myjs/mycommon.js"></script>
 
 <script type="text/javascript">
+	var footHeight = 0;
+	$(document).ready(function(){
+		footHeight = parseInt($('#footNavBar').css('height'));
+		resizeIFrame({id:"homeFrame"});
+		changeSubPage('lauchSplash','indexPage');
+	});
 	var frameIdSrcMap = {
 		"homeFrame" : "home/home.html",
 		"pinleFrame" : "together/pinle.html",
@@ -33,16 +118,20 @@
 		var id = obj.id;
 		var iframeid = id + 'Frame';
 		$('#' + iframeid).show();
+		$('#' + iframeid).css('display', 'block');//将iframe设置为block后，去除默认的2px边框，此边框会引起页面滚动
+
 		if (null == $('#' + iframeid).attr('src')) {
 			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
 		}
 
-		resizeIFrameHeight({
+		resizeIFrame({
 			'id' : iframeid
 		});
 		displayFrameId = iframeid;
+		$('.active').removeClass('active');
+		$(obj).addClass('active');
 	}
-	function resizeIFrameHeight(obj) {
+	function resizeIFrame(obj) {
 		var ifr = document.getElementById(obj.id);
 		if (clientWindowHeight == 0) {
 			clientWindowHeight = window.innerHeight
@@ -51,70 +140,13 @@
 
 			clientWindowHeight = clientWindowHeight;
 		}
-		var footHeight = $('#footNavBar').css('height');
-		ifr.style.height = clientWindowHeight - 4
-				+ 'px';
+		ifr.style.width = window.innerWidth + 'px';
+		ifr.style.height = clientWindowHeight - parseInt(footHeight) + 'px';
 	}
-	
+
 	function showFooter() {
-        $('#footNavBar').toggle();
-    }
+		$('#footNavBar').toggle();
+	}
 </script>
-
-</head>
-<style type="text/css">
-.location {
-    position: fixed;
-    left:0px;
-    bottom: 0px;
-    width: 100%;
-}
-</style>
-<body>
-	<!--  onmousewheel="return false;"return false是为了禁止上下滚动 -->
-	<div data-role="page" id="indexPage">
-		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
-			style="width: 100%;" scrolling="auto" frameborder="0"
-			onload="resizeIFrameHeight(this)"></iframe>
-
-		<!-- <iframe id="pinleFrame" name="pinleFrame" 
-			style="width:100%;display: none;" scrolling="auto"
-			frameborder="0" ></iframe> -->
-
-		<iframe id="fabuFrame" name="fabuFrame"
-			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
-
-		<iframe id="faxianFrame" name="faxianFrame"
-			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
-
-		<iframe id="wodeFrame" name="wodeFrame"
-			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
-		<iframe id="messageFrame" name="messageFrame"
-			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe>
-		<div class="location">
-			<a href="#" onclick="showFooter()" style="display:none"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
-			<div data-role="footer"
-				style="postion: absolute; width: 100%; left: 0; bottom: 0"
-				id="footNavBar">
-				<div data-role="navbar" data-grid="d">
-					<ul>
-						<li><a id="home" href="#" data-icon="home"
-							onclick="switchIframe(this)" class="ui-btn-active">首页</a></li>
-						<!-- <li><a id="pinle" href="#" data-icon="bars"
-						onclick="switchIframe(this)" >拼乐</a></li> -->
-						<li><a id="faxian" href="#" data-icon="eye"
-							onclick="switchIframe(this)">发现</a></li>
-						<li><a id="fabu" href="#" data-icon="grid"
-							onclick="switchIframe(this)">发布</a></li>
-						<li><a id="message" href="#" data-icon="mail"
-							onclick="switchIframe(this)">消息</a></li>
-						<li><a id="wode" href="#" data-icon="user"
-							onclick="switchIframe(this)">我的</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
 </body>
 </html>

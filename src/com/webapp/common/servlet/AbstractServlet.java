@@ -2,6 +2,8 @@ package com.webapp.common.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import org.springframework.util.StringUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import com.webapp.common.util.TimeUtil;
 import com.webapp.common.util.VerifyImage;
 
 
@@ -130,5 +133,28 @@ public class AbstractServlet extends HttpServlet
 				return null;
 			}
 		}
+	}
+	
+	//从请求里取得json格式参数
+	protected JSONObject getJsonFromReq(HttpServletRequest request,String paramName) throws Exception{
+		String paramJsonStr = request.getParameter(paramName);
+		if (StringUtils.isEmpty(paramJsonStr)) {
+			throw new Exception("参数"+paramName+"不能为空!");
+		}
+		paramJsonStr = URLDecoder.decode(paramJsonStr, "UTF-8");
+		JSONObject condJson = JSONObject.fromObject(paramJsonStr);
+		
+		return condJson;
+	}
+	
+	protected JSONArray getJsonArrayFromReq(HttpServletRequest request,String paramName) throws Exception{
+		String paramJsonStr = request.getParameter(paramName);
+		if (StringUtils.isEmpty(paramJsonStr)) {
+			throw new Exception("参数"+paramName+"不能为空!");
+		}
+		paramJsonStr = URLDecoder.decode(paramJsonStr, "UTF-8");
+		JSONArray condJson = JSONArray.fromObject(paramJsonStr);
+		
+		return condJson;
 	}
 }

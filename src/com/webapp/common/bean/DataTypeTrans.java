@@ -4,10 +4,15 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class DataTypeTrans {
+	public static Double transToDouble(Object value){
+		return (Double)value;
+	}
 	public static Long transToLong(Object value){
 		return (Long)value;
 	}
-	
+	public static Float transToFloat(Object value){
+		return (Float)value;
+	}
 	public static String transToString(Object value){
 		if (value==null){
 			return "";

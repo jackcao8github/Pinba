@@ -16,18 +16,19 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import sun.misc.BASE64Decoder;
 
+import com.webapp.common.dao.AlbumManagerDAO;
 import com.webapp.user.dao.UserManagerDAO;
 
 public class ImageServlet extends HttpServlet {
-	private UserManagerDAO userDao = null;
+	private AlbumManagerDAO albumDao = null;
 
 	public ImageServlet() {
 	}
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		userDao = (UserManagerDAO) ContextLoaderListener
-				.getCurrentWebApplicationContext().getBean("userDAOProxy");
+		albumDao = (AlbumManagerDAO) ContextLoaderListener
+				.getCurrentWebApplicationContext().getBean("albumDAOProxy");
 	}
 
 	public void service(ServletRequest req, ServletResponse res)
@@ -40,7 +41,7 @@ public class ImageServlet extends HttpServlet {
 
 		String photoData;
 		try {
-			photoData = userDao.getPhotoData(Long.valueOf(imageId));
+			photoData = albumDao.getPhotoData(Long.valueOf(imageId));
 
 			OutputStream out = hres.getOutputStream();
 

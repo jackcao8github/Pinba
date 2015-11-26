@@ -2,19 +2,53 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script src="../myjs/mycommon.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
 
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 
 <style>
 </style>
 
+
+</head>
+<body  onscroll="loadNextPage()">
+	<div data-role="page" id="myPubPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+
+			<h1>我的招聘</h1>
+		</div>
+            <!-- <div data-role="popup" id="popupMenu">
+                <ul data-role="listview" data-inset="true" style="min-width: 210px;"
+                    id="resumeList">
+                    <li onclick="gotoInterviewPage()">查看简历</li>
+                    <li onclick="gotoHiredPage()">复制工作</li>
+                </ul>
+            </div> -->
+		<div id="workList">
+		<div class="swipe">
+		    <div class="pullDownFresh"><div class="pullDownFreshText">下拉刷新</div></div>
+		    <div class="pullNoData">没有数据!你可以下拉刷新!</div>
+			<ul data-role="listview" id="workListUL" data-split-icon="gear">
+			</ul>
+			</div>
+			<a data-role="button" data-mini="true" data-icon="plus" class="submmitBtn"
+                    onclick="localStorage.changePageParams='';changeSubPage('work', 'myPubPage')">发布招聘信息</a>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../myjs/mycommon.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		//绑定控件滑动事件
+	    bindSwipeEvent();
 		getWorkList();
 	});
 	function swipeRight() {
@@ -22,12 +56,12 @@
 	}
 	function openWorkDetail(obj) {
 		var workId = $(obj).attr('workId');
-		changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
+		changeSubPage('workDetail', 'myPubPage', 'modFlag=true&&workId=' + workId);
 	}
-    function pageInit(){
-    	getWorkList();
-    }
     function swipeDown(){
+    	$('#workListUL').html('');
+		page = 1;
+		nextPageFlag = true;
     	getWorkList();
     }
     //进入简历列表页面
@@ -36,16 +70,17 @@
         changeSubPage('resumeListInWork', 'myPubPage', 'workId=' + workId);
     }
 	function getWorkList() {
-		$('#workListUL').html('');
+		if (nextPageFlag==false){
+			return;
+		}
 		var workInfo = {};
 		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			workInfo.userId = cachedUserInfo.userId;
 			workInfo.userToken = cachedUserInfo.userToken;
-			workInfo.page = '1';
-			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+			workInfo.page = page;
+			workInfo.workType = 'partTime';//兼职招聘
 
-			$('#pullDownFreshText').html('加载中...');
 			ajaxReq(
 					'workAction',
 					{
@@ -53,7 +88,12 @@
 						workInfo : json2Str(workInfo)
 					},
 					function(data) {
-						if (data.flag != 'fail') {
+						if (data.length>0) {
+							if (data.length==20){
+								page++;
+							}else{
+								nextPageFlag = false;
+							}
 							var lihtmls = '';
 							var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
 							litemplate += '<a href="#" onclick="openResumeInWork(this)" workId="+workId+">查看收到的简历</a></li>';
@@ -75,49 +115,21 @@
 							$('#workListUL').append(lihtmls);
 							$('#workListUL').listview("refresh");
 						} else {
-							alert(data.msg);
+							$('.pullNoData').show();
 						}
-						$('#pullDownFreshText').html('加载完成');
-						$('#pullDownFresh').slideUp('slow');
 					});
 		}
 	}
+	
+	var page = 1;
+	var nextPageFlag = true;
+	function loadNextPage(){
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop>0&&scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+			getWorkList();
+		}
+	}
 </script>
-</head>
-<body>
-	<div data-role="page" id="myPubPage">
-		<div data-role="header" data-position="fixed" data-fullscreen="false">
-			<!-- 返回按钮 -->
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-				onclick="closeSubPage();return false;">Back</a>
-
-			<h1>我的招聘</h1>
-		</div>
-
-		<div id="workList">
-		    <div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullDownFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;bottom:0;left:0" id="pullDownFreshText">下拉刷新</div></div>
-			<ul data-role="listview" id="workListUL" data-split-icon="gear">
-				<li data-icon="false"><a onclick="openWork(this)" workId="1"
-					style="padding-top: 0px; padding-bottom: 0px;"> <img
-						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-						<h2>臻洪</h2> <!-- 用人单位-->
-						<p>临时工</p> <!-- 兼职名称 -->
-						<p>2015-8-1</p> <!-- 兼职名称 -->
-				</a></li>
-
-				<li data-icon="false"><a onclick="openWork(this)" workId="12"
-					style="padding-top: 0px; padding-bottom: 0px;"> <img
-						src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-						<h2>臻洪</h2> <!-- 用人单位-->
-						<p>临时工</p> <!-- 兼职名称 -->
-						<p>2015-8-1</p> <!-- 兼职名称 -->
-				</a></li>
-			</ul>
-			
-			<a data-role="button" data-mini="true" data-icon="plus"
-                    onclick="changeSubPage('work', 'myPubPage')">发布招聘信息</a>
-		</div>
-	</div>
-</body>
 </html>

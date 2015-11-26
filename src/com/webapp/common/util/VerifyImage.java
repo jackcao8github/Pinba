@@ -48,6 +48,7 @@ public class VerifyImage
 
     public void setLength(int i)
     {
+    	length = i;
     }
 
     public void setType(int i)

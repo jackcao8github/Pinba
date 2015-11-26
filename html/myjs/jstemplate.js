@@ -1,13 +1,16 @@
-function fillOptions(ctrlId) {
+function fillOptions(ctrlId,effCond) {
 	var values = charspecvalues[ctrlId];
 	if (values != null) {
 		var optionhtml = '';
 		for ( var item in values) {
-			optionhtml += '<option value="' + item + '"';
-			if (values[item].value == 'yes') {
-				optionhtml += ' selected';
+			if ((effCond!=null&&values[item].effCond==effCond)||effCond==null){
+				optionhtml += '<option value="' + item + '"';
+				if (values[item].selected == 'yes') {
+					optionhtml += ' selected';
+				}
+				optionhtml += '>' + values[item].value + '</option>';
 			}
-			optionhtml += '>' + values[item].value + '</option>';
+			
 		}
 	}
 	var ctrl = $("#" + ctrlId);
@@ -17,9 +20,9 @@ function fillOptions(ctrlId) {
 }
 
 Array.prototype.contains = function(item){
-    return RegExp(item).test(this);
+    return RegExp('\\b'+item+'\\b').test(this);
 };
-function selectOptions(ctrlId,realValues) {
+function selectOptions(ctrlId,realValues,effCond) {
 	if (realValues==null){
 		return;
 	}
@@ -30,11 +33,13 @@ function selectOptions(ctrlId,realValues) {
 		
 		var optionhtml = '';
 		for ( var item in values) {
-			optionhtml += '<option value="' + item + '"';
-			if (realValueArr.contains(item)) {
-				optionhtml += ' selected';
+			if ((effCond!=null&&values[item].effCond==effCond)||effCond==null){
+				optionhtml += '<option value="' + item + '"';
+				if (realValueArr.contains(item)) {
+					optionhtml += ' selected';
+				}
+				optionhtml += '>' + values[item].value + '</option>';
 			}
-			optionhtml += '>' + values[item].value + '</option>';
 		}
 	}
 	var ctrl = $("#" + ctrlId);
@@ -46,7 +51,7 @@ function getDisplayEnumValue(charCode,realValue){
 	if (realValue==null)
 		return '';
 	var realValueArr = [];
-	realValueArr = realValue.split(',');
+	realValueArr = (''+realValue).split(',');
 	var values = charspecvalues[charCode];
 	if (values != null) {
 		var displayValues = '';
@@ -63,5 +68,10 @@ function getDisplayEnumValue(charCode,realValue){
 		}
 	}
 	return realValue;
+}
+
+function getEnumValues(charCode){
+	var values = charspecvalues[charCode];
+	return values;
 }
 

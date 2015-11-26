@@ -2,96 +2,14 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../mycss/photoswipe.css" />
-<link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/mycommon.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script type="text/javascript">
-	function swipeRight() {
-		closeSubPage();
-	}
-	var resumeId = 0;
-	var userId = 0;
-	$(document).ready(function() {
-		var mode = getQueryString('mode');
-		if (mode == 'intergration') {//表示此页面被嵌入到其它页面里,header和footer要去掉
-			$('#header').remove();
-			$('#footer').remove();
-		}
-		pageInit();
-	});
 
-	function pageInit() {
-		resumeId = getQueryString('resumeId');
-		if (resumeId == null) {
-			alert('参数reusmeId为空!');
-			return;
-		}
-		var resumeInfo = {};
-		if (resumeId > 0) {
-			resumeInfo.resumeId = resumeId;
-		}
-		var cachedUserInfo = str2Json(localStorage.userInfo);
-		if (cachedUserInfo != null) {
-			resumeInfo.userToken = cachedUserInfo.userToken;
-			resumeInfo.readUserId = cachedUserInfo.userId;
-			userId = cachedUserInfo.userId;
-		} else {
-			userId = 0;
-		}
-		ajaxReq('resumeAction', {
-			method : 'getResumeInfo',
-			resumeInfo : json2Str(resumeInfo)
-		}, function(data) {
-			if (data.flag == 'success') {
-				bindData(data);
-
-				//如果不是简历所有者，需要删除修改简历按钮
-				var resumeUserId = data.userId;
-				if (userId == resumeUserId) {
-					$('#footer').remove();
-				} else {
-					$('#modBtn').remove();
-				}
-			} else {
-				alert(data.msg);
-				return false;
-			}
-		});
-	}
-	/* 修改简历 */
-	function modResume() {
-		changeSubPage('resume', 'workdetailPage', 'resumeId=' + resumeId);
-	}
-	/* 增加关注 */
-	function addFocus() {
-		alert('建设中');
-	}
-
-	//绑定数据到控件
-	function bindData(jsonData) {
-		for ( var o in jsonData) {
-			var ctrl = $('#' + o);
-			if (ctrl.length > 0) {
-				//处理下拉框采集的数据
-				var realValue = jsonData[o];
-				var displayValue = getDisplayEnumValue(o, realValue);
-				if (displayValue == realValue) {//没有显示值则用realValue显示
-					ctrl.html(realValue);
-				} else {
-					ctrl.html(displayValue);
-				}
-			}
-		}
-	}
-</script>
-
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 
 <style type="text/css">
 li {
@@ -102,7 +20,6 @@ li {
 </head>
 <body>
 	<div data-role="page" id="workdetailPage">
-		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
 		<!-- 返回按钮 -->
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="header">
@@ -111,7 +28,7 @@ li {
 				onclick="closeSubPage();return false;">Back</a>
 			<h1 id="resumeType">兼职简历</h1>
 
-			<a onclick="modResume()" id="modBtn"
+			<a onclick="modResume()" id="modBtn" style="display:none"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改简历</a>
 		</div>
 		<ul data-role="listview">
@@ -193,14 +110,22 @@ li {
 			</li>
 			<li data-role="list-divider">期望待遇</li>
 			<li data-icon="false" style="padding: 0em 1em">
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>日薪:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="daySallary"></p>
-					</div>
-				</div>
+				 <div style="overflow: hidden">
+                    <div style="float: left; width: 30%; color: #a3a3a3">
+                        <p>薪资单位:</p>
+                    </div>
+                    <div style="float: left; width: 70%">
+                        <p id="sallaryType"></p>
+                    </div>
+                </div>
+                <div style="overflow: hidden">
+                    <div style="float: left; width: 30%; color: #a3a3a3">
+                        <p>薪资金额:</p>
+                    </div>
+                    <div style="float: left; width: 70%">
+                        <p id="sallaryValue"></p>
+                    </div>
+                </div>
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>工资当天结算:</p>
@@ -236,9 +161,116 @@ li {
 
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
+			<div data-role="controlgroup" data-type="horizontal">
 			<a href="#" data-role="button" data-icon="plus" onclick="addFocus()">关注</a>
-			<a href="#" data-role="button" data-icon="phone" id="cellphone">联系方式</a>
+			<a href="#" data-role="button" data-icon="phone" id="cellphone" onclick="toDial()">联系TA</a>
+			<a href="#" id="sendMsg" data-role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
+			</div>
 		</div>
 	</div>
 </body>
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript">
+	function swipeRight() {
+		closeSubPage();
+	}
+	var resumeId = 0;
+	var userId = 0;
+	var resumeUserId = 0;
+	$(document).ready(function() {
+		
+		pageInit();
+	});
+
+	function pageInit() {
+		var mode = getQueryString('mode');
+        if (mode == 'intergration') {//表示此页面被嵌入到其它页面里,header和footer要去掉
+            $('#header').remove();
+            $('#footer').remove();
+        }
+		resumeId = getQueryString('resumeId');
+		if (resumeId == null) {
+			showTipDialog('参数reusmeId为空!');
+			return;
+		}
+		var resumeInfo = {};
+		if (resumeId > 0) {
+			resumeInfo.resumeId = resumeId;
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.readUserId = cachedUserInfo.userId;
+			userId = cachedUserInfo.userId;
+		} else {
+			userId = 0;
+		}
+		ajaxReq('resumeAction', {
+			method : 'getResumeInfo',
+			resumeInfo : json2Str(resumeInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
+				bindData(data);
+				//如果不是简历所有者，需要删除修改简历按钮
+				resumeUserId = data.userId;
+				if (userId == resumeUserId) {
+					$('#footer').remove();
+					$('#modBtn').show();
+				} else {
+					$('#modBtn').remove();
+				}
+			} else {
+				showTipDialog(data.msg);
+				return false;
+			}
+		});
+	}
+	/* 修改简历 */
+	function modResume() {
+		changeSubPage('resume', 'workdetailPage', 'resumeId=' + resumeId);
+	}
+	/* 增加关注 */
+	function addFocus() {
+		showTipDialog('建设中');
+	}
+	//拔打电话
+	function toDial(){
+		if (window.sysFunc!=null){//sysFunc在android代码中使用webview.addJavascriptInterface(new SysFuncAgent(), "sysFunc")创建
+			var cellphone = $('#cellphone').html();
+			window.sysFunc.call(cellphone);
+		}
+	}
+	
+	/* 发送私信 */
+	function toSendMsg(){
+		var user = getLoginUserInfo();
+		if (user!=null){
+			var params = 'friendId=' + resumeUserId;
+			params += '&friendName=';
+			params += $('#realName').html();
+			params += '&friendHeadImageId=1';
+			params += '&msgType=friendMsg';
+			changeSubPage('friendsMsg', 'workdetailPage', params);
+		}
+	}
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				//处理下拉框采集的数据
+				var realValue = jsonData[o];
+				var displayValue = getDisplayEnumValue(o, realValue);
+				if (displayValue == realValue) {//没有显示值则用realValue显示
+					ctrl.html(realValue);
+				} else {
+					ctrl.html(displayValue);
+				}
+			}
+		}
+	}
+</script>
 </html>

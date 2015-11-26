@@ -2,84 +2,16 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script src="../myjs/mycommon.js"></script>
-
-
-<style>
-.msgStatus {
-	background: #26c281;
-	border-radius: 50%;
-	width: 9px;
-	height: 9px;
-	position: absolute;
-	top: 31px;
-	right: 17px;
-}
-
-.msgStatus.active {
-	background: #26c281;
-}
-
-.msgStatus.inactive {
-	background: #eaeef0;
-}
-</style>
-
-<script type="text/javascript">
-function swipeRight(){
-	closeSubPage();
-}
-	/* 加载新消息 */
-	function loadNewMsg() {
-		//当是滚动条已在最上时，去加载新信息
-		if ($(document).scrollTop() ==0){
-			$.ajax({
-		        type: "POST",
-		        contentType: "application/json",
-		        url: "",
-		        beforeSend: function () {         
-		        	//显示加载中 
-		        	$.mobile.loading( "show", {
-		        		            text: '加载...',
-		        		            textVisible: true,
-		        		            theme: 'a',
-		        		            textonly: true,
-		        		            html: ''
-		        		    }); 
-		        },
-		        complete:function(){
-		        	//隐藏加载中
-		        	$.mobile.loading( "hide");
-		        },
-		        success: function (msg) {
-		        	//从后台返回数据
-		        	var newhtml = '<li data-icon="false" class="ui-li-has-thumb ui-first-child"><a href="friendsMsg.html?friendId=101" >';
-		    		newhtml += '<img src="images/login01.png">';
-		    		newhtml += '<h3>xx美食</h3>';
-		    		newhtml += '<p>免预约到店的哟</p>';
-		    		newhtml += '<p class="ui-li-aside">';
-		    		newhtml += '	<strong>9:19</strong>AM';
-		    		newhtml += '</p> </a></li>';
-
-		    		for ( var i = 0; 10 > i; i++) {
-		    			var newli = $('#messageListUL').prepend(newhtml);
-		    		}
-		    		$('#messageListUL').listview("refresh");
-		        }
-		    });
-		}
-		
-	}
-</script>
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 </head>
 <body>
-	<div data-role="page" id="messagePage">
-		<div data-role="header" data-position="fixed" data-fullscreen="false">
+	<div data-role="page" id="myMoneyBagPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
@@ -87,144 +19,267 @@ function swipeRight(){
 
 			<h1>我的钱包</h1>
 		</div>
+		<div class="ui-body ui-body-a ui-corner-all" id="alipayBindState"
+			style="display: none;">
+			<p style="color: red; font-weight: bold;">你还未绑定支付宝。只有绑定支付宝才能完成冲值提现操作。绑定支付宝前需要实名认证。</p>
+			<a class="ui-btn ui-corner-all ui-btn-a ui-mini"
+				onclick="toBindAlipay()">绑定支付宝</a>
+		</div>
+
+		<div class="ui-corner-all custom-corners">
+			<div class="ui-bar ui-bar-a">
+				<h3>绑定的支付宝</h3>
+			</div>
+			<div class="ui-body ui-body-a">
+				<p id="alipayNo"></p>
+				<p id="alipayName"></p>
+			</div>
+		</div>
+
 		<div id="tabs" data-role="tabs">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#pointHisList" class="ui-btn-active"
-						id="messageTabLi">积分</a></li>
-					<li><a href="#moneyList">余额</a></li>
-					<li><a href="#depositList">保证金</a></li>
+					<li><a href="#prepayDiv" class="ui-btn-active">余额</a></li>
+					<li><a href="#depositDiv" onclick="show('deposit')">保证金</a></li>
+					<li><a href="#pointsDiv" onclick="show('points')">积分</a></li>
+
 					<!-- <li><a href="#friendList">优惠券</a></li> -->
 					<!-- <li><a href="#friendList">红包</a></li> -->
 				</ul>
 			</div>
 
-			<div id="pointHisList">
-				<ul data-role="listview" id="pointHisListUL">
-					<li data-role="list-divider">当前你有200积分<span
-						class="ui-li-count"><a>去使用积分</a></span></li>
-					<li data-role="list-divider">积分明细<span class="ui-li-count"><a>4</a></span></li>
-					<li data-icon="false"><a>
-							<h3>+10积分</h3>
-							<p>工作成功送积分</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>+10积分</h3>
-							<p>评价送积分</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>+10积分</h3>
-							<p>签到送积分</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>-1000积分</h3>
-							<p>成为会员扣减积分</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-				</ul>
-			</div>
-			<div id="moneyList">
+			<div id="pointsDiv">
 				<ul data-role="listview">
-					<li data-role="list-divider">当前你有200余额<span
-						class="ui-li-count"><a>去使用余额</a></span></li>
+					<li data-role="list-divider">当前你有积分<strong id="points">200</strong><span
+						class="ui-li-count"><a>积分有什么用?</a></span></li>
+
+				</ul>
+				<div class="swipe">
+					<div class="pullDownFresh">
+						<div class="pullDownFreshText">下拉刷新</div>
+					</div>
+					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+					<ul data-role="listview" id="pointsHisList">
+					</ul>
+				</div>
+			</div>
+			<div id="prepayDiv">
+				<ul data-role="listview">
+					<li data-role="list-divider">当前你有余额<strong id="prepay">200</strong>元<span
+						class="ui-li-count"><a>余额能干什么?</a></span></li>
 					<li data-icon="false">
-						<fieldset class="ui-grid-a">
+						<fieldset class="ui-grid-a ui-mini">
 							<div class="ui-block-a">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">充值</button>
+								<a data-role="button" data-mini="true" data-icon=""
+									onclick="topup('prepay')">充值</a>
 							</div>
 							<div class="ui-block-b">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">提取</button>
+								<a data-role="button" data-mini="true" data-icon=""
+									onclick="toCash('prepay')">提取</a>
 							</div>
 						</fieldset>
 					</li>
-					<li data-role="list-divider">余额明细<span class="ui-li-count"><a>4</a></span></li>
-					<li data-icon="false"><a>
-							<h3>+100余额</h3>
-							<p>薪水发放</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>+100余额</h3>
-							<p>薪水发放</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>-10余额</h3>
-							<p>红包发放</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>-10余额</h3>
-							<p>推广扣减</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
 				</ul>
+				<div class="swipe">
+					<div class="pullDownFresh">
+						<div class="pullDownFreshText">下拉刷新</div>
+					</div>
+					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+					<ul data-role="listview" id="prepayHisList">
+					</ul>
+				</div>
 			</div>
-			<div id="depositList">
+			<div id="depositDiv">
 				<ul data-role="listview">
-					<li data-role="list-divider">当前你有2000保证金</li>
+					<li data-role="list-divider">当前你有保证金<strong id="deposit">2000</strong>元<span
+						class="ui-li-count"><a>保证金是什么?</a></span></li>
 					<li data-icon="false">
-						<fieldset class="ui-grid-a">
+						<fieldset class="ui-grid-a  ui-mini">
 							<div class="ui-block-a">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">增加保证金</button>
+								<a data-role="button" data-mini="true" data-icon=""
+									onclick="topup('deposit')">增加保证金</a>
 							</div>
 							<div class="ui-block-b">
-								<button type="submit" class="ui-btn ui-corner-all ui-btn-a">提取保证金</button>
+								<a data-role="button" data-mini="true" data-icon=""
+									onclick="toCash('deposit')">提取保证金</a>
 							</div>
 						</fieldset>
 					</li>
-					<li data-role="list-divider">保证金明细<span class="ui-li-count"><a>4</a></span></li>
-					<li data-icon="false"><a>
-							<h3>+1000保证金</h3>
-							<p>充值增加保证金</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>+1000保证金</h3>
-							<p>充值增加保证金</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>-10保证金</h3>
-							<p>违规扣减保证金</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
-					<li data-icon="false"><a>
-							<h3>-10保证金</h3>
-							<p>违规扣减保证金</p>
-							<p class="ui-li-aside">
-								<strong>9:18 AM</strong>
-							</p>
-					</a></li>
 				</ul>
+				<div class="swipe">
+					<div class="pullDownFresh">
+						<div class="pullDownFreshText">下拉刷新</div>
+					</div>
+					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+					<ul data-role="listview" id="depositHisList">
+					</ul>
+				</div>
 			</div>
 		</div>
-
 	</div>
 </body>
+
+
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../myjs/mycommon.js"></script>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		//绑定控件滑动事件
+		bindSwipeEvent();
+		pageInit();
+	});
+	function swipeRight() {
+		closeSubPage();
+	}
+	//绑定支付宝
+	function toBindAlipay() {
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			if (cachedUserInfo.authState == null
+					|| cachedUserInfo.authState == 'no') {//未实名认证，去认证然同时绑定支付宝
+				changeSubPage('uploadAuthFile', 'myMoneyBagPage',
+						'redirectPage=bindAlipayNo');
+			} else if (cachedUserInfo.alipayNo == null) {//未绑定过支付宝，去绑定支付宝
+				changeSubPage('bindAlipayNo', 'myMoneyBagPage');
+			}
+		}
+	}
+
+	var acctTypeIdMap = {};
+
+	function pageInit() {
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			if (cachedUserInfo.alipayNo == null) {//未绑定过支付宝
+				$('#alipayBindState').show();
+			} else {
+				$('#alipayNo').html('你的支付宝帐号为:' + cachedUserInfo.alipayNo);
+				$('#alipayName').html('你的支付宝帐户名为:' + cachedUserInfo.alipayName);
+				$('#alipayBindState').remove();
+			}
+			var activeDiv = $('a[class*="ui-btn-active"]').attr('href');
+			if (activeDiv == "#prepayDiv") {
+				show('prepay');//默认显示余额
+			} else if (activeDiv == "#depositDiv") {
+				show('deposit');//默认显示余额
+			}
+			if (activeDiv == "#pointsDiv") {
+				show('points');//默认显示余额
+			}
+		}
+	}
+
+	function show(acctType) {
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			//加载余额帐户信息
+			var userInfo = {};
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.acctType = acctType;//帐户类型
+			ajaxReq('userAction', {
+				method : 'getUserAcctInfo',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					$('#' + acctType).html(data.acctValue);//显示余额
+					acctTypeIdMap[acctType] = data.acctId;
+					fillAcctHis(acctType + 'HisList', data.hisList);//显示最近20条余额变动历史
+				} else {
+					showTipDialog(data.msg);
+					return false;
+				}
+			});
+		}
+	}
+	//显示余额变动历史
+	function fillAcctHis(listId, listData) {
+		$('#' + listId).html('');
+
+		if (listData != null && listData.length > 0) {
+			$('#' + listId)
+					.append(
+							'<li data-role="list-divider">明细<span class="ui-li-count"><a>更多明细...</a></span></li>');
+			var litemp = '<li data-icon="false"><a><h3>-value-</h3><p>-optype-</p><p class="ui-li-aside"><strong>-time-</strong></p></a></li>';
+
+			for (var i = 0; listData.length > i; i++) {
+				var params = {};
+				params['-value-'] = listData[i].value;
+				params['-optype-'] = getDisplayEnumValue('acctOpType',
+						listData[i].opType);
+				params['-time-'] = listData[i].createDate;
+
+				var lihtml = replaceAll(litemp, params);
+				$('#' + listId).append(lihtml);
+			}
+
+			$('#' + listId).listview("refresh");
+		}else{
+			//显示无数据提示
+			if (listId=='pointsHisList'){
+				$('#pointsDiv .pullNoData').show();
+			}else if (listId=='prepayHisList'){
+				$('#prepayDiv .pullNoData').show();
+			}else if (listId=='depositHisList'){
+				$('#depositDiv .pullNoData').show();
+			}
+		}
+	}
+	function swipeDown() {
+		var activeDiv = $('a[class*="ui-btn-active"]').attr('href');
+		if (activeDiv == "#prepayDiv") {
+			loadAcctHis('prepay');//默认显示余额
+		} else if (activeDiv == "#depositDiv") {
+			loadAcctHis('deposit');//默认显示余额
+		}
+		if (activeDiv == "#pointsDiv") {
+			loadAcctHis('points');//默认显示余额
+		}
+	}
+	//加载余额变动历史
+	function loadAcctHis(acctType) {
+		$('#' + acctType + 'HisList').html('');
+		var userInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.acctId = acctTypeIdMap[acctType];//余额帐户
+			userInfo.page = 1;
+			ajaxReq('userAction', {
+				method : 'getAcctHisList',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				fillAcctHis(acctType + 'HisList', data);
+			});
+		}
+	}
+
+	function topup(type) {
+		//弹出冲值金额选择页面选择金额后调用支付宝接口冲值
+		if (type == 'prepay') {
+			changeSubPage('topup', 'myMoneyBagPage', 'topupType=prepay');
+			//
+		} else {
+			//弹出提现金额选择页面，选择金额后由账务后台转帐给提现人的支付宝
+			changeSubPage('topup', 'myMoneyBagPage', 'topupType=deposit');
+		}
+	}
+
+	function toCash(type) {
+		/* if (window.payUtil == null) {
+			showTipDialog('需要在app中才能调用支付宝接口');
+			return;
+		} */
+		if (type == 'prepay') {
+			//弹出提现金额选择页面，选择金额后由账务后台转帐给提现人的支付宝
+			showTipDialog('建设中,业务逻辑为弹出提现金额选择页面，选择金额后由账务后台转帐给提现人的支付宝');
+		} else {
+			//弹出提现金额选择页面，选择金额后由账务后台转帐给提现人的支付宝
+			showTipDialog('建设中,业务逻辑为弹出提现金额选择页面，选择金额后由账务后台转帐给提现人的支付宝');
+		}
+
+	}
+</script>
 </html>

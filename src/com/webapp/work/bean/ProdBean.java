@@ -37,6 +37,11 @@ public class ProdBean extends AbstractBean{
 	public String getContent() {
 		return DataTypeTrans.transToString(getAttrValue("CONTENT"));
 	}
+	public long getAssessment() {
+		return DataTypeTrans.transToLong(getAttrValue("ASSESSMENT"));
+	}
+	
+	
 	public void setProdId(long prodId) {
 		setAttrValue("PROD_ID",prodId);
 	}
@@ -58,5 +63,14 @@ public class ProdBean extends AbstractBean{
 	public void setContent(String content) {
 		setAttrValue("CONTENT",content);
 	}
+	public String getCityId() {
+		return DataTypeTrans.transToString(getAttrValue("CITY_ID"));
+	}
 	
+	public void setCityId(String prodId) {
+		setAttrValue("CITY_ID",prodId);
+	}
+	public void setAssessment(long value) {
+		setAttrValue("ASSESSMENT",value);
+	}
 }

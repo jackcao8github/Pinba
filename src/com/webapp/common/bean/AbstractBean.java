@@ -20,6 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
 
 import com.webapp.common.dao.SysSeqDAO;
+import com.webapp.common.util.CachedSeqUtil;
 
 //各种表级bean的基类
 public abstract class AbstractBean implements Serializable {
@@ -33,17 +34,11 @@ public abstract class AbstractBean implements Serializable {
 	// bean的主键attr
 	private Set<String> keyAttrs = new HashSet<String>();
 
-	private static SysSeqDAO seqDAO = null;
 
 	// bean的每个attr的取值
 	private Map<String, AttrValue> attrValues = new HashMap<String, AttrValue>();
 
 	public AbstractBean() {
-		ApplicationContext context = new ClassPathXmlApplicationContext("Application-Context.xml");
-		if (seqDAO == null) {
-			seqDAO = (SysSeqDAO) context.getBean("seqDAOProxy");
-		}
-
 	}
 
 	public AbstractBean deepCopy() throws Exception {
@@ -117,7 +112,12 @@ public abstract class AbstractBean implements Serializable {
 				AttrValue keyValue = attrValues.get(keyColName);
 				// 没设置过主键字段取值
 				if (keyValue == null || keyValue.getNewValue() == null) {
-					long newid = seqDAO.getNewId(this.tableName.toString(), keyColName);
+					long newid = 0;
+					try {
+						newid = CachedSeqUtil.getNewId(this.tableName.toString(), keyColName);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					this.setAttrValue(keyColName, newid);
 				}
 			}
@@ -214,22 +214,46 @@ public abstract class AbstractBean implements Serializable {
 		}
 		
 		if (params != null && params.size() > 0) {
+			//排序查询
 			String orderByCol = null;
 			if (params.containsKey("ORDERBY")){//排序条件
 				orderByCol = (String) params.get("ORDERBY");
 				params.remove("ORDERBY");
 			}
+			
+			//分页查询
 			String pageNo = null;
 			if (params.containsKey("PAGE")){//分页条件
 				pageNo = (String) params.get("PAGE");
 				params.remove("PAGE");
 			}
 			
+			//模糊查询
 			String[] likeColArr = null;
 			if (params.containsKey("LIKECOL")) {// 分页条件
 				String likeColstr = (String) params.get("LIKECOL");
 				likeColArr = likeColstr.split(",");
 				params.remove("LIKECOL");
+			}
+			
+			//只加载生失效时间内的
+			String effExpFlag = null;
+			if (params.containsKey("effExpDateFlag")) {//
+				effExpFlag = (String) params.get("effExpDateFlag");
+				params.remove("effExpDateFlag");
+			}
+			
+			//只加载第一条
+			boolean firstRow = false;
+			if (params.containsKey("FIRSTROW")) {//
+				firstRow = true;
+				params.remove("FIRSTROW");
+			}
+			
+			String wheresql = null;
+			if (params.containsKey("WHERESQL")){
+				wheresql = (String) params.get("WHERESQL");
+				params.remove("WHERESQL");
 			}
 			
 			StringBuffer wherecolNames = new StringBuffer();
@@ -242,7 +266,21 @@ public abstract class AbstractBean implements Serializable {
 					wherecolNames.append(" AND ");
 				}
 				Object value = ent.getValue();
-				if (value instanceof String[]) {
+				if (value instanceof List) {
+					if ("EXISTSSQL".equals(ent.getKey().toString())){
+						List values = (List) value;
+						
+						for (int i = 0; i < values.size(); i++) {
+							wherecolNames.append("exists (");
+							wherecolNames.append(values.get(i).toString());
+							wherecolNames.append(")");
+							if (i+1!=values.size()){
+								wherecolNames.append(" AND ");
+							}
+						}
+					}
+				}
+				else if (value instanceof String[]) {
 					wherecolNames.append(ent.getKey().toString()).append(" IN (");
 
 					String[] values = (String[]) value;
@@ -270,10 +308,26 @@ public abstract class AbstractBean implements Serializable {
 			}
 			sqlAndParams.sql.append(" WHERE ").append(wherecolNames);
 			
+			if (!StringUtils.isEmpty(wheresql)){
+				if (wherecolNames.length()>0){
+					sqlAndParams.sql.append(" AND ");
+				}
+				sqlAndParams.sql.append(wheresql);
+			}
+			
+			
+			if (!StringUtils.isEmpty(effExpFlag)){
+				if (wherecolNames.length()>0){
+					sqlAndParams.sql.append(" AND ");
+				}
+				sqlAndParams.sql.append(" EFF_DATE<=SYSDATE() AND SYSDATE()<=EXP_DATE ");
+			}
 			if (!StringUtils.isEmpty(orderByCol)){
 				sqlAndParams.sql.append(" ORDER BY ").append(orderByCol);
 			}
-			if (!StringUtils.isEmpty(pageNo)){//每页20条数据
+			if (firstRow == true){
+				sqlAndParams.sql.append(" LIMIT 1");
+			}else if (!StringUtils.isEmpty(pageNo)){//每页20条数据
 				long startLineNo = (Long.valueOf(pageNo)-1)*20;//计算起始行数
 				sqlAndParams.sql.append(" LIMIT ").append(startLineNo).append(",").append("20");
 			}

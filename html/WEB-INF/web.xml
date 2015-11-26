@@ -91,6 +91,43 @@
         <servlet-name>pageServlet</servlet-name>
         <url-pattern>*.html</url-pattern>
     </servlet-mapping> -->
+    
+    <!-- 批量发工资结果通知 begin -->
+    <servlet>
+        <servlet-name>alipayNotifyAction</servlet-name>
+        <servlet-class>com.webapp.common.servlet.AlipayNotifyServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>alipayNotifyAction</servlet-name>
+        <url-pattern>/alipayNotifyAction</url-pattern>
+    </servlet-mapping>
+    <!-- 批量发工资结果通知  end -->
+    <!-- 批量发工资 begin -->
+    <servlet>
+        <servlet-name>alipayPayAction</servlet-name>
+        <servlet-class>com.webapp.common.servlet.AlipayPayServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>alipayPayAction</servlet-name>
+        <url-pattern>/alipayPayAction</url-pattern>
+    </servlet-mapping>
+	<!-- 批量发工资  end -->
+	<!-- websocket begin -->
+	<servlet>
+		<servlet-name>websocket</servlet-name>
+		<servlet-class>com.webapp.common.servlet.WebSocketMessageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>websocket</servlet-name>
+		<url-pattern>/websocket</url-pattern>
+	</servlet-mapping>
+	<!-- websocket end -->
+    
+    
     <listener>
         <listener-class>com.webapp.common.servlet.CharSpecValueJSGenerator</listener-class>
     </listener>

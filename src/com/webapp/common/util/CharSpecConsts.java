@@ -15,7 +15,10 @@ public class CharSpecConsts {
 	public final static long FIXPHONE = 7L;//固话
 	public final static long COMPANY_SIZE = 8L;//公司规模
 	public final static long COMPANY_INDUSTRY = 9L;//公司行业
-
+	public final static long REAL_NAME = 22L;//真实姓名
+	public final static long BATCH_NO = 56L;//工资发放批次号
+	public final static long PAY_MONEY = 57L;//工资发放金额
+	public final static long PAY_SEQ = 58L;//工资发放序号
 	
 	private static Map<Long,String> charMap= new HashMap();
 	static{

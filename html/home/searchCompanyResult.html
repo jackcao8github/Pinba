@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+<style>
+</style>
+
+
+</head>
+<body>
+	<div data-role="page" id="searchResultPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+
+			<h1>公司查询</h1>
+		</div>
+		
+			<ul data-role="listview" id="companyUserList">
+
+			</ul>
+		<div class="location">
+		<i class="fa fa-chevron-up fa-lg"></i>
+	</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript">
+	/* function swipeRight() {
+		closeSubPage();
+	} */
+	var searchKey = '';//查询条件关键字
+	$(document).ready(function() {
+		init();
+	});
+
+	
+	function init() {
+		searchKey = getQueryString('searchKey');
+		if (searchKey != null) {
+			page = 1;
+			nextPageFlag = true;
+			$('#companyList').html('');
+			loadCompanyList();
+		}
+		$('.location').click(function() {
+			$('html,body').animate({
+				scrollTop : '0px'
+			}, 800);
+		});
+		$(window).scroll(function() {
+			/* 加载下一页*/
+			var scrolltop = $(document).scrollTop();
+			var docHeight = $(document).height();
+			var winHeight = $(window).height();
+			if (scrolltop > 0 && scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+				loadCompanyList();
+			}
+		});
+	}
+
+	var page = 1;
+	var nextPageFlag = true;
+	function loadCompanyList() {
+		if (nextPageFlag == false) {
+			return;
+		}
+		var userInfo = {};
+		userInfo.page = page;
+		if (searchKey != null) {
+			userInfo.searchKey = searchKey;
+		}
+
+		ajaxReq('userAction', {
+			method : 'getUserList',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag != 'fail') {
+				if (data.length > 0) {
+					if (data.length == 20) {
+						page++;
+					} else {
+						nextPageFlag = false;
+					}
+
+					fillCompanyList(data);
+				} else {
+					/* showTipDialog('没有数据了!'); */
+					nextPageFlag = false;
+				}
+			} else {
+				showTipDialog(data.msg);
+			}
+		});
+	}
+
+	function fillCompanyList(data) {
+		var template = '<li onclick="openCompanyHomePage(\'-userId-\')"><a href="#">\
+	        <h3>-userName-</h3></a></li>';
+
+		for (var i = 0; data.length > i; i++) {
+			var userObj = data[i];
+
+			var html = template.replace('-userName-', userObj.userName)
+					.replace('-userId-', userObj.userId);
+
+			$('#companyUserList').append(html);
+		}
+
+		$('#companyUserList').listview('refresh');
+	}
+
+	/* 打开公司主页 */
+	function openCompanyHomePage(userId) {
+		changeSubPage('companyHomePage', 'searchResultPage', 'companyUserId='
+				+ userId);
+	}
+</script>
+</html>

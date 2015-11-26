@@ -2,62 +2,229 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div id="resumePage" data-role="page">
+		<div data-role="header" id="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1 id="title">增加求职简历</h1>
+		</div>
+		<div data-role="content" class="ui-mini">
+			<div id="form">
+				<div data-role="fieldcontain">
+					<label for="resumeName">简历名称:</label> <input type="text"
+						name="resumeName" id="resumeName" value="" required>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="resumeType" class="select">简历类型:</label> <select
+						name="resumeType" id="resumeType" >
+					</select>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="realName">真实姓名:</label> <input type="text"
+						name="realName" id="realName" value="" required>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="IDNO">身份证:</label> <input type="text"
+						name="IDNO" id="IDNO" value="" required>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="stature">身高(CM):</label> <input type="text"
+						name="stature" id="stature" value="" required pattern="[0-9]{3}" placeholder="身高">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="cellphone">联系手机:</label> <input type="text"
+						name="cellphone" id="cellphone" value="" required pattern="[0-9]{11}">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="email">联系邮箱:</label> <input type="email" name="email"
+						id="email" value="" required>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="sex" class="select">性别:</label> <select name="sex"
+						id="sex" >
+						<option value="male" selected>男</option>
+						<option value="female">女</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="age">年龄:</label> <input type="text" name="age" id="age"
+						value="" required>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="expectPost" class="select">期望职位:</label> <select
+						name="expectPost" multiple="multiple" id="expectPost"
+						>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="expectWorkArea" class="select">期望区域:</label> <select
+						name="expectWorkArea" multiple="multiple" id="expectWorkArea"
+						>
+					</select>
+				</div>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+                    <legend>薪资</legend>
+                    <input type="radio" name="sallaryType" id="hour" value="hour"
+                        checked="checked"> <label for="hour">小时</label><input
+                        type="radio" name="sallaryType" id="day" value="day"> <label
+                        for="day">天</label>
+                </fieldset>
+                <div data-role="fieldcontain" id="daySallaryDiv">
+                    <input type="range" name="sallaryValue" id="sallaryValue"
+                        value="10" min="0" max="200">
+                </div>
+
+				<div data-role="fieldcontain">
+					<label for="dayCharge">期望工资当天结算:</label> <select name="dayCharge"
+						id="dayCharge" >
+						<option value="no">No</option>
+						<option value="yes" selected="">Yes</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for=foodAndLodging>期望提供食宿:</label><select
+						name="foodAndLodging" id="foodAndLodging" >
+						<option value="no">No</option>
+						<option value="yes" selected="">Yes</option>
+					</select>
+				</div>
+
+
+				<div data-role="fieldcontain">
+					<label for="degree" class="select">学历:</label> <select
+						name="degree" id="degree" >
+						<option value="gaozhong" selected>高中</option>
+						<option value="bengke">本科</option>
+						<option value="suoshi">硕士</option>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="experience" class="select">工作经验(年):</label> <input
+						type="text" name="experience" id="experience" value="0"
+						required placeholder="工作经验(年)" pattern="[0-9]{1,2}"
+						title="必须是整数">
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="workHisList">工作经历:</label>
+					<textarea cols="40" rows="8" name="workHisList" id="workHisList"
+						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="eduHisList">教育经历:</label>
+					<textarea cols="40" rows="8" name="eduHisList" id="eduHisList"
+						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="selfReview">自我评价:</label>
+					<textarea cols="40" rows="8" name="selfReview" id="selfReview"
+						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
+				</div>
+
+				<div data-role="fieldcontain">
+					<label for="verifyCode">验证码:</label>
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required>
+						</div>
+						<div class="ui-block-b">
+							<img id="verifyImg" src=""
+								style="margin-top: 14px; margin-left: 5px;"></img>
+						</div>
+					</fieldset>
+					<!-- <div style="display: inline-flex; width: 100%">
+						<div style="width: 40%; height: 100%;">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required>
+						</div>
+						<a data-mini="true" href="#"
+							style="width: 30%; height: 100%; margin-top: 15px;margin-left:-80px;"><img
+							id="verifyImg" src=""></img></a>
+					</div> -->
+				</div>
+
+				<a data-role="button" class="submmitBtn" data-icon="check" onclick="publish()"  >提交</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
-<style>
-</style>
 
 <script type="text/javascript">
 	var resumeId = 0;
-	$(document).ready(
-			function() {
-				$('#verifyImg').attr(
-						'src',
-						getContextPath()
-								+ '/verifyImage?width=70&height=21&length=4');
+	$(document).ready(function() {
+		pageInit();
+	});
+	function pageInit() {
+		//加载验证码
+		loadVerifyImage('verifyImg');
+		//初始化下拉框控件
+		$('select').each(function(index, item) {
+			if (item.id == "expectWorkArea") {
+				fillOptions(item.id, localStorage.city);
+			} else {
+				fillOptions(item.id);
+			}
+		});
 
-				//初始化下拉框控件
-				$('select').each(function(index, item) {
-					fillOptions(item.id);
+		resumeId = getQueryString('resumeId');
+		if (resumeId > 0) {
+			$('#title').html('修改简历');
+			var resumeInfo = {};
+			if (resumeId > 0) {
+				resumeInfo.resumeId = resumeId;
+			}
+			var cachedUserInfo = getLoginUserInfo();
+			if (cachedUserInfo != null) {
+				resumeInfo.userToken = cachedUserInfo.userToken;
+
+				ajaxReq('resumeAction', {
+					method : 'getResumeInfo',
+					resumeInfo : json2Str(resumeInfo)
+				}, function(data) {
+					if (data.flag == 'success') {
+						bindData(data);
+					} else {
+						showTipDialog(data.msg);
+						return false;
+					}
 				});
-
-				resumeId = getQueryString('resumeId');
-				if (resumeId > 0) {
-					$('#title').html('修改简历');
-					var resumeInfo = {};
-					if (resumeId > 0) {
-						resumeInfo.resumeId = resumeId;
-					}
-					var cachedUserInfo = getLoginUserInfo();
-					if (cachedUserInfo != null) {
-						resumeInfo.userToken = cachedUserInfo.userToken;
-
-						ajaxReq('resumeAction', {
-							method : 'getResumeInfo',
-							resumeInfo : json2Str(resumeInfo)
-						}, function(data) {
-							if (data.flag == 'success') {
-								bindData(data);
-							} else {
-								alert(data.msg);
-								return false;
-							}
-						});
-					}
-				}
-			});
-
+			}
+		}
+	}
 	//绑定数据到控件
 	function bindData(jsonData) {
 		for ( var o in jsonData) {
 			var value = jsonData[o];
+
+			if (o == 'sallaryType') {
+				if (value == 'day') {
+					showDaySallary();
+				} else {
+					showHourSallary();
+				}
+				continue;
+			}
 			var ctrl = $('#' + o);
 			if (ctrl.length > 0) {
-				if (ctrl[0].tagName == 'SELECT') {//jquery mobile 渲染了select,html完全变了
+				if (ctrl[0].id == 'expectWorkArea') {
+					selectOptions(o, value, localStorage.city);//根据城市加载行政区域
+				} else if (ctrl[0].tagName == 'SELECT') {//jquery mobile 渲染了select,html完全变了
 					selectOptions(o, value);
 				} else if (o == 'selfReview') {
 					ctrl.html(value);
@@ -72,6 +239,10 @@
 	}
 
 	function publish() {
+		//form表单校验不通过
+		if (checkFormNullable('form') == false) {
+			return;
+		}
 		var resumeInfo = {};
 		var method = 'newResume';
 		if (resumeId > 0) {
@@ -107,7 +278,6 @@
 				expectWorkAreaStr += item;
 			});
 			resumeInfo.expectWorkArea = expectWorkAreaStr;
-			resumeInfo.daySallary = $('#daySallary').val();
 			resumeInfo.dayCharge = $('#dayCharge').val();
 			resumeInfo.foodAndLodging = $('#foodAndLodging').val();
 			resumeInfo.expectIndustry = $('#expectIndustry').val();
@@ -119,178 +289,37 @@
 			resumeInfo.verifyCode = $('#verifyCode').val();
 			resumeInfo.eduHisList = $('#eduHisList').val();
 			resumeInfo.workHisList = $('#workHisList').val();
+			resumeInfo.sallaryValue = $('#sallaryValue').val();
+			resumeInfo.sallaryType = $('[name="sallaryType"]:checked').val();
+			resumeInfo.IDNO = $('#IDNO').val();//身份证号
+			resumeInfo.stature = $('#stature').val();//身高
+			
 			ajaxReq('resumeAction', {
 				method : method,
 				resumeInfo : json2Str(resumeInfo)
 			}, function(data) {
 				if (data.flag == 'success') {
-					alert(data.msg);
+					showTipDialog(data.msg);
 					closeSubPage();
 				} else {
-					alert(data.msg);
+					showTipDialog(data.msg);
 					return false;
 				}
 			});
 		}
 		return false;
 	}
+
+	function showHourSallary() {
+		$('[name="sallaryType"][value="hour"]').eq(0).attr('checked', true);
+		$('[for="hour"]').addClass('ui-btn-active');
+		$('[for="day"]').removeClass('ui-btn-active');
+	}
+
+	function showDaySallary() {
+		$('[name="sallaryType"][value="day"]').eq(0).attr('checked', true);
+		$('[for="day"]').addClass('ui-btn-active');
+		$('[for="hour"]').removeClass('ui-btn-active');
+	}
 </script>
-</head>
-<body>
-	<div id="resumePage" data-role="page">
-		<div data-role="header" id="header">
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-				onclick="closeSubPage();return false;">Back</a>
-			<h1 id="title">增加求职简历</h1>
-		</div>
-		<div data-role="content" class="ui-mini">
-			<form method="post" onsubmit="return publish()" action="">
-				<div data-role="fieldcontain">
-					<label for="resumeName">简历名称:</label> <input type="text"
-						name="resumeName" id="resumeName" value="" required="required">
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="resumeType" class="select">简历类型:</label> <select
-						name="resumeType" id="resumeType" data-native-menu="false">+BEGIN+<option value="partTime" selected>兼职</option>
-						<option value="fullTime">全职</option>+END+</select>
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="realName">真实姓名:</label> <input type="text"
-						name="realName" id="realName" value="" required="required">
-				</div>
-				<div data-role="fieldcontain">
-					<label for="cellphone">联系手机:</label> <input type="text"
-						name="cellphone" id="cellphone" value="" required="required">
-				</div>
-				<div data-role="fieldcontain">
-					<label for="email">联系邮箱:</label> <input type="text" name="email"
-						id="email" value="" required="required">
-				</div>
-				<div data-role="fieldcontain">
-					<label for="sex" class="select">性别:</label> <select name="sex"
-						id="sex" data-native-menu="false">
-						<option value="male" selected>男</option>
-						<option value="female">女</option>
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="age">年龄:</label> <input type="text" name="age" id="age"
-						value="" required="required">
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="expectPost" class="select">期望职位:</label> <select
-						name="expectPost" multiple="multiple" id="expectPost"
-						data-native-menu="false">
-						<option value="xuesheng" selected>学生兼职</option>
-						<option value="xiaoshigong">小时工</option>
-						<option value="shixisheng">实习生</option>
-						<option value="chuxiao">促销</option>
-						<option value="jiajiao">家教</option>
-						<option value="chuangdan">传单派发</option>
-						<option value="mote">模特</option>
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="expectWorkArea" class="select">期望区域:</label> <select
-						name="expectWorkArea" multiple="multiple" id="expectWorkArea"
-						data-native-menu="false">
-						<option value="njgulou" selected>鼓楼</option>
-						<option value="njqinhuai">秦淮</option>
-						<option value="njbaixia">白下</option>
-						<option value="njqixia">栖霞</option>
-						<option value="njjianye">建邺</option>
-						<option value="njyuhua">雨花</option>
-						<option value="njjiangning">江宁</option>
-						<option value="njpukou">浦口</option>
-						<option value="njdachang">大厂</option>
-						<option value="njliuhe">六合</option>
-						<option value="njgaochun">高淳</option>
-						<option value="njlishui">溧水</option>
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="daySallary">期望日薪:</label><input type="range"
-						name="daySallary" id="daySallary" value="100" min="0" max="1000">
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="dayCharge">期望工资当天结算:</label> <select name="dayCharge"
-						id="dayCharge" data-native-menu="false">
-						<option value="no">No</option>
-						<option value="yes" selected="">Yes</option>
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for=foodAndLodging>期望提供食宿:</label><select
-						name="foodAndLodging" id="foodAndLodging" data-native-menu="false">
-						<option value="no">No</option>
-						<option value="yes" selected="">Yes</option>
-					</select>
-				</div>
-
-
-				<div data-role="fieldcontain">
-					<label for="degree" class="select">学历:</label> <select
-						name="degree" id="degree" data-native-menu="false">
-						<option value="gaozhong" selected>高中</option>
-						<option value="bengke">本科</option>
-						<option value="suoshi">硕士</option>
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="experience" class="select">工作经验(年):</label> <input
-						type="text" name="experience" id="experience" value="0"
-						required="required" placeholder="工作经验(年)" pattern="[0-9]{1,2}"
-						title="必须是整数">
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="workHisList">工作经历:</label>
-					<textarea cols="40" rows="8" name="workHisList" id="workHisList"
-						required="required" placeholder="让用人单位更好了解你" data-mini="true"></textarea>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="eduHisList">教育经历:</label>
-					<textarea cols="40" rows="8" name="eduHisList" id="eduHisList"
-						required="required" placeholder="让用人单位更好了解你" data-mini="true"></textarea>
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="selfReview">自我评价:</label>
-					<textarea cols="40" rows="8" name="selfReview" id="selfReview"
-						required="required" placeholder="让用人单位更好了解你" data-mini="true"></textarea>
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="verifyCode">验证码:</label>
-					<fieldset class="ui-grid-a">
-						<div class="ui-block-a">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required="required">
-						</div>
-						<div class="ui-block-b">
-							<img id="verifyImg" src=""
-								style="margin-top: 14px; margin-left: 5px;"></img>
-						</div>
-					</fieldset>
-					<!-- <div style="display: inline-flex; width: 100%">
-						<div style="width: 40%; height: 100%;">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required="required">
-						</div>
-						<a data-mini="true" href="#"
-							style="width: 30%; height: 100%; margin-top: 15px;margin-left:-80px;"><img
-							id="verifyImg" src=""></img></a>
-					</div> -->
-				</div>
-
-				<button type="submit" class="ui-btn">提交</button>
-			</form>
-		</div>
-	</div>
-</body>
 </html>

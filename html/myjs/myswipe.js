@@ -34,33 +34,16 @@ var touchEvents = {
 	touchmove : "touchmove",
 	touchend : "touchend",
 	toucancel : "touchcancel",
-	/**
-	 * @desc:判断是否pc设备，若是pc，需要更改touch事件为鼠标事件，否则默认触摸事件
-	 */
-	initTouchEvents : function() {
-		if (isPC()) {
-			this.touchstart = "mousedown";
-			this.touchmove = "mousemove";
-			this.touchend = "mouseup";
-		}
-	}
+/**
+ * @desc:判断是否pc设备，若是pc，需要更改touch事件为鼠标事件，否则默认触摸事件
+ */
+/*
+ * initTouchEvents : function() { if (isPC()) { this.touchstart = "mousedown";
+ * this.touchmove = "mousemove"; this.touchend = "mouseup"; } }
+ */
 };
-var startX, startY;// 滑动起始的xy坐标
-// 滑动开始时的响应事件
-document.addEventListener(touchEvents.touchstart, function(ev) {
-	console.log("touchstart");
-	startX = ev.touches[0].pageX;
-	startY = ev.touches[0].pageY;
 
-	console.log("touchstart,startX=" + startX + "startY=" + startY);
-}, false);
-
-var endX, endY;// 滑动结束的xy坐标
-var direction;// 根据起始结束坐标计算得到的滑动方各1�7�1�7
-var distanceX;// 横向滑动距离
-var distanceY;// 纵向滑动距离
-
-function getDistanceAndDirection(endX,endY){
+function getDistanceAndDirection(endX, endY) {
 	direction = GetSlideDirection(startX, startY, endX, endY);
 	if (endX > startX) {
 		distanceX = endX - startX;
@@ -74,74 +57,127 @@ function getDistanceAndDirection(endX,endY){
 		distanceY = startY - endY;
 	}
 }
+
+var startX, startY;// 滑动起始的xy坐标
+var endX, endY;// 滑动结束的xy坐标
+var direction;// 根据起始结束坐标计算得到的滑动方各1�7�1�7
+var distanceX;// 横向滑动距离
+var distanceY;// 纵向滑动距离
+
+// 滑动开始时的响应事件
+/* document.addEventListener(touchEvents.touchstart, function(ev) { */
+function touchStart(ev) {
+	// ev.preventDefault();//阻止默认行为：页面滚动
+	startX = ev.originalEvent.touches[0].pageX;
+	startY = ev.originalEvent.touches[0].pageY;
+}
+
 // 滑动结束事件发生时的处理
-function swipeOver(ev) {
-	endX = ev.changedTouches[0].pageX;
-	endY = ev.changedTouches[0].pageY;
-	getDistanceAndDirection(endX,endY);
-	console.log("touchend,endX=" + endX + "endY=" + endY);
-	if (distanceX > 100) {// 水平滑动距离
+function touchend(ev) {
+	endX = ev.originalEvent.changedTouches[0].pageX;
+	endY = ev.originalEvent.changedTouches[0].pageY;
+	getDistanceAndDirection(endX, endY);
+
+	if (distanceX > 30) {// 水平滑动距离
 		// 滑动结束时的业务处理回调
 		// myTouchEnd(ev);
 		switch (direction) {
 		case 3:
-			console.log("向左");
 			// 向左滑动时的回调处理
-			if (window.swipeLeft != null)
-				swipeLeft();
+			/*if (window.swipeLeft != null)
+				swipeLeft();*/
 			break;
 		case 4:
-			console.log("向右");
 			// 向右滑动时的回调处理
-			if (window.swipeRight != null)
-				swipeRight();
+			/*if (window.swipeRight != null)
+				swipeRight();*/
 			break;
 		default:
 		}
-	} else if (distanceY > 30) {// 垂直滑动距离
-		switch (direction) {
-		case 1:
-			console.log("向上");
-			// 向上滑动时的回调处理
-			if (window.swipeUp != null)
-				swipeUp();
-			break;
-		case 2:
-			console.log("向下");
-			
-			// 向下滑动时的回调处理
-			if (window.swipeDown != null)
-				swipeDown();
-			break;
-		default:
+	} else if (distanceY > 0) {// 垂直滑动距离
+		if (ev.currentTarget.nodeName != 'BODY') {//阻止body上的上下滑动
+			switch (direction) {
+			case 1:
+				// 向上滑动时的回调处理
+				if (window.swipeUp != null){
+					$(ev.currentTarget).find('.pullUpFreshText').html('加载中...');
+					swipeUp();
+					$(ev.currentTarget).find('.pullUpFreshText').html('加载完成');
+					$(ev.currentTarget).find('.pullUpFresh').slideUp('slow');
+				}
+					
+				break;
+			case 2:
+				// 向下滑动时的回调处理
+				if (window.swipeDown != null){
+					$(ev.currentTarget).find('.pullDownFreshText').html('加载中...');
+					swipeDown();
+					$(ev.currentTarget).find('.pullDownFreshText').html('加载完成');
+					$(ev.currentTarget).find('.pullDownFresh').slideUp('slow');
+				}
+					
+				break;
+			default:
+			}
 		}
 	}
-
 }
-document.addEventListener(touchEvents.touchend, swipeOver, false);
-document.addEventListener(touchEvents.toucancel, swipeOver, false);
+/*
+ * document.addEventListener(touchEvents.touchend, touchend, false);
+ * document.addEventListener(touchEvents.toucancel, touchend, false);
+ */
 
-/*滑动事件响应方法*/
-document.addEventListener(touchEvents.touchmove, function(ev) {
-	endX = ev.changedTouches[0].pageX;
-	endY = ev.changedTouches[0].pageY;
-	console.log("touchmove,endX=" + endX + "endY=" + endY);
-	
-	getDistanceAndDirection(endX,endY);
-	switch (direction) {
-	case 1:
-		console.log("向上");
-		
-		$('#pullUpFresh').show();
-		$('#pullUpFreshText').html('上拉刷新');
-		$('#pullUpFresh').css('height',distanceY);
-		break;
-	case 2:
-		
-		$('#pullDownFresh').show();
-		$('#pullDownFreshText').html('下拉刷新');
-		$('#pullDownFresh').css('height',distanceY);
-		break;
-	default:
+/* 滑动事件响应方法 */
+function touchmove(ev) {
+	/* document.addEventListener(touchEvents.touchmove, function(ev) { */
+
+	// ev.stopPropagation();
+	if (ev.currentTarget.nodeName != 'BODY') {//阻止body上的上下滑动
+
+		endX = ev.originalEvent.changedTouches[0].pageX;
+		endY = ev.originalEvent.changedTouches[0].pageY;
+
+		getDistanceAndDirection(endX, endY);
+
+		switch (direction) {
+		case 1:// 向上滑动
+			/*alert($(document).scrollTop());
+			alert($(document).height());
+			alert( $(window).height());*/
+			/*if ($(document).scrollTop() == $(document).height()
+					- $(window).height()) {// 滚动条到达底部
+				ev.preventDefault();// 阻止默认行为：页面滚动
+				$(ev.currentTarget).find('.pullUpFresh').show();
+				$(ev.currentTarget).find('.pullUpFreshText').show();
+				$(ev.currentTarget).find('.pullUpFreshText').html('上拉刷新');
+				$(ev.currentTarget).find('.pullUpFresh').css('height', distanceY);
+				
+				//让滚动条滑动到底部
+				$(document).scrollTop($(document).height());
+			}*/
+			
+			break;
+		case 2:// 向下滑动
+			if ($(document).scrollTop() == 0) {// 滚动条到达顶部
+				ev.preventDefault();// 阻止默认行为：页面滚动
+				$(ev.currentTarget).find('.pullNoData').hide();//隐藏无数据提示框
+				$(ev.currentTarget).find('.pullDownFresh').show();
+				$(ev.currentTarget).find('.pullDownFreshText').show();
+				$(ev.currentTarget).find('.pullDownFreshText').html('下拉刷新');
+				$(ev.currentTarget).find('.pullDownFresh').css('height', distanceY);
+			}
+			
+			break;
+		default:
+		}
 	}
-}, false);
+}
+
+function bindSwipeEvent() {
+	$('.swipe').bind(touchEvents.touchstart, touchStart).bind(
+			touchEvents.touchmove, touchmove).bind(touchEvents.touchend,
+			touchend);
+	$('body').bind(touchEvents.touchstart, touchStart).bind(
+			touchEvents.touchmove, touchmove).bind(touchEvents.touchend,
+			touchend);
+}

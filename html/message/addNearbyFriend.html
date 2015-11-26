@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+</head>
+<body onscrollend="nextPage()">
+	<div data-role="page" id="addFiendPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>附近的人</h1>
+		</div>
+		<div class="swipe">
+				<div class="pullDownFresh">
+					<div class="pullDownFreshText">下拉刷新</div>
+				</div>
+				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+			
+				<ul data-role="listview" id="nearbyUserListUL">
+				</ul>
+				</div>
+	</div>
+</body>
+
+
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	//绑定控件滑动事件
+	bindSwipeEvent();
+	loadNearbyUserList();
+});
+
+function swipeDown(){
+	nextPageFlag = true;
+	page = 1;
+	$('#nearbyUserListUL').html('');//清除已有li
+	
+	loadNearbyUserList();
+}
+
+var page = 1;
+var nextPageFlag = true;//是否有下一页数据,true表示有
+function nextPage(){
+	if (nextPageFlag==false){
+		showTipDialog('没有数据了!');
+		return;
+	}
+	page++;
+	loadNearbyUserList();
+}
+function loadNearbyUserList() {
+	var cachedUserInfo = str2Json(localStorage.userInfo);
+	if (cachedUserInfo != null) {
+		var userInfo = {};
+		userInfo.userId = cachedUserInfo.userId;
+		userInfo.page = page;
+		userInfo.cityName = localStorage.city;
+		
+		ajaxReq('userAction', {
+			method : 'getNearbyUserList',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.length>0) {
+				if (data.length<20){
+					nextPageFlag  = false;
+				}
+				fillUserList(data);
+			} else {
+				$('.pullNoData').show();
+			}
+		});
+	}
+}
+function fillUserList(arr){
+	var ulHtml = '';
+	var liTemplate = '<li data-icon="false"><a href="#" onclick="toViewFriendInfo(\'-friendId-\',\'-friendType-\')"><img style="margin:5px;height:70px;width:70px;border-radius:50px;top:10px;" src="-friendHeadPic-"></img> \
+		<h3>-friendName-</h3>-feelingText- \
+		<p style="float:left;">-friendTypeName--privateFriend-&nbsp;|&nbsp;<i class="fa fa-street-view"></i>-distance-米</p> \
+	</a></li>';
+
+	for ( var i = 0; arr.length > i; i++) {
+		var repValueArr = {};
+		repValueArr['-friendId-'] = arr[i].friendId;
+		repValueArr['-friendName-'] = arr[i].friendName;
+		repValueArr['-friendType-'] = arr[i].friendType;
+		if (arr[i].feelingText!=null){
+			repValueArr['-feelingText-'] = '<p>-friendFeelingText-</p>'.replace('-friendFeelingText-',arr[i].feelingText);
+		}else{
+			repValueArr['-feelingText-'] ='';
+		}
+		
+		repValueArr['-distance-'] = arr[i].distance;
+		repValueArr['-friendType-'] = arr[i].friendType;
+		repValueArr['-friendTypeName-'] = getDisplayEnumValue('userType',arr[i].friendType);
+		
+		if (arr[i].friendType=='private'){
+			var sex = arr[i].sex==null?'性别未知':arr[i].sex;
+			var age = arr[i].age==null?'年龄未知':arr[i].age;
+			var privateFriendInfo = '&nbsp;|&nbsp;-sex-&nbsp;|&nbsp;-age-'.replace('-sex-',getDisplayEnumValue('sex',sex)).replace('-age-',age);
+			repValueArr['-privateFriend-'] = privateFriendInfo;
+		}else{
+			repValueArr['-privateFriend-'] = '';
+		}
+		
+		repValueArr['-friendHeadPic-'] = createImageUrl(arr[i].friendHeadPicImageId);
+
+		var liHtml = replaceAll(liTemplate, repValueArr);
+		ulHtml += liHtml;
+	}
+
+	$('#nearbyUserListUL').append(ulHtml);
+	$('#nearbyUserListUL').listview("refresh");
+}
+//查看用户信息
+function toViewFriendInfo(friendId,friendUserType){
+	if (friendUserType=='private'){//个人用户
+		var params = 'privateUserId='+friendId;
+		changeSubPage('privateHomePage','addFiendPage',params);
+	}else{//企业用户
+		var params = 'companyUserId='+friendId;
+		changeSubPage('companyHomePage','addFiendPage',params);
+	}
+}
+/* //加为好友
+function toAddFriend(friendId){
+	var cachedUserInfo = str2Json(localStorage.userInfo);
+	if (cachedUserInfo != null) {
+		var userInfo = {};
+		userInfo.userId = cachedUserInfo.userId;
+		userInfo.friendId = friendId;
+		
+		ajaxReq('userAction', {
+			method : 'addFriend',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
+				closeSubPage();
+			} else {
+				showTipDialog(data.msg);
+			}
+		});
+	}
+} */
+</script>
+</html>

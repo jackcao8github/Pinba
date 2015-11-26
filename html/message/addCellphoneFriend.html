@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="addCellphoneFiendPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>加好友</h1>
+		</div>
+		<!-- 手机号加好友-->
+		<div data-role="content" class="ui-mini">
+			<div id="form">
+				<div data-role="fieldcontain">
+					<label for="friendKey">好友手机或用户号:</label> <input type="text"
+						name="friendKey" id="friendKey" value="" required pattern="[0-9]*"
+						placeholder="好友手机或用户号">
+				</div>
+			</div>
+			<a data-role="button" class="submmitBtn ui-mini"
+				onclick="addCellphoneFriend()" data-icon="check" id="pubBtn">确定</a>
+		</div>
+	</div>
+</body>
+
+
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+
+<script type="text/javascript">
+/* function swipeLeft(){
+	//打开当前页面左边页面
+	parent.switchIframeByClick('wode');
+}
+
+function swipeRight(){
+	//打开当前页面右边页面
+	parent.switchIframeByClick('fabu');
+} */
+	/* 加载新消息 */
+	function addCellphoneFriend(){
+		//form表单校验不通过
+		if (checkFormNullable('form') == false) {
+			return;
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			var userInfo = {};
+			userInfo.userId = cachedUserInfo.userId;
+			
+			var friendKey = $('#friendKey').val();
+			if (friendKey.length==11){//11位手机号码
+				userInfo.friendCellphone = friendKey;
+			}else{//用户id
+				userInfo.friendId = friendKey;
+			}
+			
+			
+			ajaxReq('userAction', {
+				method : 'addFriend',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				showTipDialog(data.msg);
+				if (data.flag == 'success') {
+					closeSubPage();
+				}
+			});
+		}
+	}
+</script>
+</html>

@@ -2,143 +2,523 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/idangerous.swiper.css">
+<link rel="stylesheet" href="../mycss/mycommon.css" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../mycss/photoswipe.css" />
-<link rel="stylesheet" href="../css/font-awesome.css" />
-<link rel="stylesheet" href="../mycss/scrolltotop.css" />
 
-<script src="../js/jquery-1.7.1.min.js"></script>
-<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
-<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<style type="text/css">
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.swiper-container {
+	width: 100%;
+	height: 180px;
+	color: #fff;
+	text-align: center;
+}
+
+.red-slide {
+	background: #ca4040;
+}
+
+.blue-slide {
+	background: #4390ee;
+}
+
+.orange-slide {
+	background: #ff8604;
+}
+
+.green-slide {
+	background: #49a430;
+}
+
+.pink-slide {
+	background: #973e76;
+}
+
+.swiper-slide .title {
+	font-style: italic;
+	font-size: 42px;
+	margin-top: 80px;
+	margin-bottom: 0;
+	line-height: 45px;
+}
+
+.swiper-slide img {
+	width: 100%;
+}
+
+.pagination {
+	position: absolute;
+	z-index: 20;
+	right: 10px;
+	bottom: 10px;
+}
+
+.swiper-pagination-switch {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 8px;
+	background: #222;
+	margin-right: 5px;
+	opacity: 0.8;
+	border: 1px solid #fff;
+	cursor: pointer;
+}
+
+.swiper-visible-switch {
+	background: #aaa;
+}
+
+.swiper-active-switch {
+	background: #fff;
+}
+
+.swiper-slide2 {
+	border-radius: 50px;
+	text-align : center;
+	/* font-size: 14px; */
+	color: #fff;
+	background: #4390ee;
+	margin-right: 5px;
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	text-align: center;
+}
+
+
+
+.function-entry{
+color:white;text-align:center;line-height:80px;border-radius:5px;float:left;height:80px;margin-bottom:7px;
+}
+</style>
+
+</head>
+<body onscroll="swipeUp()">
+	<div data-role="page" id="homePage">
+		<div
+			style="position: fixed; width: 100%; top: 0; left: 0; z-index: 100;"
+			id="homeHeader">
+			<div
+				style="position: absolute; width: 100%; top: 0; left: 0; background-color: #4390ee; opacity: 0.7;">
+				<div
+					style="float: left; width: 25%; overflow: hidden; text-align: center; line-height: 49px;">
+					<a style="color: white; text-shadow: none"
+						onclick="changeSubPage('changeCity','homePage')"> <i
+						class="fa fa-street-view fa-fw"></i><span id="location">城市</span>
+					</a>
+				</div>
+				<div
+					style="float: left; width: 60%; line-height: 49px; padding-top: 5px;">
+					<div class="input-group">
+						<span class="input-group-addon"><i
+							class="fa fa-search fa-fw"></i></span> <input type="search"
+							name="keyboard" placeholder="趣章鱼有你工作。。。" class="form-control"
+							id="searchBox" />
+					</div>
+				</div>
+				<div
+					style="float: right; width: 15%; overflow: hidden; text-align: center; line-height: 49px;">
+					<a style="color: white; text-shadow: none"
+						onclick="parent.switchIframeByClick('message')"><i
+						class="fa fa-envelope-o fa-fw"></i><span id="msgCnt">0</span></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="swiper-container" id="picSwiper">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide red-slide">
+					<p class="title" onclick="changeSubPage('register4Private')">注册就送500积分，赶快来注册吧!</p>
+				</div>
+				<!-- <div class="swiper-slide red-slide">
+					<p class="title" onclick="changeSubPage('register4Private')">推荐就送500积分，赶快推荐好友吧!</p>
+				</div> -->
+				<div class="swiper-slide red-slide">
+					<img src="/PinBa/image/hotels/shuangzita/shuangzita.png"></img>
+				</div>
+				<div class="swiper-slide blue-slide">
+					<img src="/PinBa/image/hotels/yincheng/00005GlN.jpg"></img>
+				</div>
+				<div class="swiper-slide orange-slide">
+					<img src="/PinBa/image/hotels/yincheng/00007Gv3.jpg"></img>
+				</div>
+			</div>
+			<div class="pagination"></div>
+		</div>
+
+		<!-- <div data-role="content"> -->
+		<p class="section-divider" id="yourLike">热门岗位</p>
+		<!-- Swiper -->
+		<div class="swiper-container" style="height: 65px;" id="postSwiper">
+			<div class="swiper-wrapper" id="postList"></div>
+			<!-- Add Pagination -->
+			<!-- <div class="swiper-pagination"></div>
+			<div class="swiper-button-next"></div>
+			<div class="swiper-button-prev"></div> -->
+		</div>
+
+		<p class="section-divider" id="yourLike">热门功能</p>
+		<div id="functionDiv" style="overflow: hidden; width: 100%;"></div>
+		<p class="section-divider" id="yourLike">猜你喜欢</p>
+		<div id="workDiv">
+			<!-- <div class="swipe"> -->
+			<ul data-role="listview" id="workList" style="margin: 0"
+				class="list-group">
+
+			</ul>
+			<!-- <div class="pullUpFresh">
+					<div class="pullUpFreshText">上拉刷新</div>
+				</div>
+				</div> -->
+		</div>
+		<div id="reqWorkDiv">
+			<!-- <div class="swipe"> -->
+			<ul data-role="listview" id="reqworkList" style="margin: 0">
+
+			</ul>
+			<!-- <div class="pullUpFresh">
+					<div class="pullUpFreshText">上拉刷新</div>
+				</div>
+				</div> -->
+		</div>
+		<!-- </div> -->
+		<div class="location">
+			<i class="fa fa-chevron-up fa-lg"></i>
+		</div>
+	</div>
+
+</body>
+
+
+<script src="../js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
-
-
+<script src="../js/idangerous.swiper.min.js"></script>
+<script type="text/javascript" src="../myjs/BMap.js"></script>
+<script type="text/javascript" src="../myjs/websocket.js"></script>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				$('.location').click(function() {
-					$('html,body').animate({
-						scrollTop : '0px'
-					}, 800);
-				});
-				//searchBox绑定点击事件
-				$('#searchBox').bind('click', function() {
-					//$.mobile.changePage("search.html", "pop", false, false);
-					changeSubPage('search', 'homePage');
-				});
-				//图片滚动处理 ------------------------------start
-				$(".main_visual").hover(function() {
+	//功能数组
+	var funcArr = [ {
+		"name" : "签到领积分",
+		"image" : "/image/login03.png",
+		"pageId" : "collectPoints",
+		"remark" : ""
+	}, {
+		"name" : "校园行",
+		"image" : "/image/login03.png",
+		"pageId" : "appraiseUserInfo",
+		"remark" : ""
+	}, {
+		"name" : "随机工作",
+		"image" : "/image/login03.png",
+		"pageId" : "randomWork",
+		"remark" : ""
+	}, {
+		"name" : "视频中心",
+		"image" : "/image/login03.png",
+		"pageId" : "videoCenter",
+		"remark" : ""
+	}, {
+		"name" : "技能交换",
+		"image" : "/image/login03.png",
+		"pageId" : "randomFriend",
+		"remark" : ""
+	}, {
+		"name" : "进行中的工作",
+		"image" : "/image/login03.png",
+		"pageId" : "currentWork",
+		"remark" : ""
+	} ];
+	var corlorArr = [ '#ca4040', '#4390ee', '#ff8604', '#49a430', '#973e76' ];
 
-				}, function() {
+	//动态排列显示功能入口div
+	//显示规则为一行最少1个，最多3个，颜色随机从red,blue,orange,green,pink中选择
+	function displayFuncEntry() {
 
-				});
-				$dragBln = false;
+		var numInRow = 0;
+		for (var i = 0; funcArr.length > i; i++) {
+			var randomNum = GetRandomNum(1, 2);//从1-2中随机取一个数,表示这个div占用的列数		
+			var colNum = 0;//当前这个div占的列数
 
-				$(".main_image").touchSlider(
-						{
-							flexible : true,
-							speed : 200,
-							btn_prev : $("#btn_prev"),
-							btn_next : $("#btn_next"),
-							paging : $(".flicking_con a"),
-							counter : function(e) {
-								$(".flicking_con a").removeClass("on").eq(
-										e.current - 1).addClass("on");
-							}
+			if (randomNum == 1) {
+				//生成占一列的div
+				colNum = 1;
+			} else if (randomNum == 2) {
+				if (numInRow == 0) {
+					//生成占2列的div
+					colNum = 2;
+				} else 
+				if (numInRow == 1) {
+					//生成占2列的div
+					colNum = 2;
+				} else if (numInRow == 2) {
+					//生成占一列的div
+					colNum = 1;
+				}
+			}/*  else if (randomNum == 3) {
+				if (numInRow == 0) {
+					//生成占3列的div
+					colNum = 3;
+				} else if (numInRow == 1) {
+					//生成占2列的div
+					colNum = 2;
+				} else if (numInRow == 2) {
+					//生成占1列的div
+					colNum = 1;
+				}
+			} */
+			
+			var floatFlag = 'left';
+			numInRow+=colNum;
+			if (numInRow >= 3) {//换行
+				floatFlag = 'right';
+				numInRow = 0;
+			}else if (funcArr.length == i+1){//最后一个时
+				if (colNum==numInRow){
+					colNum = 3;
+				}else{
+					colNum = colNum + (3-numInRow);
+					floatFlag = 'right';
+				}
+			}
+			//将列数转换成宽度
+			var width = 0;
+			if (colNum==1){
+				width=32;
+			}else if (colNum==2){
+				width=66;
+			}else{
+				width=100;
+			}
+			
+			var marginright = '';
+			//如果是每行的第一个占一列的，则增加margin-right:7px
+			if (numInRow==1){
+				marginright='margin-right:2%';
+			}
+			//随机生成一个颜色
+			var colorIndex = GetRandomNum(0, 4);
+			var color = corlorArr[colorIndex];
+
+			var divHtmlTemplate = '<div class="function-entry" style="float:-float-;background-color:-color-;width:-width-%;-margin-right-" onclick="changeSubPage(\'-pageId-\', \'homePage\');"><i class="fa fa-cog fa-fw fa-2x"></i>&nbsp;-name-</div>';
+
+			var divHtml = divHtmlTemplate.replace('-color-', color)
+			.replace(
+					'-width-', width)
+					.replace('-name-', funcArr[i].name)
+					.replace('-pageId-', funcArr[i].pageId)
+					.replace('-float-',floatFlag)
+					.replace('-imgsrc-',getContextPath()+funcArr[i].image)
+					.replace('-margin-right-',marginright);
+			$('#functionDiv').append(divHtml);
+		}
+	}
+	
+	$(document)
+			.ready(
+					function() {
+						initWebSocket();
+						//绑定控件滑动事件
+						//bindSwipeEvent();
+						//searchBox绑定点击事件
+						$('#searchBox').bind('click', function() {
+							//$.mobile.changePage("search.html", "pop", false, false);
+							changeSubPage('search', 'homePage');
+						});
+						 $('.location').click(function() {
+								$('#homePage').animate({
+									scrollTop : '0px'
+								}, 800);
+							});
+						//为页面绑定滚动事件处理
+						/* $("body").scroll(function(){
+							swipeUp();//当滚动条滑动到底部时，加载列表数据
+						}); */
+						//图片滚动处理 ------------------------------start
+						var mySwiper = new Swiper('#homePage #picSwiper', {
+							pagination : '.pagination',
+							paginationClickable : true,
+							spaceBetween : 30,
+							centeredSlides : true,
+							autoplay : 5000,
+							autoplayDisableOnInteraction : false,
+							loop : true
 						});
 
-				$(".main_image").bind("mousedown", function() {
-					$dragBln = false;
-				});
+						//生成岗位列表
+						var hotPostList = {'jiajiao':'','chuxiao':'','chuandan':'','liyimote':'','fuwuyuan':'','zhongdian':'','huawu':'','xiaoyuanjianzhi':''};
+						var postList = getEnumValues('post');
+						var postListHtml = '';
+						if (postList != null) {
+							var liHtml = '<div class="swiper-slide swiper-slide2" onclick="openHotWorkPage(\'-post_code-\')">-post_name-</div>';
+							for ( var item in postList) {
+								if (hotPostList[item]!=null){
+									postListHtml += liHtml.replace('-post_code-',
+											item).replace('-post_name-',
+											postList[item].value);
+								}
+							}
+							//增加"全部工作"
+							postListHtml += liHtml.replace('-post_code-',
+									'all').replace('-post_name-',
+									'全部工作');
+							$('#postList').html(postListHtml);
+						}
 
-				$(".main_image").bind("dragstart", function(e) {
-					$dragBln = true;
-					e.preventDefault();
-				});
+						//计算得到一次可以看到的slide数量
+						var slideNumInOneView = 6;
+						slideNumInOneView = window.outerWidth/65;
+						var swiper = new Swiper('#homePage #postSwiper', {
+							slidesPerView : slideNumInOneView,
+							freeMode : true
+						});
+						//图片滚动处理 ------------------------------end
+						//初始化页面数据
+						initData();
+						//定位
+						//pageInit中先显示上次登陆时的城市，如果定位城市不一样，则提示切换为定位城市
+						if (navigator.onLine) {
+							getPosition(showPosition);
+						}
 
-				$(".main_image a").click(function() {
-					if ($dragBln) {
-						return false;
-					}
-				});
-
-				timer = setInterval(function() {
-					$("#btn_next").click();
-				}, 5000);
-
-				$(".main_visual").hover(function() {
-					clearInterval(timer);
-				}, function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-
-				$(".main_image").bind("touchstart", function() {
-					clearInterval(timer);
-				}).bind("touchend", function() {
-					timer = setInterval(function() {
-						$("#btn_next").click();
-					}, 5000);
-				});
-				//图片滚动处理 ------------------------------end
-
-				//定位
-				if(navigator.onLine){
-					getPosition(showPosition);
-				}else{
-					showPosition();
-				}
-				
-
-				//阻止在图片上滑动时引起的翻页行为
-				$(".main_visual").bind(touchEvents.touchend, function() {
-					return false;
-				}, false);
-				$(".main_visual").bind(touchEvents.toucancel, function() {
-					return false;
-				}, false);
-			    $('#workList').html('');
-			    $('#reqworkList').html('');
-				loadWorkList();
-			});
-
-	/* 显示当前定位城市 */
-	function showPosition() {
-		if (localStorage.qryCity != null) {
-			$("#location").html(localStorage.qryCity);
-		} else {
-			$("#location").html(localStorage.city);
+						//动态排列显示功能入口div
+						displayFuncEntry();
+					});
+	
+	
+	var show = 'work';//默认展示工作列表
+	function initData() {
+		//显示城市名称
+		showPosition();
+		//加载工作和求职列表
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			if (cachedUserInfo.userType!='private'){
+				show = 'reqWork';
+			}
 		}
 		
-		//上传用户当前坐标
-        if (localStorage.latitude!=null){
-        	var cachedUserInfo = str2Json(localStorage.userInfo);
-            if (cachedUserInfo != null) {
-              userInfo = {};
-                userInfo.userId = cachedUserInfo.userId;
-                userInfo.latitude = localStorage.latitude;
-                userInfo.longitude = localStorage.longitude;
-                userInfo.cityName = localStorage.city;
-                
-                ajaxReq('userAction', {
-                    method : 'logUserPosition',
-                    userInfo : json2Str(userInfo)
-                }, function(data) {
-                    if (data.flag == 'success') {//登陆成功后返回主页面
-                    } else {
-                    }
-                });
-            }
-        }
+		if (show=='work'){
+			$('#workDiv').show();
+			$('#reqWorkDiv').remove();
+			$('#workList').html('');
+			
+			workPage = 1;
+			workNextPageFlag = true;
+			loadWorkList();
+		}else{
+			$('#reqWorkDiv').show();
+			$('#workDiv').remove();
+			$('#reqworkList').html('');
+			
+			reqWorkPage = 1;
+			reqWorkNextPageFlag = true;
+			loadReqWorkList();
+		}
+	}
+	/* 显示当前定位城市 */
+	function showPosition() {
+		$("#location").html(localStorage.city);
 	}
 
-	function swipeLeft() {
+	//使用baidu api实现定位功能
+	function getPosition(showPosition) {
+		var geolocation = new BMap.Geolocation();
+		geolocation
+				.getCurrentPosition(
+						function(r) {
+							if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+								//将经纬度缓存下来
+								var newlatitude = r.point.lat;
+								var newlongitude = r.point.lng;
+								localStorage.latitude = newlatitude;
+								localStorage.longitude = newlongitude;
+								
+								// ak = appkey 访问次数流量有限制
+								$.getJSON('http://api.map.baidu.com/geocoder/v2/?callback=?&ak=71709218d45a706b9c7e3abc2f037b23&location='
+														+ newlatitude
+														+ ','
+														+ newlongitude
+														+ '&output=json&pois=1',
+												function(res) {
+													//addressComponent =&gt; {city: "广州市", district: "天河区", province: "广东省", street: "广州大道", street_number: "中922号-之101-128"}
+													var positionCity = res.result.addressComponent.city;
+													var positionAddress = res.result.addressComponent.city
+															+ res.result.addressComponent.district
+															+ res.result.addressComponent.street
+															+ res.result.addressComponent.street_number;
+
+													//缓存当前的详细地址
+													localStorage.addressComponent = positionAddress;
+													//上传用户当前坐标
+													logUserPosition(
+															newlatitude,
+															newlongitude,
+															positionCity);
+
+													if (localStorage.city == null) {
+														localStorage.city = positionCity;
+														//刷新列表
+														initData();
+													} else if (localStorage.city != null
+															&& localStorage.city != positionCity) {
+														//先缓存定位到的城市名称
+														localStorage.positionCity = positionCity;
+														//提示城市变了
+														showConfirmDialog(
+																'是否切换为当前城市'
+																		+ positionCity
+																		+ '?',
+																changeCityByPosition);
+													}
+												});
+							} else {
+								showTipDialog('failed' + this.getStatus());
+							}
+						}, {
+							enableHighAccuracy : true
+						})
+	}
+	function changeCityByPosition() {
+		//将当前城市缓存下来
+		localStorage.city = localStorage.positionCity;
+		localStorage.removeItem('positionCity');
+		//刷新列表
+		initData();
+	}
+	// 关于状态码
+	// BMAP_STATUS_SUCCESS 检索成功。对应数值“0”。
+	// BMAP_STATUS_CITY_LIST 城市列表。对应数值“1”。
+	// BMAP_STATUS_UNKNOWN_LOCATION 位置结果未知。对应数值“2”。
+	// BMAP_STATUS_UNKNOWN_ROUTE 导航结果未知。对应数值“3”。
+	// BMAP_STATUS_INVALID_KEY 非法密钥。对应数值“4”。
+	// BMAP_STATUS_INVALID_REQUEST 非法请求。对应数值“5”。
+	// BMAP_STATUS_PERMISSION_DENIED 没有权限。对应数值“6”。(自 1.1 新增)
+	// BMAP_STATUS_SERVICE_UNAVAILABLE 服务不可用。对应数值“7”。(自 1.1 新增)
+	// BMAP_STATUS_TIMEOUT 超时。对应数值“8”。(自 1.1 新增)
+	/* function swipeLeft() {
 		//打开当前页面左边页面
 		parent.switchIframeByClick('faxian');
 	}
@@ -146,475 +526,115 @@
 	function swipeRight() {
 		//打开当前页面右边页面
 		parent.switchIframeByClick('wode');
+	} */
+
+	
+	//打开热门工作列表
+	function openHotWorkPage(postCode) {
+		if (postCode=='all'){//查找全部
+			changeSubPage('searchResult', 'homePage');
+		}else{//按岗位查找
+			changeSubPage('searchResult', 'homePage', 'postCode=' + postCode);
+		}
 	}
+	
+	//滑动到底部时处理
 	function swipeUp() {
-		/* var scrolltop = $(document).scrollTop();
+		var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
-		if (scrolltop / (docHeight - winHeight) >= 0.9) {//滚动到距底部20%时 */
-			/* 正在查看的是工作列表 */
-			if ($('a[class*="ui-btn-active"]').attr('href') == "#workDiv") {
-
+		if (scrolltop>0&&scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+			if (show=='work'){
 				loadWorkList();
-
-			} else {/* 正在查看的是求职列表 */
+			}else{
 				loadReqWorkList();
 			}
-		//}
+		}
 	}
 	
 	var workPage = 1;
-	
+	var workNextPageFlag = true;
 	function loadWorkList() {
-		$('#pullUpFreshText').html('加载中...');
+		if (workNextPageFlag == false) {
+			//提示没有数据了
+			showTipDialog('没有数据了');
+			return;
+		}
 		var workInfo = {};
 		workInfo.page = workPage;
 		workInfo.cityName = localStorage.city;
-		workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
-
+		workInfo.workType = 'partTime';//兼职
+		workInfo.effExpDateFlag = 'true';//只加载生失效时间内的
+		workInfo.orderBy = 'newest';
+		
 		ajaxReq('workAction', {
 			method : 'getWorkList',
 			workInfo : json2Str(workInfo)
 		}, function(data) {
 			if (data.flag != 'fail') {
 				if (data.length > 0) {
-					workPage++;
-					fillWorkList(data);
+
+					if (data.length == 20) {//如果返回20条记录，表明还有下一页
+						workPage++;
+					} else {
+						workNextPageFlag = false;
+					}
+					fillWorkList('workList', data);
 				}
 			} else {
-				alert(data.msg);
+				//showTipDialog(data.msg);
 			}
-			
-			$('#pullUpFreshText').html('加载完成');
-            $('#pullUpFresh').slideUp('slow');
 		});
 	}
 
-	function fillWorkList(data) {
-		var newhtml = '<li data-icon="false" onclick="openWork(this)" workId="+workId+"><a href="#" class="ui-btn ui-mini">\
-            <div style="overflow: hidden;">\
-            <p style="float: left;font-weight:bold;">+title+</p>\
-            <p style="color: black; float: right">+time+</p>\
-            </div><div style="overflow: hidden;">\
-                        <p style="float: left">+condition+</p>\
-                        <p style="color: red; float: right">时薪:+daymoney+</p>\
-                    </div><div style="overflow: hidden;">\
-                        <p style="float: left">+username+</p>\
-                        <div style="float: right; color: #f63">+userCredit+\
-                        </div></div></a></li>';
-
-		for ( var i = 0; data.length > i; i++) {
-			var workObj = data[i];
-			var conditionStr = '';
-			conditionStr += getDisplayEnumValue('expectDegree',
-					workObj.expectDegree)
-					+ '学历';
-			conditionStr += '&nbsp;|&nbsp;';
-			conditionStr += getDisplayEnumValue('expectExperience',
-					workObj.expectExperience)
-					+ '经验';
-			conditionStr += '&nbsp;|&nbsp;';
-			conditionStr += getDisplayEnumValue('expectAge', workObj.expectAge)
-					+ '年龄';
-
-			var userCreditHtml = createCreditHtml(workObj.userCredit);
-
-			var html = newhtml.replace('+username+', workObj.userName).replace(
-					'+title+', workObj.workName).replace('+time+',
-					workObj.effDate).replace('+condition+', conditionStr)
-					.replace('+daymoney+', workObj.daySallary).replace(
-							'+workId+', workObj.workId).replace('+userCredit+',
-							userCreditHtml);
-
-			$('#workList').append(html);
-		}
-
-		$('#workList').listview("refresh");
-	}
-
-	function createCreditHtml(userCredit) {
-		var strArr = [];
-		var mod = userCredit / 100;
-		mod = parseInt(mod);
-		var left = userCredit % 100;
-		if (mod > 0) {
-			for ( var i = 0; mod > i; i++) {
-				strArr.push('<i class="fa fa-star"></i>');
-			}
-		}
-		if (left > 50) {
-			strArr.push('<i class="fa fa-star-o"></i>');
-		}
-		if (strArr.length != 5) {
-			var c = 5 - strArr.length;
-			for ( var j = 0; c > j; j++)
-				strArr.push('<i class="fa fa-star-o"></i>');
-		}
-
-		return strArr.join('');
-	}
-
-	var reqWorkPage = 1;
-	function loadReqWorkList() {
-		$('#pullUpFreshText2').html('加载中...');
-		var workInfo = {};
-		workInfo.page = reqWorkPage;
-		workInfo.cityName = localStorage.city;
-		workInfo.workType = 'reqPartTime,reqFullTime';//兼职求职/全职求职
-
-		ajaxReq('workAction', {
-			method : 'getWorkList',
-			workInfo : json2Str(workInfo)
-		}, function(data) {
-			if (data.flag != 'fail') {
-				if (data.length > 0) {
-					reqWorkPage++;
-					fillReqWorkList(data);
-				}
-			} else {
-				alert(data.msg);
-			}
-			$('#pullUpFreshText2').html('加载完成');
-            $('#pullUpFresh2').slideUp('slow');
-		});
-	}
-
-	function fillReqWorkList(data) {
-		var newhtml = '<li data-icon="false" onclick="openReqWorkDetail(this)" workId="+workId+"><a\
-            href="#" class="ui-btn ui-mini">\
-        <div style="overflow: hidden;">\
-            <p style="float: left; font-weight: bold;">+workName+</p>\
-            <p style="color: black; float: right">+time+</p>\
-        </div><p>+basicInfo+</p><p>+condition+</p><p >+req+</p></a></li>';
-
-		for ( var i = 0; data.length > i; i++) {
-			var workObj = data[i];
-			var basicInfo = '';
-			basicInfo += workObj.resumeInfo.realName;
-			basicInfo += '&nbsp;|&nbsp;';
-			basicInfo += getDisplayEnumValue('sex', workObj.resumeInfo.sex);
-			basicInfo += '&nbsp;|&nbsp;';
-			basicInfo += workObj.resumeInfo.age;
-
-			var conditionStr = '';
-			conditionStr += getDisplayEnumValue('degree',
-					workObj.resumeInfo.degree)
-					+ '学历';
-			conditionStr += '&nbsp;|&nbsp;';
-			conditionStr += getDisplayEnumValue('experience',
-					workObj.resumeInfo.experience)
-					+ '年工作经验';
-
-			var reqInfo = '';
-			reqInfo += '期望日薪:' + workObj.resumeInfo.daySallary;
-			reqInfo += '&nbsp;|&nbsp;';
-			reqInfo += '期望工作地:'
-					+ getDisplayEnumValue('expectWorkArea',
-							workObj.resumeInfo.expectWorkArea);
-
-			//'纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员'
-			//'学历：本科&nbsp;|&nbsp;工作经验：3年'
-			//'期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁'
-			var html = newhtml.replace('+basicInfo+', basicInfo).replace(
-					'+workId+', workObj.workId).replace('+workName+',
-					workObj.workName).replace('+time+', workObj.createDate)
-					.replace('+condition+', conditionStr).replace('+req+',
-							reqInfo);
-			$('#reqworkList').append(html);
-		}
-
-		$('#reqworkList').listview("refresh");
-	}
+	
 	function openWork(obj) {
 		var workid = $(obj).attr('workId');
 		changeSubPage('workDetail', 'homePage', 'workid=' + workid);
 	}
+	
+	var reqWorkPage = 1;
+	var reqWorkNextPageFlag = true;
+	function loadReqWorkList() {
+		if (reqWorkNextPageFlag == false) {
+			//提示没有数据了
+			showTipDialog('没有数据了');
+			return;
+		}
+		var workInfo = {};
+		workInfo.page = reqWorkPage;
+		workInfo.cityName = localStorage.city;
+		workInfo.workType = 'reqPartTime';//兼职求职
+		workInfo.orderBy = 'newest';
 
+		ajaxReq('workAction', {
+			method : 'getWorkList',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.flag != 'fail') {
+				if (data.length > 0) {
+					if (data.length == 20) {//如果返回20条记录，表明还有下一页
+						reqWorkPage++;
+					} else {
+						reqWorkNextPageFlag = false;
+					}
+
+					fillReqWorkList('reqworkList', data);
+				}
+			} else {
+				showTipDialog(data.msg);
+			}
+		});
+	}
 	function openReqWorkDetail(obj) {
 		var workId = $(obj).attr('workId');
 		changeSubPage('reqWorkDetail', 'homePage', 'workId=' + workId);
 	}
+	
+	//显示新消息数量
+	function showNewMsgCount(msgCount){
+		$('#msgCnt').html(msgCount);
+	}
+	
 </script>
-
-</head>
-<style type="text/css">
-</style>
-
-</head>
-<body>
-	<div data-role="page" id="homePage" style="top: -20px;">
-		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="homeHeader">
-			<div
-				style="float: left; width: 25%; overflow: hidden; text-align: center; line-height: 49px;">
-				<a href="#" data-role="none" data-ajax="false"><!-- onclick="changeSubPage('changeCity','homePage')" -->
-				<i class="fa fa-street-view"></i><span id="location">城市</span></a>
-			</div>
-			<div style="float: left; width: 60%;">
-				<input type="search" name="keyboard" placeholder="关键字.."
-					style="width: 100%;" id="searchBox" />
-			</div>
-			<div
-				style="float: right; width: 15%; overflow: hidden; text-align: center; line-height: 49px;">
-				<a href="#" data-role="none" data-ajax="false"
-					onclick="parent.switchIframeByClick('message')"><i
-					class="fa fa-envelope-o"></i><span id="msgCnt">28</span></a>
-			</div>
-		</div>
-		<div class="main_visual">
-			<div class="flicking_con">
-				<a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
-				<a href="#">5</a>
-			</div>
-			<div class="main_image">
-				<ul>
-					<li><img
-						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img
-						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img
-						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img
-						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-					<li><img
-						src="http://www.internetke.com/jsEffects/2015010801/images/img_main_1.jpg"></li>
-				</ul>
-				<a href="javascript:;" id="btn_prev" style="display: none;"></a> <a
-					href="javascript:;" id="btn_next" style="display: none;"></a>
-			</div>
-		</div>
-
-		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
-			id="yourLike">今日精选</p>
-		<div class="ui-grid-a">
-			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">关注最多企业</p>
-				</a>
-			</div>
-			<div class="ui-block-b" style="text-align: center;" id="workDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">评价最好企业</p>
-				</a>
-			</div>
-		</div>
-		<div class="ui-grid-a">
-			<div class="ui-block-a" style="text-align: center;"
-				id="entertainmentDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">关注最多招聘</p>
-				</a>
-			</div>
-			<div class="ui-block-b" style="text-align: center;"
-				id="entertainmentDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">简历最多招聘</p>
-				</a>
-			</div>
-		</div>
-		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
-			id="yourLike">热门企业</p>
-		<div class="ui-grid-a">
-			<div class="ui-block-a" style="text-align: center;" id="foodDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">关注最多</p>
-				</a>
-			</div>
-			<div class="ui-block-b" style="text-align: center;" id="workDiv">
-				<a class="ui-bar ui-bar-a">
-					<p style="margin: 0px">评价最好</p>
-				</a>
-			</div>
-		</div>
-		<div class="h1"></div>
-		<p style="margin: 5px 5px; text-align: center; font-weight: bold"
-			id="yourLike">猜你喜欢</p>
-		<div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#workDiv" class="ui-btn-active">招聘</a></li>
-					<li><a href="#reqWorkDiv" onclick="loadReqWorkList()">求职</a></li>
-				</ul>
-			</div>
-
-			<div id="workDiv">
-				<ul data-role="listview" id="workList">
-					<li data-icon="false" onclick="openWork(this)" workId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
-								<!--招聘标题-->
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<p style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</p>
-							</div>
-					</a></li>
-					<li data-icon="false" onclick="openWork(this)" workId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
-								<!--招聘标题-->
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<p style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</p>
-							</div>
-					</a></li>
-					<li data-icon="false" onclick="openWork(this)" workId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
-								<!--招聘标题-->
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<p style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</p>
-							</div>
-					</a></li>
-					<li data-icon="false" onclick="openWork(this)" workId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
-								<!--招聘标题-->
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<p style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</p>
-							</div>
-					</a></li>
-					<li data-icon="false" onclick="openWork(this)" workId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">招聘营业员(江宁)</p>
-								<!--招聘标题-->
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">学历不限&nbsp;|&nbsp;经验不限&nbsp;|&nbsp;年龄不限</p>
-								<!--要求-->
-								<p style="color: red; float: right">日薪:100-200</p>
-								<!--待遇-->
-							</div>
-							<div style="overflow: hidden;">
-								<p style="float: left">KFC-欧尚超市店</p>
-								<!--招聘用户名称-->
-								<p style="float: right; color: #f63">
-									<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star"></i><i class="fa fa-star"></i><i
-										class="fa fa-star-half-full"></i>
-								</p>
-							</div>
-					</a></li>
-				</ul>
-                <div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullUpFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;top:0;left:0" id="pullUpFreshText">上拉刷新</div></div>
-			</div>
-			<div id="reqWorkDiv">
-				<ul data-role="listview" id="reqworkList">
-					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
-							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
-					</a></li>
-					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
-							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
-					</a></li>
-					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
-							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
-					</a></li>
-					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
-							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
-					</a></li>
-					<li data-icon="false" onclick="openResume(this)" resumeId="1"><a
-						href="#" class="ui-btn ui-mini">
-							<div style="overflow: hidden;">
-								<p style="float: left; font-weight: bold;">纪云&nbsp;|&nbsp;男&nbsp;|&nbsp;25岁&nbsp;|&nbsp;促销员</p>
-								<p style="color: black; float: right">22:23 PM</p>
-							</div>
-							<p>学历：本科&nbsp;|&nbsp;工作经验：3年</p>
-							<p>期望日薪:100-200&nbsp;|&nbsp;期望工作地：江宁</p>
-					</a></li>
-				</ul>
-				<div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullUpFresh2"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;top:0;left:0" id="pullUpFreshText2">上拉刷新</div></div>
-			</div>
-		</div>
-		<!-- 显示返回到页面顶端浮动按钮-->
-		<div class="location">
-			<a href="#"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-carat-u ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
-		</div>
-	</div>
-</body>
 </html>

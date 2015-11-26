@@ -2,209 +2,244 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<script src="../js/jquery-1.11.3.js"></script>
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery.mobile-1.4.5.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
 </style>
 
 <script type="text/javascript">
-var workId = 0;
-var workType = 'reqPartTime';
-    $(document).ready(
-            function() {
-                $('#verifyImg').attr(
-                        'src',
-                        getContextPath()
-                                + '/verifyImage?width=70&height=21&length=4');
-              //初始化下拉框控件
-                $('select').each(function(index,item){
-                    fillOptions(item.id);
-                });
-                
-                workType = getQueryString('workType');
-                if (workType==null){//默认为兼职
-                    workType = 'reqPartTime';
-                }
-                workId = getQueryString('workId');
-                if (workId > 0) {
-                    $('#title').html('修改求职');
-                    var workInfo = {};
-                    if (workId > 0) {
-                        workInfo.workId = workId;
-                    }
-                    var cachedUserInfo = getLoginUserInfo();
-                    if (cachedUserInfo != null) {
-                        workInfo.userToken = cachedUserInfo.userToken;
-                        workInfo.readUserId = cachedUserInfo.userId;
-                        ajaxReq('workAction', {
-                            method : 'getWorkInfo',
-                            workInfo : json2Str(workInfo)
-                        }, function(data) {
-                            if (data.flag == 'success') {
-                                bindData(data);
-                            } else {
-                                alert(data.msg);
-                                return false;
-                            }
-                        });
-                    }
-                }else{
-                	//初始化简历列表
-                    initResumeSelect();
-                }
-                
-            });
-    function swipeRight() {
-        closeSubPage();
-    }
-    
-    //初始化简历列表下拉框
-    function initResumeSelect(resumeId){
-        var cachedUserInfo = getLoginUserInfo();
-        if (cachedUserInfo != null) {
-        	var resumeInfo = {};
-        	resumeInfo.userToken = cachedUserInfo.userToken;
-        	resumeInfo.userId = cachedUserInfo.userId;
-        	resumeInfo.page = '1';
-            ajaxReq('resumeAction', {
-                method : 'getResumeList',
-                resumeInfo : json2Str(resumeInfo)
-            }, function(data) {
-                	var optionhtml = '';
-                	for(var i=0;data.length>i;i++){
-                        var resumeobj = data[i];
-                        optionhtml += '<option value="' + resumeobj.resumeId + '"';
-                        if (resumeId!=null&&resumeId==resumeobj.resumeId){//默认选中
-                        	optionhtml += ' selected';
-                        }
-                        optionhtml += ' >';
-                        optionhtml += resumeobj.resumeName+'</option>';
-                    }
-                	var ctrl= $('#resumeId');
-                	ctrl.html(optionhtml);
-                	ctrl.selectmenu();
-                	ctrl.selectmenu('refresh', true);
-            });
-        	
-        }
-    }
-    //绑定数据到控件
-    function bindData(jsonData) {
-        for ( var o in jsonData) {
-            var value = jsonData[o];
-            var ctrl = $('#' + o);
-            if (ctrl.length > 0) {
-            	if (ctrl[0].tagName=='SELECT'){//jquery mobile 渲染了select,html完全变了
-            		if (o=='resumeId'){//简历列表单独加载
-            			initResumeSelect(value);
-            		}else{//普通下拉框值是从char_spec_value加载
-            			selectOptions(o,value); 
-            		}
-                    
-                }if (o=='selfreview'){
-                    ctrl.html(value);
-                }else{
-                    ctrl.val(value);
-                }
-            }
-        }
-    }
-    function publish() {
-        var workInfo = {};
-        var method = 'newWork';
-        if (workId > 0) {
-            workInfo.workId = workId;
-            method = 'modWork';
-        }
-        var cachedUserInfo = getLoginUserInfo();
-        if (cachedUserInfo != null) {
-            workInfo.userId = cachedUserInfo.userId;
-            workInfo.workName = $('#workName').val();
-            workInfo.content = $('#content').val();
-            workInfo.workType = workType;
-            workInfo.expDate = $('#expDate').val();
-            workInfo.effDate = $('#effDate').val();
-            workInfo.resumeId = $('#resumeId').val();
-            workInfo.verifyCode = $('#verifyCode').val();
+	var workId = 0;
+	var workType = 'reqPartTime';
+	var postCode = '';
+	$(document).on('pageinit', function() {
+		pageInit()
 
-            ajaxReq('workAction', {
-                method : method,
-                workInfo : json2Str(workInfo)
-            }, function(data) {
-                if (data.flag == 'success') {
-                    alert(data.msg);
-                    closeSubPage();
-                } else {
-                    alert(data.msg);
-                    return false;
-                }
-            });
-        }
-        return false;
-    }
-    
+	});
+
+	function pageInit() {
+		//加载验证码
+		loadVerifyImage('verifyImg');
+		//初始化下拉框控件
+		$('select').each(function(index, item) {
+			fillOptions(item.id);
+		});
+
+		workType = getQueryString('workType');
+		if (workType == null) {//默认为兼职
+			workType = 'reqPartTime';
+		}
+
+		postCode = getQueryString('postCode');
+		if (postCode == null) {
+			postCode = '';
+		}
+		workId = getQueryString('workId');
+		if (workId > 0) {
+			$('#title').html('修改求职');
+			var workInfo = {};
+			if (workId > 0) {
+				workInfo.workId = workId;
+			}
+			var cachedUserInfo = getLoginUserInfo();
+			if (cachedUserInfo != null) {
+				workInfo.userToken = cachedUserInfo.userToken;
+				workInfo.readUserId = cachedUserInfo.userId;
+				ajaxReq('workAction', {
+					method : 'getWorkInfo',
+					workInfo : json2Str(workInfo)
+				}, function(data) {
+					if (data.flag == 'success') {
+						bindData(data);
+					} else {
+						showTipDialog(data.msg);
+						return false;
+					}
+				});
+			}
+		} else {
+			//初始化简历列表
+			initResumeSelect();
+		}
+	}
+	function swipeRight() {
+		closeSubPage();
+	}
+
+	//初始化简历列表下拉框
+	function initResumeSelect(resumeId) {
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			var resumeInfo = {};
+			resumeInfo.userToken = cachedUserInfo.userToken;
+			resumeInfo.userId = cachedUserInfo.userId;
+			resumeInfo.page = '1';
+			ajaxReq('resumeAction', {
+				method : 'getResumeList',
+				resumeInfo : json2Str(resumeInfo)
+			}, function(data) {
+				if (data.length>0){
+					var optionhtml = '';
+					for ( var i = 0; data.length > i; i++) {
+						var resumeobj = data[i];
+						optionhtml += '<option value="' + resumeobj.resumeId + '"';
+						if (resumeId != null && resumeId == resumeobj.resumeId) {//默认选中
+							optionhtml += ' selected';
+						}
+						optionhtml += ' >';
+						optionhtml += resumeobj.resumeName + '</option>';
+					}
+					var ctrl = $('#resumeId');
+					ctrl.html(optionhtml);
+					ctrl.selectmenu();
+					ctrl.selectmenu('refresh', true);
+				}else{//还没有简历
+					showConfirmDialog(
+							'你还没有兼职简历,是否先去增加?',
+							toAddResume,toReturn);
+				}
+			});
+		}
+	}
+	
+	function toAddResume(){
+		changeSubPage('resume', 'myWorkPage');
+	}
+	
+	function toReturn(){
+		closeSubPage();
+	}
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var value = jsonData[o];
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				if (ctrl[0].tagName == 'SELECT') {//jquery mobile 渲染了select,html完全变了
+					if (o == 'resumeId') {//简历列表单独加载
+						initResumeSelect(value);
+					} else {//普通下拉框值是从char_spec_value加载
+						selectOptions(o, value);
+					}
+				}
+				if (o == 'selfreview') {
+					ctrl.html(value);
+				} else {
+					ctrl.val(value);
+				}
+			}
+		}
+	}
+	function publish() {
+		//form表单校验不通过
+		if (checkFormNullable('form') == false) {
+			return;
+		}
+		$('#pubBtn').attr('disabled',true);
+		var workInfo = {};
+		var method = 'newWork';
+		if (workId > 0) {
+			workInfo.workId = workId;
+			method = 'modWork';
+		}
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userId = cachedUserInfo.userId;
+			workInfo.workName = $('#workName').val();
+			workInfo.content = $('#content').val();
+			workInfo.workType = workType;
+			workInfo.expDate = $('#expDate').val();
+			workInfo.effDate = $('#effDate').val();
+			workInfo.resumeId = $('#resumeId').val();
+			workInfo.verifyCode = $('#verifyCode').val();
+			workInfo.cityName = localStorage.city;
+
+			ajaxReq('workAction', {
+				method : method,
+				workInfo : json2Str(workInfo)
+			}, function(data) {
+				if (data.flag == 'success') {
+					showConfirmDialog(data.msg+'是否继续发布?',initPage,closeSubPage);
+				} else {
+					showTipDialog(data.msg);
+					$('#pubBtn').removeAttr("disabled");
+					return false;
+				}
+			});
+		}
+		return false;
+	}
+	
+	//清空控件内容
+	function initPage(){
+		$('#pubBtn').removeAttr("disabled");
+		$('#workName').val('');
+		$('#content').val('');
+		$('#verifyCode').val('');
+		//刷新验证码
+        loadVerifyImage('verifyImg');
+	}
+
 </script>
 </head>
 <body>
-    <div id="workPage" data-role="page">
-        <div data-role="header" id="header">
+	<div id="myWorkPage" data-role="page">
+		<div data-role="header" id="header" data-position="fixed"
+			data-fullscreen="false" data-tap-toggle="false">
 
-            <a href="#" data-rel="back"
-                class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-                onclick="closeSubPage();return false;">Back</a>
-            <h1 id="title">发布求职</h1>
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1 id="title">发布求职</h1>
 
-        </div>
-        <div data-role="content" class="ui-mini">
-            <form method="post" action="" onsubmit="return publish()">
-                <div data-role="fieldcontain">
-                    <label for="workName">标题:</label> <input type="text"
-                        name="workName" id="workName" value="" required="required"
-                        placeholder="工作简介">
-                </div>
-                <div data-role="fieldcontain">
-                    <label for="content">工作内容:</label>
-                    <textarea cols="40" rows="8" name="content" id="content"
-                        data-mini="true" required="required" placeholder="工作详细内容">工作内容</textarea>
-                </div>
+		</div>
+		<div data-role="content" class="ui-mini">
+			<div id="form">
+				<div data-role="fieldcontain">
+					<label for="workName">标题:</label> <input type="text"
+						name="workName" id="workName" value="" required
+						placeholder="工作简介">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="content">工作内容:</label>
+					<textarea cols="40" rows="8" name="content" id="content"
+						data-mini="true" required placeholder="工作详细内容">工作内容</textarea>
+				</div>
 
 
-                <div data-role="fieldcontain">
-                    <label for="resumeId" class="select">求职简历:</label> <select
-                        name="resumeId" id="resumeId" data-native-menu="false">
-                        <option value="41" selected>酒店临时工简历</option>
-                        <option value="41">服务员简历</option>
-                        <option value="41">派单员</option>
-                    </select>
-                </div>
+				<div data-role="fieldcontain">
+					<label for="resumeId" class="select">求职简历:</label> <select required
+						name="resumeId" id="resumeId">
+					</select>
+				</div>
 
-                <div data-role="fieldcontain">
-                    <label for="effDate">生效时间:</label> <input type="date"
-                        name="effDate" id="effDate" value="" required="required">
-                </div>
-                <div data-role="fieldcontain">
-                    <label for="expDate">失效时间:</label> <input type="date"
-                        name="expDate" id="expDate" value="" required="required">
-                </div>
-                <div data-role="fieldcontain">
-                    <label for="verifyCode">验证码:</label>
-                    <div style="display: inline-flex; width: 100%">
-                        <div style="width: 70%; height: 100%;">
-                            <input type="text" name="verifyCode" id="verifyCode" value=""
-                                placeholder="验证码" required="required">
-                        </div>
-                        <a data-mini="true" href="#"
-                            style="width: 30%; height: 100%; margin-top: 8px;"><img
-                            src="" id="verifyImg"></img></a>
-                    </div>
-                </div>
-                <button type="submit" class="ui-btn" onclick="" id="pubBtn">发布</button>
-            </form>
-        </div>
-    </div>
+				<div data-role="fieldcontain">
+					<label for="effDate">生效时间:</label> <input type="date"
+						name="effDate" id="effDate" value="" required>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="expDate">失效时间:</label> <input type="date"
+						name="expDate" id="expDate" value="" required>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="verifyCode">验证码:</label>
+					<div style="display: inline-flex; width: 100%">
+						<div style="width: 70%; height: 100%;">
+							<input type="text" name="verifyCode" id="verifyCode" value=""
+								placeholder="验证码" required>
+						</div>
+						<a data-mini="true" href="#"
+							style="width: 30%; height: 100%; margin-top: 8px;"><img
+							src="" id="verifyImg"></img></a>
+					</div>
+				</div>
+				<a data-role="button" class="submmitBtn" data-icon="check" id="pubBtn" onclick="publish()"  >发布</a>
+			</div>
+
+		</div>
+	</div>
 </body>
 </html>

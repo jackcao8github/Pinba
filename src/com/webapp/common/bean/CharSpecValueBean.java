@@ -40,7 +40,12 @@ public class CharSpecValueBean extends AbstractBean{
 	public void setSelected(String userName) {
 		setAttrValue("SELECTED",userName);
 	}
-	
+	public String getEffCond() {
+		return DataTypeTrans.transToString(getAttrValue("EFF_COND"));
+	}
+	public void setEffCond(String userName) {
+		setAttrValue("EFF_COND",userName);
+	}
 	
 	public String getCreateDate() {
 		return DataTypeTrans.transToString(getAttrValue("CREATE_DATE"));

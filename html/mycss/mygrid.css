@@ -15,9 +15,14 @@
 }
 
 .hint {
+	width:60%;
 	color: #666;
 	font-size: 12px;
 	margin-right: 5px;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	text-align:right;
 }
 
 .firstblock,.secondblock,.thirdblock {
@@ -25,11 +30,10 @@
 }
 /* 头部登陆 */
 .login {
-	height: 180px;
-	widht: 100%;
+	width: 100%;
 	background-color:#3388cc;
-	background-repeat: no-repeat center;
 	text-align: center;
+	padding-bottom:10px;
 }
 
 .loginbg { /*position: absolute;*/
@@ -71,11 +75,13 @@
 
 /* 设置条目 */
 .item {
+	overflow:hidden;
 	height: 50px;
 	width: 100%;
 	line-height: 50px;
 	padding-left: 5px;
 	background-color: #fff;
+	border-bottom:1px solid #f0f0f0;
 }
 
 .item_ico {

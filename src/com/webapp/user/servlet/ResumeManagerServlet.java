@@ -45,12 +45,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 		
 		try {
 			if (method.equals("getResumeInfo")){//加载简历信息
-				String resumeInfo = hreq.getParameter("resumeInfo");
-				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
-				if (StringUtils.isEmpty(resumeInfo)) {
-					returnFailResult("参数resumeInfo不能为空", response);
-					return;
-				}
+				JSONObject resumeJson = super.getJsonFromReq(request,"resumeInfo");
 				long resumeId = resumeJson.getLong("resumeId");
 				long readUserId = resumeJson.containsKey("readUserId")==true?resumeJson.getLong("readUserId"):0L;
 				//String token = userJson.getString("token");
@@ -65,12 +60,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 				
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("newResume")){//新增简历信息
-				String resumeInfo = hreq.getParameter("resumeInfo");
-				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
-				if (StringUtils.isEmpty(resumeInfo)) {
-					returnFailResult("参数resumeInfo不能为空", response);
-					return;
-				}
+				JSONObject resumeJson = super.getJsonFromReq(request,"resumeInfo");
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
@@ -79,12 +69,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 				retJson.put("msg", "新增成功！");
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("modResume")){//修改简历信息
-				String resumeInfo = hreq.getParameter("resumeInfo");
-				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
-				if (StringUtils.isEmpty(resumeInfo)) {
-					returnFailResult("参数resumeInfo不能为空", response);
-					return;
-				}
+				JSONObject resumeJson = super.getJsonFromReq(request,"resumeInfo");
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
@@ -94,12 +79,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 				retJson.put("msg", "修改成功！");
 				returnSuccessResult(retJson, response);
 			}else if (method.equals("getResumeList")){//加载简历列表
-				String resumeInfo = hreq.getParameter("resumeInfo");
-				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
-				if (StringUtils.isEmpty(resumeInfo)) {
-					returnFailResult("参数resumeInfo不能为空", response);
-					return;
-				}
+				JSONObject resumeJson = super.getJsonFromReq(request,"resumeInfo");
 				long userId = resumeJson.getLong("userId");
 				int page = resumeJson.getInt("page");
 				//String token = userJson.getString("token");
@@ -109,15 +89,10 @@ public class ResumeManagerServlet extends AbstractServlet {
 				JSONArray resumeList = resumeDao.getResumeList(userId,page);
 				returnSuccessResult(resumeList, response);
 			}else if (method.equals("getResumeInWorkList")){//加载工作收到的简历列表
-				String resumeInfo = hreq.getParameter("resumeInfo");
-				JSONObject resumeJson = JSONObject.fromObject(resumeInfo);
-				if (StringUtils.isEmpty(resumeInfo)) {
-					returnFailResult("参数resumeInfo不能为空", response);
-					return;
-				}
+				JSONObject resumeJson = super.getJsonFromReq(request,"resumeInfo");
 				long workId = resumeJson.getLong("workId");
 				String resumeState = super.getStringFromJSON(resumeJson, "resumeState", false);
-				int page = resumeJson.getInt("page");
+				int page = (int)super.getLongFromJSON(resumeJson,"page",false);
 				//String token = userJson.getString("token");
 				//先判断token是否正确，如果不正确则提示重新登陆
 
@@ -125,13 +100,7 @@ public class ResumeManagerServlet extends AbstractServlet {
 				JSONArray resumeList = resumeDao.getResumeInWorkList(workId,resumeState,page);
 				returnSuccessResult(resumeList, response);
 			}else if (method.equals("sendResume")) {// 发送简历
-				String sendResumeInfo = hreq.getParameter("sendResumeInfo");
-
-				if (StringUtils.isEmpty(sendResumeInfo)) {
-					returnFailResult("参数focusInfo不能为空", response);
-					return;
-				}
-				JSONObject sendResumeJson = JSONObject.fromObject(sendResumeInfo);
+				JSONObject sendResumeJson = super.getJsonFromReq(request,"sendResumeInfo");
 				long workId = sendResumeJson.getLong("workId");
 				long resumeId = sendResumeJson.getLong("resumeId");
 				// String token = userJson.getString("token");

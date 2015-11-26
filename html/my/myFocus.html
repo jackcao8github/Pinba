@@ -2,108 +2,15 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script src="../myjs/mycommon.js"></script>
-
-<style>
-</style>
-
-<script type="text/javascript">
-$(document).ready(function() {
-	getWorkList();
-});
-function swipeRight() {
-	closeSubPage();
-}
-function openWorkDetail(obj) {
-	var workId = $(obj).attr('workId');
-	changeSubPage('workDetail', 'myPubPage', 'workId=' + workId);
-}
-function pageInit(){
-	getWorkList();
-}
-function swipeDown(){
-    getWorkList();
-}
-function delFocus(obj){
-	var workId = $(obj).attr('workId');
-	var cachedUserInfo = getLoginUserInfo();
-	if (cachedUserInfo != null) {
-		var focusInfo= {};
-		focusInfo.userId=cachedUserInfo.userId;
-		focusInfo.workId=workId;
-		ajaxReq(
-				'workAction',
-				{
-					method : 'delFocus',
-					focusInfo : json2Str(focusInfo)
-				},
-				function(data) {
-					if (data.flag != 'fail') {
-						//从列表删除当前行
-						
-					} else {
-						alert(data.msg);
-					}
-				});
-	}
-}
-function getWorkList() {
-	$('#workListUL').html('');
-	var workInfo = {};
-	var cachedUserInfo = getLoginUserInfo();
-	if (cachedUserInfo != null) {
-		workInfo.userId = cachedUserInfo.userId;
-		workInfo.userToken = cachedUserInfo.userToken;
-		workInfo.page = '1';
-		workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
-
-		$('#pullDownFreshText').html('加载中...');
-		ajaxReq(
-				'workAction',
-				{
-					method : 'getFocusWorkList',
-					workInfo : json2Str(workInfo)
-				},
-				function(data) {
-					if (data.flag != 'fail') {
-						var lihtmls = '';
-						var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
-						litemplate += '<a href="#" onclick="delFocus(this)" workId="+workId+">删除关注</a></li>';
-						for ( var i = 0; data.length > i; i++) {
-							var workObj = data[i];
-							var lihtml = litemplate.replace(/\+workId\+/g,
-									workObj.workId).replace('+workName+',
-									workObj.workName).replace('+workType+',
-											getDisplayEnumValue('workType',workObj.workType)).replace('+effDate+',
-									workObj.effDate).replace('+expDate+',
-									workObj.expDate).replace(
-									'+focusNumber+', workObj.focusNumber)
-									.replace('+lookNumber+',
-											workObj.lookNumber).replace(
-											'+resumeNumber+',
-											workObj.resumeNumber);
-							lihtmls += lihtml;
-						}
-						$('#workListUL').append(lihtmls);
-						$('#workListUL').listview("refresh");
-					} else {
-						alert(data.msg);
-					}
-					$('#pullDownFreshText').html('加载完成');
-                    $('#pullDownFresh').slideUp('slow');
-				});
-	}
-}
-</script>
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 </head>
-<body>
-	<div data-role="page" id="messagePage">
-		<div data-role="header" data-position="fixed" data-fullscreen="false">
+<body onscroll="loadNextPage()">
+	<div data-role="page" id="focusPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
@@ -120,27 +27,131 @@ function getWorkList() {
 					<li><a href="#messageList" id="messageTabLi">公司</a></li>
 				</ul>
 			</div> -->
-			<div id="workList">
-			<div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" id="pullDownFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;bottom:0;left:0" id="pullDownFreshText">下拉刷新</div></div>
+		<div id="workList">
+			<div class="swipe">
+				<div
+					style="width: 100%; height: 0px; background-color: #3388cc; position: relative; top: 0; left: 0"
+					class="pullDownFresh">
+					<div
+						
+						class="pullDownFreshText">下拉刷新</div>
+				</div>
+				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
 				<ul data-role="listview" id="workListUL" data-split-icon="delete">
-					<li data-icon="false"><a onclick="openWork(this)" workId="1"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
-
-					<li data-icon="false"><a onclick="openWork(this)" workId="12"
-						style="padding-top: 0px; padding-bottom: 0px;"> <img
-							src="http://image.zhangxinxu.com/image/study/s/s128/mm5.jpg">
-							<h2>臻洪</h2> <!-- 用人单位-->
-							<p>临时工</p> <!-- 兼职名称 -->
-							<p>2015-8-1</p> <!-- 兼职名称 -->
-					</a></li>
 				</ul>
 			</div>
+		</div>
 		<!-- </div> -->
 	</div>
 </body>
+
+
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../myjs/mycommon.js"></script>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		//绑定控件滑动事件
+		bindSwipeEvent();
+		getWorkList();
+	});
+	function swipeRight() {
+		closeSubPage();
+	}
+	function openWorkDetail(obj) {
+		var workId = $(obj).attr('workId');
+		changeSubPage('workDetail', 'focusPage', 'workId=' + workId);
+	}
+	function swipeDown() {
+		$('#workListUL').html('');
+		page = 1;
+		nextPageFlag = true;
+		getWorkList();
+	}
+	function delFocus(obj) {
+		var workId = $(obj).attr('workId');
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			var focusInfo = {};
+			focusInfo.userId = cachedUserInfo.userId;
+			focusInfo.workId = workId;
+			ajaxReq('workAction', {
+				method : 'delFocus',
+				focusInfo : json2Str(focusInfo)
+			}, function(data) {
+				if (data.flag != 'fail') {
+					//从列表删除当前行
+					//从列表删除
+					$(obj).parent('li').remove();
+				} else {
+					showTipDialog(data.msg);
+				}
+			});
+		}
+	}
+	function getWorkList() {
+		if (nextPageFlag==false){
+			return;
+		}
+		var workInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userId = cachedUserInfo.userId;
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.page = page;
+			workInfo.workType = 'partTime,fullTime';//兼职/全职招聘
+
+			ajaxReq(
+					'workAction',
+					{
+						method : 'getFocusWorkList',
+						workInfo : json2Str(workInfo)
+					},
+					function(data) {
+						if (data.length>0) {
+							if (data.length==20){
+								page++;
+							}else{
+								nextPageFlag = false;
+							}
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
+							litemplate += '<a href="#" onclick="delFocus(this)" workId="+workId+">删除关注</a></li>';
+							for ( var i = 0; data.length > i; i++) {
+								var workObj = data[i];
+								var lihtml = litemplate.replace(/\+workId\+/g,
+										workObj.workId).replace('+workName+',
+										workObj.workName).replace(
+										'+workType+',
+										getDisplayEnumValue('workType',
+												workObj.workType)).replace(
+										'+effDate+', workObj.effDate).replace(
+										'+expDate+', workObj.expDate).replace(
+										'+focusNumber+', workObj.focusNumber)
+										.replace('+lookNumber+',
+												workObj.lookNumber).replace(
+												'+resumeNumber+',
+												workObj.resumeNumber);
+								lihtmls += lihtml;
+							}
+							$('#workListUL').append(lihtmls);
+							$('#workListUL').listview("refresh");
+						} else {
+							$('.pullNoData').show();
+						}
+					});
+		}
+	}
+	var page = 1;
+	var nextPageFlag = true;
+	function loadNextPage(){
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+			getWorkList();
+		}
+	}
+</script>
 </html>

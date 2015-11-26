@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div id="payPage" data-role="page">
+		<div data-role="header" id="header" data-position="fixed"
+			data-fullscreen="false" data-tap-toggle="false">
+
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>发工资</h1>
+
+		</div>
+		<div id="payListDiv">
+
+			<ul id="needPayList" data-role="listview">
+			</ul>
+			<a data-role="button" data-mini="true" data-icon="check" class="submmitBtn"
+				onclick="submmit()">确认支付</a>
+		</div>
+		<iframe style="width: 100%; height: 0px; display: none;"
+		id="alipayPage"> </iframe>
+	</div>
+	
+</body>
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+
+<script type="text/javascript">
+	var workId = 0;
+	$(document).ready(function() {
+		pageInit()
+	});
+	function pageInit() {
+		workId = getQueryString('workId');
+		$('#needPayList').html('');
+		
+		var workInfo = {};
+		workInfo.workId = workId;
+		
+		ajaxReq('workAction', {
+			method : 'getPayList',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.length>0) {
+				var litemplate = '<li>';
+				litemplate += '<h3>员工名称:-realName-</h3><p>员工手机:-cellphone-</p>';
+				litemplate += '<p>支付宝帐号:-alipayNo-&nbsp;|&nbsp;支付宝户名:-alipayName-</p>';
+				litemplate += '<p>工作时长:-time-&nbsp;|&nbsp;薪资:-money-</p>';
+				litemplate += '</li>';
+				for (var i = 0; data.length > i; i++) {
+					var obj = data[i];
+					var replaceArr = {};
+					replaceArr['-realName-'] = obj.realName;
+					replaceArr['-cellphone-'] = obj.cellphone;
+					replaceArr['-alipayNo-'] = obj.alipayNo;
+					replaceArr['-alipayName-'] = obj.alipayName;
+					replaceArr['-time-'] = obj.timeLength;
+					replaceArr['-money-'] = obj.money;
+
+					var lihtml = replaceAll(litemplate, replaceArr);
+					$('#needPayList').append(lihtml);
+				}
+				$('#needPayList').listview("refresh");
+			}else{
+				showTipDialog('没有需要支付的工资!');
+			}
+		});
+		
+	}
+
+	function swipeRight() {
+		closeSubPage();
+	}
+	function submmit() {
+
+		/*json格式的信息，{accountNo:xx@163.com,accountName:xx公司,receiverList:
+		 *            [{targetAcctNo:x1,targetAcctName:x11,money:100},{targetAcctNo:
+		 *            x2,targetAcctName:x12,money:100}]}
+		 *            accountNo为出钱支付宝帐号，accountName为出钱支付帐号所有人名称
+		 *            ，receiverList为收款人列表，targetAcctNo为收款人支付宝帐号
+		 *            ,targetAcctName为收款人名称,money为收款金额
+		 */
+		 
+		var batchTransMsg = {};
+		/* batchTransMsg.accountNo = 'huangjihui41@163.com';
+		batchTransMsg.accountName = '南京尊尚网络科技有限公司'; */
+		
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo.alipayNo==null){
+			showTipDialog('你还未绑定支付宝帐号!请到我的钱包里绑定支付宝帐号!');
+			return;
+		}
+		batchTransMsg.accountNo = cachedUserInfo.alipayNo;
+		batchTransMsg.accountName = cachedUserInfo.alipayName;
+
+		var receiverList = [];
+		for (var i = 0; parent.needPayArray.length > i; i++) {
+			var obj = parent.needPayArray[i];
+			var receiver = {};
+			receiver.targetAcctNo = obj.alipayNo;
+			receiver.targetAcctName = obj.alipayName;
+			receiver.money = obj.money;
+			receiver.userWorkId = obj.userWorkId;
+			receiver.seq = i+1;
+			receiverList.push(receiver);
+		}
+
+		batchTransMsg.receiverList = receiverList;
+		var msg = json2Str(batchTransMsg);
+
+		var payInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			payInfo.userId = cachedUserInfo.userId;
+		}
+		payInfo.payMsg = msg;
+
+		//调用支付宝api生成提交地址，并在iframe中打开
+		ajaxReq('alipayPayAction', {
+			method : 'payToStaff',
+			payInfo : json2Str(payInfo)
+		}, function(data) {
+			if (data.flag != 'fail') {
+				$('#payListDiv').hide();
+				$('#alipayPage').show();
+				$('#alipayPage').attr('src', data.alipayUrl);//alipay url
+				$('#alipayPage').css('height',(window.innerHeight-parseInt($('#header').css('height')))+'px');
+			} else {
+				showTipDialog(data.msg);
+			}
+		});
+	}
+</script>
+</html>

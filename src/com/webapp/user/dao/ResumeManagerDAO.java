@@ -18,7 +18,10 @@ import com.webapp.user.bean.UserProdCharBean;
 import com.webapp.user.bean.UserResumeBean;
 import com.webapp.user.bean.UserResumeCharBean;
 import com.webapp.user.bean.UserResumeLookHisBean;
+import com.webapp.user.bean.UserBean;
 import com.webapp.user.bean.UserProdBean;
+import com.webapp.work.bean.BatchPayHisBean;
+import com.webapp.work.dao.WorkManagerDAO;
 
 public class ResumeManagerDAO extends AbstractDAO {
 	private static CharSpecDAO charSpecDao = null;
@@ -212,6 +215,12 @@ public class ResumeManagerDAO extends AbstractDAO {
 		List<AbstractBean> result = getBeans(UserProdBean.class, params);
 
 		if (result!=null&&result.size()>0){
+			//取工作信息
+			WorkManagerDAO workDao = new WorkManagerDAO();
+			workDao.setDataSource(getDataSource());
+			
+			JSONObject workJson = workDao.getWorkInfo(workId);
+			
 			JSONArray resumeList = new JSONArray();
 			for (AbstractBean abBean : result){
 				UserProdBean hisBean = (UserProdBean)abBean;
@@ -225,7 +234,21 @@ public class ResumeManagerDAO extends AbstractDAO {
 				if (charBean==null)continue;
 				JSONObject retJson = this.getResumeInfo(Long.valueOf(charBean.getValue()));
 				if (retJson!=null){
+					//返回工作信息
+					retJson.put("workInfo",workJson);
+					//返回用户与工作的关系id
+					retJson.put("userWorkId", hisBean.getUserProdId());
 					
+					//返回用户绑定的支付宝帐号和户名
+					params.clear();
+					params.put("USER_ID", "" + hisBean.getUserId());
+					UserBean userBean = (UserBean) super.getBean(UserBean.class, params);
+					if (userBean!=null){
+						retJson.put("alipayNo", userBean.getAlipayNo());
+						retJson.put("alipayName", userBean.getAlipayName());
+					}
+					
+					//返回工作过程信息，例如签到签退信息及工资发放信息
 					params.clear();
 					params.put("USER_PROD_ID", "" + hisBean.getUserProdId());
 					
@@ -237,6 +260,19 @@ public class ResumeManagerDAO extends AbstractDAO {
 						}
 					}
 					
+					//返回支付批次和状态
+					params.clear();
+					params.put("USER_WORK_ID", "" + hisBean.getUserProdId());
+					params.put("ORDERBY", "CREATE_DATE DESC");
+					params.put("FIRSTROW", "");
+
+					
+					BatchPayHisBean payHisBean = (BatchPayHisBean) super.getBean(BatchPayHisBean.class, params);
+					if (payHisBean!=null){
+						retJson.put("batchNo", payHisBean.getBatchNo());
+						retJson.put("state", payHisBean.getState());
+						retJson.put("remark", payHisBean.getRemark());
+					}
 					resumeList.add(retJson);
 				}
 			}

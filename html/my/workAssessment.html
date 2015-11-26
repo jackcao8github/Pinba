@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="workProgressPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>工作评价</h1>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+					<label for="haunjing">工作环境:</label> 
+					<div style="color: #f63" id="huangjing">
+						<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i>
+					</div>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="fenwei">工作氛围:</label> 
+					<div style="color: #f63" id="fenwei">
+						<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i>
+					</div>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="shudu">结算速度:</label> 
+					<div style="color: #f63" id="shudu">
+						<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i
+							class="fa fa-star-o"></i>
+					</div>
+				</div>
+				
+				
+				<div data-role="fieldcontain">
+					<label for="remark">备注:</label>
+					<textarea cols="40" rows="8" name="remark" id="remark"
+						required placeholder="" data-mini="true"></textarea>
+				</div>
+				
+				<a data-role="button" class="submmitBtn" data-icon="check" onclick="submmit()">提交</a>
+		</div>
+	</div>
+</body>
+
+
+<script src="../myjs/mycommon.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('i').click(function(){
+			//将当前star及左边的star的样式改为选中，将右边star改为未选中
+			$(this).removeClass('fa-star-o').addClass('fa-star');
+			$(this).prevAll().removeClass('fa-star-o').addClass('fa-star');
+			$(this).nextAll().removeClass('fa-star').addClass('fa-star-o');
+		});
+	});
+	
+	function submmit(){
+		var huangjing = $('#huangjing .fa-star').length;
+		var fenwei = $('#fenwei .fa-star').length;
+		var shudu = $('#shudu .fa-star').length;
+		var remark = $('#remark').val();
+		
+		var assessmentInfo = {};
+		var workId = getQueryString('workId');
+		var userInfo = getLoginUserInfo();
+		
+		assessmentInfo.workId = workId;
+		assessmentInfo.userId = userInfo.userId;//当前用户id
+		
+		var assessmentList = [];
+		assessmentList.push({assessType:'huangjing',assessValue:huangjing});
+		assessmentList.push({assessType:'fenwei',assessValue:fenwei});
+		assessmentList.push({assessType:'shudu',assessValue:shudu});
+		assessmentInfo.assessmentList = assessmentList;
+		
+		ajaxReq('workAction', {
+			method : 'saveAssessment',
+			assessmentInfo : json2Str(assessmentInfo)
+		}, function(data) {
+			showTipDialog(data.msg);
+			if (data.flag != 'fail') {
+				closeSubPage();
+			}
+		});
+	}
+</script>
+</html>

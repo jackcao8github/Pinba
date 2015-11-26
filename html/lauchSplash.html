@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html manifest="pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1,user-scalable=no" />
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="myjs/mycommon.js"></script>
+
+<script type="text/javascript">
+var clock = '';
+var times = 5;//验证码发送按钮点击后的倒数时间,单位秒
+	$(document).on("pagecreate","#splashPage",function() {
+		clock = setInterval('clockDecre()', 1000);
+		$('#toIndexPageBtn').click(function(){
+			clearInterval(clock);
+			closeSubPage();
+		});
+	});
+
+	
+	function clockDecre() {
+		$('#fiveSecond').html(times);
+		times = times - 1;
+		if (times == 0) {
+			clearInterval(clock);
+			closeSubPage();
+		}
+	}
+</script>
+
+</head>
+<style type="text/css">
+
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+}
+</style>
+<body>
+	<div data-role="page" id="splashPage">
+		<div id="welcomeDiv" style="text-align:center;position:fixed;bottom:0;width:100%;">
+			<div style="">
+				<img src="/PinBa/image/quzhangyu.png"></img>
+			</div>
+			<div style="">
+				<div id="fiveSecond">5</div> 
+				<a class="ui-btn"
+						style="width:50%;color: blue; border: 1px solid blue; padding: 10px;margin:auto; border-radius: 10px;"
+						id="toIndexPageBtn">开始使用</a>
+				<div>趣章鱼助你快乐工作</div>
+				<div>©2012-2015 尊尚网络,Inc.All rights reserved.</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

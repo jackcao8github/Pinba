@@ -3,116 +3,165 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../css/font-awesome.css" />
-<link rel="stylesheet" href="../mycss/mygrid.css" />
+	content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=no" />
 
+<link rel="stylesheet" href="../mycss/mycommon.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
+</head>
+<body>
+	<div data-role="page" id="searchPage">
+		<div class="header">
+			<div class="headercontent">
+				<!-- 返回按钮 -->
+				<div class="headerclose">
+					<a onclick="closeSubPage();return false;"><i
+						class="fa fa-close fa-lg"></i></a>
+				</div>
+
+				<div
+					style="float: right; width: 15%; text-align: center; line-height: 45px;">
+					<a href="#" style="color:white" id="searchBtn"><i
+						class="fa fa-search fa-lg"></i></a>
+				</div>
+				<div style="float: right; width: 70%; padding-top: 5px;">
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false" id="selectType">
+								工作 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#" onclick="selectType('work','工作')">工作</a></li>
+								<li><a href="#" onclick="selectType('company','公司')">公司</a></li>
+							</ul>
+						</div>
+						<!-- /btn-group -->
+						<input type="hidden" id="searchType" value="work"> <input
+							type="text" class="form-control" aria-label="..." name="keyword"
+							id="keyword">
+					</div>
+					<!-- /input-group -->
+				</div>
+			</div>
+		</div>
+
+		<div class="pagecontent">
+			<!-- 显示查询历史 -->
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">
+					搜索历史<a onclick="clearHis()" class="pull-right">清除历史</a>
+				</div>
+				<div id="searchHisList" class="list-group"></div>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+		
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				//页面初始化
-				pageInit();
-				
-				//为查询按钮绑定事件处理
-				$('#searchBtn').click(
-						function() {
-							var searchKey = $('#keyword').val();
-							if (searchKey == '') {
-								/* 关键字不能为空 */
-								showTipDialog('关键字不能为空 !');
-							} else {
-								//将key写到历史
-								var hisArra = {};
-								if (localStorage.searchKeyHis!=null){
-									hisArra = str2Json(localStorage.searchKeyHis);
-								}
-								if (hisArra[searchKey]!=null){
-									var num = parseInt(hisArra[searchKey]);
-									hisArra[searchKey] = num+1;
-								}else{
-									hisArra[searchKey] = 1;
-								}
-								//按key使用次数进行倒排序，使用次数最多的放前面
-								
-								localStorage.searchKeyHis=json2Str(hisArra);
-								/* 进入查询结果展示页面 */
-								changeSubPage('searchResult', 'searchPage',
-										'searchKey=' + searchKey);
-							}
-						});
-			});
-	
-	function pageInit(){
+function selectType(type,typeName)
+{
+	$('#searchType').val(type);
+	$('#selectType').html(typeName+' <span class="caret"></span>');
+}
+	$(document)
+			.ready(
+					function() {
+						//页面初始化
+						pageInit();
+
+						//为查询按钮绑定事件处理
+						$('#searchBtn')
+								.click(
+										function() {
+											var searchKey = $('#keyword').val();
+											if (searchKey == '') {
+												/* 关键字不能为空 */
+												showTipDialog('关键字不能为空 !');
+											} else {
+												//将key写到历史
+												var hisArra = {};
+												if (localStorage.searchKeyHis != null) {
+													hisArra = str2Json(localStorage.searchKeyHis);
+												}
+												if (hisArra[searchKey] != null) {
+													var num = parseInt(hisArra[searchKey]);
+													hisArra[searchKey] = num + 1;
+												} else {
+													hisArra[searchKey] = 1;
+												}
+												//按key使用次数进行倒排序，使用次数最多的放前面
+
+												localStorage.searchKeyHis = json2Str(hisArra);
+												var searchType = $(
+														'#searchType').val();
+												if (searchType == 'work') {
+													/* 进入查询结果展示页面 */
+													changeSubPage(
+															'searchResult',
+															'searchPage',
+															'searchKey='
+																	+ searchKey);
+												} else {
+													changeSubPage(
+															'searchCompanyResult',
+															'searchPage',
+															'searchKey='
+																	+ searchKey);
+												}
+
+											}
+										});
+					});
+
+	function pageInit() {
 		//显示查询历史关键字
-        $('#searchHisList').html('');
-        if (localStorage.searchKeyHis!=null){
-            var hisArra = str2Json(localStorage.searchKeyHis);
-            
-            var ulHtml = '<li data-role="list-divider">搜索历史</li>';
-            var liTemplate = '<li onclick="searchByOldKey(this)">-key-</li>';
-            for (var item in hisArra){
-                var liHtml = liTemplate.replace('-key-',item);
-                ulHtml += liHtml;
-            }
-            $('#searchHisList').html(ulHtml);
-            $('#searchHisList').listview("refresh");
-        }
+		$('#searchHisList').html('');
+		if (localStorage.searchKeyHis != null) {
+			var hisArra = str2Json(localStorage.searchKeyHis);
+
+			var ulHtml = '';
+			var liTemplate = '<a class="list-group-item" onclick="searchByOldKey(this)">-key-</a>';
+			for ( var item in hisArra) {
+				var liHtml = liTemplate.replace('-key-', item);
+				ulHtml += liHtml;
+			}
+			$('#searchHisList').html(ulHtml);
+			//$('#searchHisList').listview("refresh");
+		}
 	}
-	
+
 	//按照历史关键字查询
 	function searchByOldKey(obj) {
 		/* 历史查询关键字 */
 		var searchKey = $(obj).html();
-		/* 进入查询结果展示页面 */
-		changeSubPage('searchResult', 'searchPage', 'searchKey=' + searchKey);
+		var searchType = $('#searchType').val();
+		if (searchType == 'work') {
+			/* 进入查询结果展示页面 */
+			changeSubPage('searchResult', 'searchPage', 'searchKey='
+					+ searchKey);
+		} else {
+			changeSubPage('searchCompanyResult', 'searchPage', 'searchKey='
+					+ searchKey);
+		}
+
 	}
 	function swipeRight() {
 		closeSubPage();
 	}
+
+	function clearHis() {
+		localStorage.removeItem('searchKeyHis');
+		pageInit();
+	}
 </script>
-
-</head>
-<style type="text/css">
-</style>
-<body>
-	<div data-role="page" id="searchPage" data-dom-cache="true">
-		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false">
-			<!-- 返回按钮 -->
-			<div
-				style="float: left; width: 25%; overflow: hidden; text-align: center;">
-				<a href="#" data-rel="back"
-					class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-					onclick="closeSubPage();return false;">Back</a>
-			</div>
-
-			<div
-				style="float: right; width: 15%; text-align: center; line-height: 49px;">
-				<a href="#" data-role="none" id="searchBtn"><i
-					class="fa fa-search fa-lg"></i></a>
-			</div>
-			<div style="float: right; width: 60%;">
-				<input type="search" name="keyword" id="keyword" placeholder="关键字.."
-					style="width: 100%;" id="searchBox" />
-			</div>
-		</div>
-
-		<!-- 显示查询历史 -->
-		<div class="firstblock">
-			<ul data-role="listview" id="searchHisList">
-			    <li data-role="list-divider">搜索历史</li>
-				<li >hilton</li>
-				<li >银城皇冠</li>
-				<li >万达</li>
-				<li >江宁</li>
-			</ul>
-		</div>
-	</div>
-</body>
 </html>

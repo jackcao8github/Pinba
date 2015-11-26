@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+</head>
+<body>
+	<div data-role="page" id="myPubPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false">
+			<!-- 返回按钮 -->
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+
+			<h1>不良信息举报</h1>
+		</div>
+		<!-- 举报内容-->
+		<div data-role="content" class="ui-mini">
+			<div id="form">
+				<div data-role="fieldcontain">
+					<label for="content">举报内容:</label> <textarea rows="8"
+						name="content" id="content" value="" required
+						placeholder="举报内容"></textarea>
+				</div>
+			</div>
+			<a data-role="button" class="submmitBtn"
+				onclick="sendToAdmin()" data-icon="check" id="pubBtn">提交</a>
+		</div>
+		
+	</div>
+</body>
+
+<script src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/websocket.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	initWebSocket();
+});
+function sendToAdmin(){
+	//form表单校验不通过
+	if (checkFormNullable('form') == false) {
+		return;
+	}
+	var workId = getQueryString('workId');
+	var userInfo = {};
+	userInfo.userId = 0;//用户未登陆
+	userInfo.friendId = 1;//1为系统管理员id
+	userInfo.msgContent = '编号为:'+workId+'的工作存在以下问题:'+$('#content').val();
+	userInfo.msgType="sendMsg";
+	var cachedUserInfo = str2Json(localStorage.userInfo);
+	if (cachedUserInfo != null) {
+		userInfo.userId = cachedUserInfo.userId;
+	}
+	doSend(userInfo);
+	closeSubPage();
+}
+</script>
+</html>

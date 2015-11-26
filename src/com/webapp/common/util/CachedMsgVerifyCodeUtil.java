@@ -14,7 +14,7 @@ public class CachedMsgVerifyCodeUtil {
 			String key = (String) keyArr[i];
 			JSONObject data = (JSONObject) memBuf.getJSONObject(key);
 			long time = data.getLong("time");
-			if (nowTime-time>5000){
+			if (nowTime-time>1000*300){
 				memBuf.remove(key);
 			}
 		}
@@ -24,7 +24,7 @@ public class CachedMsgVerifyCodeUtil {
 	public static void addCachedData(String number, String verifyCode) {
 		// 清除时间到期的数据
 		long nowTime = System.currentTimeMillis();
-		if (nowTime - 5000 >= lastCleanTime) {
+		if (nowTime - 1000*300 >= lastCleanTime) {
 			lastCleanTime = nowTime;
 			cleanMemBuf(nowTime);
 		}
@@ -38,7 +38,7 @@ public class CachedMsgVerifyCodeUtil {
 	public static String getCachedData(String number) {
 		// 清除时间到期的数据
 		long nowTime = System.currentTimeMillis();
-		if (nowTime - 5000 >= lastCleanTime) {
+		if (nowTime - 1000*300 >= lastCleanTime) {
 			lastCleanTime = nowTime;
 			cleanMemBuf(nowTime);
 		}

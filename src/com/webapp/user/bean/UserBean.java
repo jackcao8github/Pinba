@@ -67,6 +67,18 @@ public class UserBean extends AbstractBean{
 		setAttrValue("USER_LEVEL",UserCredit);
 	}
 	
+	public String getAlipayNo() {
+		return DataTypeTrans.transToString(getAttrValue("ALIPAY_NO"));
+	}
+	public void setAlipayNo(String UserCredit) {
+		setAttrValue("ALIPAY_NAME",UserCredit);
+	}
+	public String getAlipayName() {
+		return DataTypeTrans.transToString(getAttrValue("ALIPAY_NAME"));
+	}
+	public void setAlipayName(String UserCredit) {
+		setAttrValue("ALIPAY_NO",UserCredit);
+	}
 	public String getToken() {
 		return DataTypeTrans.transToString(getAttrValue("TOKEN"));
 	}

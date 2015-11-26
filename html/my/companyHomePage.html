@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+
+<style>
+/* 显示全部岗位按钮的样式 */
+.showHideBtn{
+height:40px;line-height:40px;text-align:center;border-top:1px solid #f0f0f0;
+}
+#statDiv .statItem{
+float:left;height:40px;line-height：40px;width:33%;text-align:center;border-right:1px solid gray;margin:15px 0;color:orangered;font-weight:bold;
+}
+#statDiv .lastStatItem{
+border-right:0;
+}
+.statItem p{
+margin:0;
+}
+</style>
+
+
+</head>
+<body onscroll="scrollend()">
+	<div data-role="page" id="userHomePage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
+			<a href="#" data-rel="back" class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>公司主页</h1>
+		</div>
+		<div class="login">
+			<img src="/PinBa/image?imageId=1" id="image" alt=""
+				class="personal_logo">
+			<div class="userinfo">
+				<div class="title" style="font-size:inherit" id="userName"></div>
+				<!-- 认证状态: --><div class="subtitle" id="userAuthState"></div>
+				<!-- 等级: --><div class="subtitle" id="userLevel"></div>
+				<!-- 保证金: --><div class="subtitle" id="deposit"></div>
+				<!-- 星级: --><div class="subtitle" id="userCredit"></div>
+			</div>
+		</div>
+		<!-- 第一块显示公司信息 -->
+		<div class="firstblock">
+			<ul data-role="listview" class="ui-mini" id="userInfoDiv" style="display:none;margin:0;">
+				<li data-icon="false">公司编号 <span class="ui-li-count" id="userId"></span></li>
+				<li data-icon="false">手机<span class="ui-li-count" id="cellphone"></span></li>
+				<li data-icon="false" >邮箱 <span class="ui-li-count" id="email"></span></li>
+				<li data-icon="false" >联系人 <span class="ui-li-count" id="contacter"></span></li>
+				<li data-icon="false" >QQ <span class="ui-li-count" id="qq"></span></li>
+				<li data-icon="false" >公司地址<span class="ui-li-count" id="address"></span></li>
+				<li data-icon="false" >公司规模<span class="ui-li-count" id="size"></span></li>
+				<li data-icon="false" >公司行业<span class="ui-li-count" id="industry"></span></li>
+				<li data-icon="false" >公司介绍<p id="selfReview" style="white-space: pre-wrap;"></p></li>
+			</ul>
+			<div class="showHideBtn" state="hide" onclick="showHidePost('pubPartTimeWork',this)">显示公司信息</div>
+		</div>
+		
+		<div class="h1"></div>
+		<div class="firstblock">
+			<!-- <div class="item">
+				<i class="fa fa-gear fa-lg" style="color: #f63"></i> <span>信息统计</span>
+			</div> -->
+
+			<div style="overflow: hidden;" id="statDiv">
+				<div class="statItem">
+					累计员工数
+					<p id="staffNum">0
+					</p>
+				</div>
+				<div class="statItem">
+					线上发放工资
+					<p id="onlinePayAmount">0
+					</p>
+				</div>
+				<div class="statItem lastStatItem">
+					线下发放工资
+					<p id="offlinePayAmount">0
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="h1"></div>
+		<div class="firstblock">
+			<div class="item">
+				<i class="fa fa-tasks fa-lg" style="color: #f63"></i> <span>工作列表</span>
+
+			</div>
+
+			<ul data-role="listview" id="workListUL">
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed" data-fullscreen="false"
+			data-tap-toggle="false" id="footer">
+			<div data-role="controlgroup" data-type="horizontal">
+				<!-- <a href="#" id="addFocusBtn" data-role="button" data-icon="heart">关注</a> -->
+				<a href="#" id="addFriendBtn" data-role="button" data-icon="plus">加好友</a>
+				<!-- <a href="#" id="dialTel" data-role="button" data-icon="phone" onclick="toDial()">电话联系</a> -->
+				<!-- <a href="#" id="sendMsg" data-role="button" data-icon="mail" onclick="toSendMsg()">私信</a> -->
+			</div>
+		</div>
+		</div>
+	</body>
+	
+	
+<script src="../myjs/mycommon.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		initData();
+		//加关注
+		/* $('#addFocusBtn').click(function(){
+			var cachedUserInfo = getLoginUserInfo();
+			if (cachedUserInfo != null) {
+				var focusInfo = {};
+				focusInfo.userToken = cachedUserInfo.userToken;
+				focusInfo.userId = cachedUserInfo.userId;
+				focusInfo.friendId = userId;
+
+				ajaxReq(
+						'userAction',
+						{
+							method : 'addFocus',
+							focusInfo : json2Str(focusInfo)
+						},
+						function(data) {
+							showTipDialog(data.msg);
+							if (data.flag == 'success') {
+								$('#addFocusBtn')
+										.html(
+												data.focusNumber);
+							}
+						});
+			}
+		}); */
+		//加为好友
+		$('#addFriendBtn').click(function(){
+			var cachedUserInfo = str2Json(localStorage.userInfo);
+			if (cachedUserInfo != null) {
+				var userInfo = {};
+				userInfo.userId = cachedUserInfo.userId;
+				userInfo.friendId = userId;
+				
+				ajaxReq('userAction', {
+					method : 'addFriend',
+					userInfo : json2Str(userInfo)
+				}, function(data) {
+					if (data.flag == 'success') {
+						showTipDialog(data.msg);
+					} else {
+						showTipDialog(data.msg);
+					}
+				});
+			}
+		});
+	});
+	var userId = 0;
+	
+	function initData() {
+		userId = getQueryString('companyUserId');
+		var userInfo = {};
+		userInfo.userId = userId;
+		ajaxReq('userAction', {
+			method : 'getUserInfo',
+			userInfo : json2Str(userInfo)
+		}, function(data) {
+			if (data.flag == 'success') {//登陆成功后返回主页面
+				bindData(data, 'userHomePage');
+			} else {
+				showTipDialog(data.msg);
+				return false;
+			}
+		});
+		
+		getWorkList();
+	}
+	//绑定数据到控件
+	function bindData(jsonData, divId) {
+		for ( var o in jsonData) {
+			var realValue = jsonData[o];
+			if (o == 'headPicId') {//头像图片id需要特殊处理
+				$('#image').attr('src', createImageUrl(realValue));
+				continue;
+			}
+
+			var ctrl = $('#' + divId + ' #' + o);
+			if (ctrl.length > 0) {
+				var displayValue = getDisplayEnumValue(o, realValue);
+				if (o == 'userAuthState') {
+					ctrl.html('认证状态:' + displayValue);
+					continue;
+				} else if (o == 'userLevel') {
+					ctrl.html('等级:' + displayValue);
+					continue;
+				}else if (o == 'userCredit') {
+					ctrl.html('星级:' + displayValue);
+					continue;
+				} else if (o == 'deposit') {
+					ctrl.html('保证金:' + displayValue);
+					continue;
+				} else {
+					//处理下拉框采集的数据
+					ctrl.html(displayValue);
+				}
+			}
+		}
+	}
+	function showHidePost(pDivId, obj) {
+		var showState = $(obj).attr('state');
+		if (showState == 'hide') {
+			$('#userInfoDiv').show();
+			$(obj).html('隐藏公司信息');
+			$(obj).attr('state', 'show');
+		} else {
+			$('#userInfoDiv').hide();
+			$(obj).html('显示公司信息');
+			$(obj).attr('state', 'hide');
+		}
+	}
+
+	function openWork(obj) {
+		var workid = $(obj).attr('workId');
+		changeSubPage('workDetail', 'userHomePage', 'workId=' + workid);
+	}
+	
+	function scrollend(){
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop>0&&scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+			getWorkList();
+		}
+	}
+	
+	var page = 1;
+	var nextPage = true;
+	function getWorkList() {
+		if (nextPage==false){
+			return;
+		}
+		var workInfo = {};
+		workInfo.userId = userId;
+		workInfo.page = page;
+		workInfo.workType = 'partTime';//兼职招聘
+		workInfo.effExpDateFlag = 'true';//只加载生失效时间内的
+		workInfo.orderBy='newest';
+		ajaxReq(
+				'workAction',
+				{
+					method : 'getWorkList',
+					workInfo : json2Str(workInfo)
+				},
+				function(data) {
+					if (data.length > 0) {
+						if (data.length!=20){//没有下一页了
+							nextPage = false;
+						}else{
+							page ++;
+						}
+						
+						fillWorkList('workListUL', data);
+					} else {
+						nextPage = false;
+					}
+				});
+	}
+</script>
+</html>

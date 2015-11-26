@@ -2,124 +2,22 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,user-scalable=no" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="../mycss/photoswipe.css" />
-<link rel="stylesheet" href="../css/font-awesome.css" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<script src="../js/jquery-1.7.1.min.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<!-- 支持jquery.event.drag-1.5.min.js中的图片手动滑动 -->
-<script type="text/javascript" src="../js/jquery.event.drag-1.5.min.js"></script>
-<script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
-<script type="text/javascript" src="../myjs/mycommon.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script type="text/javascript">
-	function swipeRight() {
-		closeSubPage();
-	}
-	var workId = 0;
-	var userId = 0;
-	$(document).ready(function() {
-		
-		//为关注钮增加响应事件
-        $('#addFocusBtn').bind('click', function() {
-            var cachedUserInfo = getLoginUserInfo();
-            if (cachedUserInfo != null) {
-                var focusInfo = {};
-                focusInfo.userToken = cachedUserInfo.userToken;
-                focusInfo.userId = cachedUserInfo.userId;
-                focusInfo.workId = workId;
-
-                ajaxReq('userAction', {
-                    method : 'addFocus',
-                    focusInfo : json2Str(focusInfo)
-                }, function(data) {
-                    if (data.flag == 'success') {
-                        $('#addFocusBtn').html(data.focusNumber);
-                    } else {
-                        alert(data.msg);
-                    }
-                });
-            }
-        });
-
-		workId = getQueryString('workId');
-		if (workId > 0) {
-			$('#title').html('修改求职');
-			pageInit();
-		}
-	});
-	function pageInit() {
-		var workInfo = {};
-		if (workId > 0) {
-			workInfo.workId = workId;
-		}
-		var cachedUserInfo = str2Json(localStorage.userInfo);
-		if (cachedUserInfo != null) {
-			workInfo.userToken = cachedUserInfo.userToken;
-			workInfo.readUserId = cachedUserInfo.userId;
-			userId = cachedUserInfo.userId;
-		}else{
-			userId = 0;
-		}
-			ajaxReq('workAction', {
-				method : 'getWorkInfo',
-				workInfo : json2Str(workInfo)
-			}, function(data) {
-				if (data.flag == 'success') {
-					bindData(data);
-					$('#addFocusBtn').html(data.focusNumber);
-					
-					//如果不是工作所有者，需要删除修改按钮
-                    var workOwnerId = data.userId;
-                    if (userId == workOwnerId) {
-                        $('#footer').remove();
-                    } else {
-                        $('#modBtn').remove();
-                    }
-				} else {
-					alert(data.msg);
-					return false;
-				}
-			});
-		
-	}
-	//绑定数据到控件
-	function bindData(jsonData) {
-		for ( var o in jsonData) {
-			var value = jsonData[o];
-			var ctrl = $('#' + o);
-			if (ctrl.length > 0) {
-				ctrl.html(value);
-			} else if (o == 'resumeId') {
-				var resumeHtml = getContextPath()
-						+ '/my/resumeDetail.html?mode=intergration&resumeId='
-						+ value;
-				$('#resumeFrame').attr('src', resumeHtml);
-			}
-		}
-	}
-
-	function resizeIFrameHeight(obj) {
-		var iframe = document.getElementById(obj.id);
-		iframe.height = iframe.contentDocument.body.scrollHeight + 100;
-	}
-	function modReqWork() {
-		changeSubPage('reqwork', 'workdetailPage', 'workId=' + workId);
-	}
-</script>
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 
 
 <style type="text/css">
-
 </style>
 
 </head>
 <body>
 	<div data-role="page" id="workdetailPage">
-		<!-- <div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> -->
 		<!-- 返回按钮 -->
 		<div data-role="header" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false">
@@ -127,7 +25,7 @@
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
 				onclick="closeSubPage();return false;">Back</a>
 			<h1>求职详情</h1>
-			<a onclick="modReqWork()" id="modBtn"
+			<a onclick="modReqWork()" id="modBtn" style="display: none"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改求职</a>
 		</div>
 		<ul data-role="listview" data-mini="true">
@@ -160,25 +58,128 @@
 				</div>
 			</li>
 
-			<li><a style="color: #a3a3a3;font-size:0.75em;background-color:white;font-weight:normal;">该用户其它求职<span class="ui-li-count">2</span></a></li>
+			<li><a
+				style="color: #a3a3a3; font-size: 0.75em; background-color: white; font-weight: normal;">该用户其它求职<span
+					class="ui-li-count">2</span></a></li>
 		</ul>
-		<iframe src="" id="resumeFrame"
-                    style="width: 100%; padding: 0" scrolling="no"
-                    onload="resizeIFrameHeight(this)"></iframe>
+		<iframe src="" id="resumeFrame" style="width: 100%; padding: 0"
+			scrolling="no" onload="resizeIFrameHeight(this)"></iframe>
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">
 				<!-- 关注 -->
 				<a href="#" id="addFocusBtn" data-role="button" data-icon="plus">10
-                </a> 
+				</a>
 
 				<!-- 联系求职者 -->
-				<a href="#" data-role="button" data-icon="mail"
-					style="margin-left: 5px; margin-right: 5px; background-color: #3388cc; color: white;">联系求职者</a>
-
-				</ul>
+				<a href="#" id="contactBtn" data-role="button" data-icon="mail">联系求职者</a>
 			</div>
 		</div>
 	</div>
 </body>
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript">
+	function swipeRight() {
+		closeSubPage();
+	}
+	var workId = 0;
+	var userId = 0;
+	$(document).ready(function() {
+
+		//为关注钮增加响应事件
+		$('#addFocusBtn').bind('touchstart', function() {
+			var cachedUserInfo = getLoginUserInfo();
+			if (cachedUserInfo != null) {
+				var focusInfo = {};
+				focusInfo.userToken = cachedUserInfo.userToken;
+				focusInfo.userId = cachedUserInfo.userId;
+				focusInfo.workId = workId;
+
+				ajaxReq('userAction', {
+					method : 'addFocus',
+					focusInfo : json2Str(focusInfo)
+				}, function(data) {
+					if (data.flag == 'success') {
+						$('#addFocusBtn').html(data.focusNumber);
+					} else {
+						showTipDialog(data.msg);
+					}
+				});
+			}
+		});
+
+		$('#contactBtn').bind('touchstart', function() {
+			showTipDialog('建设中');
+		});
+
+		pageInit();
+
+	});
+	function pageInit() {
+		workId = getQueryString('workId');
+		if (workId > 0) {
+			$('#title').html('修改求职');
+		}
+		var workInfo = {};
+		if (workId > 0) {
+			workInfo.workId = workId;
+		}
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.readUserId = cachedUserInfo.userId;
+			userId = cachedUserInfo.userId;
+		} else {
+			userId = 0;
+		}
+		ajaxReq('workAction', {
+			method : 'getWorkInfo',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
+				bindData(data);
+				$('#addFocusBtn').html(data.focusNumber);
+
+				//如果不是工作所有者，需要删除修改按钮
+				var workOwnerId = data.userId;
+				if (userId == workOwnerId) {
+					$('#footer').remove();
+					$('#modBtn').show();
+				} else {
+					$('#modBtn').remove();
+				}
+			} else {
+				showTipDialog(data.msg);
+				return false;
+			}
+		});
+
+	}
+	//绑定数据到控件
+	function bindData(jsonData) {
+		for ( var o in jsonData) {
+			var value = jsonData[o];
+			var ctrl = $('#' + o);
+			if (ctrl.length > 0) {
+				ctrl.html(value);
+			} else if (o == 'resumeId') {
+				var resumeHtml = getContextPath()
+						+ '/my/resumeDetail.html?mode=intergration&resumeId='
+						+ value;
+				$('#resumeFrame').attr('src', resumeHtml);
+			}
+		}
+	}
+
+	function resizeIFrameHeight(obj) {
+		var iframe = document.getElementById(obj.id);
+		iframe.height = iframe.contentDocument.body.scrollHeight + 100;
+	}
+	function modReqWork() {
+		changeSubPage('reqwork', 'workdetailPage', 'workId=' + workId);
+	}
+</script>
 </html>

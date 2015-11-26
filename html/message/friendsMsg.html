@@ -2,237 +2,183 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
-<script src="../js/jquery-1.11.3.js"></script>
-<script src="../js/jquery.mobile-1.4.5.js"></script>
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../mycss/mytalkpanel.css" />
-<link rel="stylesheet" href="../mycss/scrolltotop.css" />
-<script type="text/javascript" src="../myjs/mycommon.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<style>
-</style>
-<script>
-function swipeRight(){
-	closeSubPage();
-}
-	$(document).ready(function() {
-		$('.location').click(function() {
-			$('html,body').animate({
-				scrollTop : '0px'
-			}, 800);
-		});
 
-		//滚动到底部
-		$('html,body').animate({
-			scrollTop : $('#msgFooter').offset().top
-		}, 800);
-
-		$("#backBtn").bind("click", function() {
-			window.history.go(-1);
-			return false;
-		});
-	});
-</script>
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
 </head>
 <body>
-	<div data-role="page" id="pagetwo">
+	<div data-role="page" id="msgPage">
 		<div data-role="header" data-position="fixed" data-fullscreen="false" style="min-height:40px;">
 			<!-- 返回按钮 -->
 			<a href="#" data-rel="back"
 				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l" onclick="closeSubPage();return false;">Back</a>
 
-			<h1 id="friendName"><a href="#">Hilton</a></h1>
+			<h1 id="friendName"></h1>
 		</div>
-		<div data-role="content">
-			<!-- Left -->
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-
-
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="sender">
-				<div>
-					<img src="image/empty_page_nothing.png">
-				</div>
-				<div>
-					<div class="left_triangle"></div>
-					<span> hello, man! </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
-			<div class="receiver">
-				<div>
-					<img src="image/firstcover02.png">
-				</div>
-				<div>
-					<div class="right_triangle"></div>
-					<span> hello world </span> <span class="talk_time">2014-09-15
-						15:06</span>
-				</div>
-			</div>
+		<div data-role="content" id="messageList">
 			
 		</div>
-		<div class="location">				
-				<a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-u ui-btn-icon-notext ui-btn-b ui-btn-inline">Delete</a>
-		</div>
-		<div data-role="footer" data-position="fixed" data-fullscreen="false"
+		<div data-role="footer" data-position="fixed" data-fullscreen="false"  class="ui-bar"
+			data-tap-toggle="false"
 			id="msgFooter">
-			<div style="float: left">
-				<a class="ui-btn ui-icon-camera ui-btn-icon-notext" href="#">Icon
-					only</a>
-			</div>
-			<div style="float: left">
-				<a class="ui-btn ui-icon-grid ui-btn-icon-notext" href="#">Icon
-					only</a>
-			</div>
-			<div style="float: left">
-				<input name="text-19" id="text-19" type="text" value=""
-					placeholder="聊天内容" data-clear-btn="true">
-			</div>
-			<div style="float: left">
-				<a class="ui-btn ui-icon-comment ui-btn-icon-notext" href="#">Icon
-					only</a>
-			</div>
+				<textarea name="msgContent" id="msgContent" value="" style="float:left;width:70%;"
+					placeholder="聊天内容" data-clear-btn="true"></textarea>
+				<a data-role="button" class="ui-btn-icon-notext" data-icon="mail" href="#" onclick="send()">发送</a>
 		</div>
+		
+		<div class="location">
+		<i class="fa fa-chevron-up fa-lg"></i>
+	</div>
 	</div>
 
 </body>
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/websocket.js"></script>
+<script>
+	var friendId,friendName,friendHeadImageId,msgType;
+	$(document).ready(function() {
+		initWebSocket();
+		friendId = getQueryString('friendId');
+		friendName = getQueryString('friendName');
+		msgType = getQueryString('msgType');
+		friendHeadImageId = getQueryString('friendHeadImageId');
+		$('#friendName').html(friendName);
+		
+		loadFriendMsgList();
+		
+		$('.location').click(function() {
+			$('html,body').animate({
+				scrollTop : '0px'
+			}, 800);
+		});
+		
+		if (friendId==0){
+			$('#msgFooter').remove();
+		}
+	});
+	
+	function loadFriendMsgList(){
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			var userInfo = {};
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.friendId = friendId;
+			userInfo.msgType = msgType;
+			
+			ajaxReq('userAction', {
+				method : 'getFriendMsgList',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.length>0) {
+					fillFriendMsgList(data);
+				} else {
+					$('#friendList .pullNoData').show();
+				}
+			});
+		}
+	}
+	
+	
+	var friendMsgTemplate = '<div class="sender"><div> \
+		<img src="-friendHeadPic-"></div><div> \
+		<div class="left_triangle"></div> \
+		<span>-msgContent-</span> <span class="talk_time">-msgTime-</span></div></div>';
+		
+		
+		var myMsgTemplate = '<div class="receiver"><div> \
+			<img src="-myHeadPic-"></div><div> \
+			<div class="right_triangle"></div> \
+			<span>-msgContent-</span> <span class="talk_time">-msgTime-</span></div></div>';	
+	
+	function fillFriendMsgList(arr){
+		$('#messageList').html('');//清除已有
+
+		var ulHtml = '';
+		
+		for ( var i = 0; arr.length > i; i++) {
+			if (arr[i].direction=='toMe'){
+				var repValueArr = {};
+				repValueArr['-friendHeadPic-'] = createImageUrl(friendHeadImageId);
+				repValueArr['-msgContent-'] = arr[i].msgContent;
+				repValueArr['-msgTime-'] = arr[i].createDate;
+
+				var liHtml = replaceAll(friendMsgTemplate, repValueArr);
+				ulHtml += liHtml;
+			}else{
+				var repValueArr = {};
+				repValueArr['-myHeadPic-'] = createImageUrl(1);
+				repValueArr['-msgContent-'] = arr[i].msgContent;
+				repValueArr['-msgTime-'] = arr[i].createDate;
+
+				var liHtml = replaceAll(myMsgTemplate, repValueArr);
+				ulHtml += liHtml;
+			}
+			
+		}
+
+		$('#messageList').append(ulHtml);
+		//滚动到底部
+		$('html,body').animate({
+			scrollTop : $(document).height()
+		}, 800);
+	}
+	
+	function send(){
+		var msgContent= $('#msgContent').val();
+		if (msgContent==''){
+			showTipDialog('消息内容不能为空!');
+			return;
+		}
+		
+		var msgTrans = transferString(msgContent);
+		
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			var userInfo = {};
+			userInfo.userId = cachedUserInfo.userId;
+			userInfo.friendId = friendId;
+			userInfo.msgContent = msgTrans;
+			userInfo.msgType="sendMsg";
+			doSend(userInfo);
+			$('#msgContent').val('');
+			
+			var repValueArr = {};
+			repValueArr['-myHeadPic-'] = createImageUrl(1);
+			repValueArr['-msgContent-'] = msgTrans;
+			repValueArr['-msgTime-'] = '刚刚';
+
+			var liHtml = replaceAll(myMsgTemplate, repValueArr);
+			$('#messageList').append(liHtml);
+			
+			//滚动到底部
+			$('html,body').animate({
+				scrollTop : $('#msgFooter').offset().top
+			}, 800);
+		}
+	}
+	
+	//新消息到达
+	function showNewMsg(msgContent){
+		var repValueArr = {};
+		repValueArr['-friendHeadPic-'] = createImageUrl(friendHeadImageId);
+		repValueArr['-msgContent-'] = msgContent;
+		repValueArr['-msgTime-'] = '刚刚';
+
+		var liHtml = replaceAll(friendMsgTemplate, repValueArr);
+		
+		$('#messageList').append(liHtml);
+		
+		//滚动到底部
+		$('html,body').animate({
+			scrollTop : $('#msgFooter').offset().top
+		}, 800);
+	}
+</script>
 </html>

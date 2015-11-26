@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html manifest="../pinba.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="../mycss/mygrid.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="authPage">
+		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false">
+			<a href="#" data-rel="back"
+				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
+				onclick="closeSubPage();return false;">Back</a>
+			<h1>上传认证信息</h1>
+            <a onclick="redirectPage()" id="okBtn" style="display:none;">完成</a>
+		</div>
+		<div id="imageDiv">
+			<!-- <div class="login" id="div34">
+				/PinBa/image?imageId=34
+				<img src="/PinBa/image?imageId=34" id="image34"
+					style="background-size: contain; height: 180px;">
+			</div> -->
+		</div>
+		<input type="file" id="imgFile" style="display: none;"
+			accept="image/*" /> <a data-role="button" class="submmitBtn"
+			onclick="uploadAuthFile()" data-mini="true" data-icon="plus">上传认证文件</a>
+	</div>
+</body>
+
+
+<script src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script src="../myjs/mobileFix.mini.js"></script>
+<script src="../myjs/exif.js"></script>
+<script src="../myjs/lrz.js"></script>
+
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {
+						var redirectPage = getQueryString('redirectPage');
+				        if (redirectPage != null) {
+				        	$('#okBtn').show();
+				        }
+						pageInit();
+						//图片选择控件的响应方法
+						document.getElementById('imgFile').onchange = function(
+								evt) {
+							// 如果浏览器不支持FileReader，则不处理  
+							/* if (!window.FileReader)
+								return; */
+							var files = evt.target.files;
+							for ( var i = 0, f; f = files[i]; i++) {
+								if (!f.type.match('image.*')) {
+									showTipDialog('必须是图片文件!');
+									return false;
+								}
+								// 做一下诸如文件大小校验的动作
+								if (f.size > 1024 * 1024 * 5) {
+									showTipDialog('图片大小不能超过 5MB!');
+									return false;
+								}
+								
+								//图片压缩
+				                lrz(f, {
+				                    width:1200,
+				                    before: function() {
+				                        console.log('压缩开始');
+				                    },
+				                    fail: function(err) {
+				                        console.error(err);
+				                    },
+				                    always: function() {
+				                        console.log('压缩结束');
+				                    },
+				                    done: function (results) {
+				                          // 你需要的数据都在这里，可以以字符串的形式传送base64给服务端转存为图片。
+				                          console.log(results);
+				                       // 显示图片到img 元素  
+				                        var ctrl = createPicCtrl();
+                                        ctrl.find('img').attr('src',results.base64);
+                                        
+				                        //将图片上传到服务器
+				                        //将图片上传到服务器
+                                        var userInfo = {};
+                                        var cachedUserInfo = getLoginUserInfo();
+                                        if (cachedUserInfo != null) {
+                                            userInfo.userId = cachedUserInfo.userId;
+                                            userInfo.userToken = cachedUserInfo.userToken;
+                                            userInfo.authPicData = encodeURIComponent(results.base64);
+
+                                            ajaxReq('userAction', {
+                                                method : 'saveAuthPic',
+                                                userInfo : json2Str(userInfo)
+                                            }, function(data) {
+                                                if (data.flag=='fail')
+                                                    showTipDialog(data.msg);
+                                            });
+                                        }
+				                    }
+				                });
+								/* console.log(f);
+								var reader = new FileReader();
+								reader.onload = (function(theFile) {
+									return function(e) {
+										// 显示图片到img 元素  
+										
+										var ctrl = createPicCtrl();
+										//document.getElementById(ctrl.id).src = e.target.result;
+										ctrl.find('img').attr('src',e.target.result);
+										
+										//将图片上传到服务器
+										var userInfo = {};
+										var cachedUserInfo = getLoginUserInfo();
+										if (cachedUserInfo != null) {
+											userInfo.userId = cachedUserInfo.userId;
+											userInfo.userToken = cachedUserInfo.userToken;
+											userInfo.authPicData = encodeURIComponent(e.target.result);
+
+											ajaxReq('userAction', {
+												method : 'saveAuthPic',
+												userInfo : json2Str(userInfo)
+											}, function(data) {
+												if (data.flag=='fail')
+												    showTipDialog(data.msg);
+											});
+										}
+									}
+								})(f);
+
+								reader.readAsDataURL(f); */
+							}
+						}
+					});
+	//先加载上传过的认证图片
+	var userId = 0;
+	var picNo = 0;
+	function pageInit() {
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			var userInfo = {};
+			userId = cachedUserInfo.userId;
+			userInfo.userId = cachedUserInfo.userId;
+			ajaxReq('userAction', {
+				method : 'getAuthPic',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.flag != 'fail') {//返回认证图片列表
+					showAuthPic(data);
+				} else {
+					showTipDialog(data.msg);
+					return false;
+				}
+			});
+		}
+	}
+	
+	function showAuthPic(data){
+		for (var i=0;data.length>i;i++){
+			var imageId = data[i];
+			
+			createPicCtrl(imageId);
+		}
+	}
+	
+	function createPicCtrl(imageId){
+		var template = '<div class="login" id="div-imageId-"><img src="-src-" id="image-imageId-"\
+            style="background-size: contain; height: 180px;"></div>';
+		var params={};
+		params['-imageId-']=picNo;
+		if (imageId>0){
+			params['-src-']=createImageUrl(imageId);
+		}else{
+			params['-src-']='#';
+		}
+		
+		var imageHtml = replaceAll(template,params);
+        var ctrl = $(imageHtml).appendTo('#imageDiv');
+        
+        picNo ++;
+        return ctrl;
+	}
+
+	function swipeRight() {
+		closeSubPage();
+	}
+
+	function uploadAuthFile() {
+		$('#imgFile').click();
+	}
+	
+	//关闭当前页面并打开另一个页面
+	function redirectPage(){
+		var redirectPage = getQueryString('redirectPage');
+        if (redirectPage != null) {
+            closeSubPage();
+        	parent.changeSubPage('bindAlipayNo');
+        }
+	}
+</script>
+</html>

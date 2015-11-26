@@ -2,93 +2,14 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<link rel="stylesheet" href="../css/font-awesome.css" />
-<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
-<script type="text/javascript" src="../js/jquery.mobile-1.4.5.js"></script>
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 
-<script type="text/javascript" src="../myjs/mycommon.js"></script>
-<script type="text/javascript" src="../myjs/myswipe.js"></script>
-<script type="text/javascript">
-	
-	function swipeLeft(){
-		//打开当前页面左边页面
-		parent.switchIframeByClick('home');
-	}
-	
-	function swipeRight(){
-		//打开当前页面右边页面
-		parent.switchIframeByClick('message');
-	}
-	$(document).bind("pagecreate", pageInit);
-	
-	function pageInit(){
-		var cachedUserInfo = str2Json(localStorage.userInfo);
-        if (cachedUserInfo != null) {
-            var userInfo = {};
-            userInfo.userId = cachedUserInfo.userId;
-            ajaxReq('userAction', {
-                method : 'getUserInfo',
-                userInfo : json2Str(userInfo)
-            }, function(data) {
-                if (data.flag == 'success') {//登陆成功后返回主页面
-                	$('#userName').html(''+data.userName);
-                    $('#authSate').html('认证状态:'+data.userAuthState);
-                    $('#balanceValue').html('余额:'+data.balance);
-                    $('#pointsValue').html('积分:'+data.points);
-                    $('#level').html('级别:' + data.userLevel);
-        			$('#image').attr('src',createImageUrl(data.headPicId));
-                } else {
-                    alert(data.msg);
-                    return false;
-                }
-            });
-        }else{
-        	$('#image').attr('src',createImageUrl(1));//默认头像id
-        	$('#userName').html('未登陆');
-            $('#authSate').html('认证状态:未知');
-            $('#balanceValue').html('余额:未知');
-            $('#pointsValue').html('积分:未知');
-            $('#level').html('级别:未知' );
-        }
-	}
-	
-
-	function viewUserInfo() {
-		//如果未登陆过，则进入登陆页面
-		//userId为用户ID
-		var userInfo = getLoginUserInfo();
-		if (userInfo != null) {
-			//进入用户信息页面
-			if (userInfo.userType=='private'){//个人用户
-				changeSubPage('privateUserInfo', 'wodePage');
-			}else{//企业用户
-				changeSubPage('companyUserInfo', 'wodePage');
-			}
-		}
-	}
-
-	function changePage(obj) {
-		var userInfo = getLoginUserInfo();
-        if (userInfo == null) {//未登陆过，则显示登陆页面
-        	return;
-        }
-		var id = obj.id;
-		changeSubPage(id, 'wodePage');
-	}
-
-	function clearCache() {
-		//清理缓存下来的html,css,js
-		if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-			window.applicationCache.update();
-			alert('sucess');
-		}
-	}
-</script>
-
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mobile-1.4.5.min.js"></script>
 <style>
 </style>
 </head>
@@ -99,23 +20,35 @@
 				<img id="image" src="" alt="" class="personal_logo"
 					onclick="viewUserInfo()">
 				<div class="userinfo">
-					<div class="title" id="userName">用户A</div>
+					<div class="title" style="font-size:inherit" id="userName">用户A</div>
 					<div class="subtitle" id="authSate">未认证</div>
-					<div class="subtitle" id="balanceValue">余额</div>
+					<div class="subtitle" id="prepayValue">余额</div>
 					<div class="subtitle" id="pointsValue">积分</div>
 					<div class="subtitle" id="level">等级</div>
 				</div>
-
 			</div>
 
-			<!-- 第一块 -->
 			<div class="firstblock">
-
+				<div class="item" id="myHomePage" onclick="toMyHomePage()">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的主页</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i>
+				</div>
+				<div class="h1"></div>
+				<div class="item" id="feelingList" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的心情</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+						class="fr hint" id="feeling"></span>
+				</div>
+			</div>
+			<div class="h10"></div>
+			<div class="secondblock">
 				<div class="h1"></div>
 				<div class="item" id="myWork" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的工作</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-					<span
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
 						class="fr hint">简历/求职记录/工作记录</span>
 				</div>
 				<!-- <div class="h1"></div>
@@ -124,11 +57,30 @@
 					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
 				</div> -->
 
+
+
+				<div class="h1"></div>
+				<div class="item" id="myPublish" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的招聘</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+						class="fr hint">招聘管理/员工操作</span>
+				</div>
+
 				<div class="h1"></div>
 				<div class="item" id="myMoneyBag" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的钱包</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
 						class="fr hint">余额/保证金/积分</span>
+				</div>
+
+				<div class="h1"></div>
+				<div class="item" id="batchPayWithAlipay" onclick="changePage(this)" style="display:none;">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>批量支付工资</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+						class="fr hint">批量支付工资到员工支付宝</span>
 				</div>
 			</div>
 
@@ -136,16 +88,20 @@
 			<!-- 第二块 -->
 			<div class="h10"></div>
 			<div class="secondblock">
-				<div class="item" id="myPublish" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的招聘</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
-						class="fr hint">招聘管理/员工操作</span>
+				<div class="item" id="uploadAuthFile"
+					onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>实名认证</span>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+						class="fr hint">认证资料上传</span>
 				</div>
 
 				<div class="h1"></div>
 				<div class="item" id="myFocus" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的关注</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i><span
+						class="fr hint">关注的工作</span>
 				</div>
 				<!-- <div class="h1"></div>
 				<div class="item" id="mySub" onclick="changePage(this)">
@@ -170,12 +126,15 @@
 			<div class="thirdblock">
 				<div class="item" id="myLookHis" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>最近浏览</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i><span
+						class="fr hint">查看过的工作</span>
 				</div>
 				<div class="h1"></div>
 				<div class="item" id="serviceCenter" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>服务中心</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
+					<i class="fa fa-chevron-right fa-lg fa-fw fr"
+						style="color: #f63; line-height: 50px; margin-right: 5px;"></i>
 				</div>
 				<!-- <div class="h1"></div>
 				<div class="item" id="tobeBusiness" onclick="changePage(this)">
@@ -212,4 +171,104 @@
 	</div>
 
 </body>
+
+
+
+<script type="text/javascript" src="../myjs/mycommon.js"></script>
+<script type="text/javascript" src="../myjs/myswipe.js"></script>
+<script type="text/javascript">
+	/* function swipeLeft() {
+		//打开当前页面左边页面
+		parent.switchIframeByClick('home');
+	}
+
+	function swipeRight() {
+		//打开当前页面右边页面
+		parent.switchIframeByClick('message');
+	} */
+	$(document).bind("pagecreate", pageInit);
+
+	function pageInit() {
+		var cachedUserInfo = str2Json(localStorage.userInfo);
+		if (cachedUserInfo != null) {
+			var userInfo = {};
+			userInfo.userId = cachedUserInfo.userId;
+			ajaxReq('userAction', {
+				method : 'getUserInfo',
+				userInfo : json2Str(userInfo)
+			}, function(data) {
+				if (data.flag == 'success') {//登陆成功后返回主页面
+					$('#userName').html('' + data.userName);
+					$('#authSate').html('实名认证:' + data.userAuthState);
+					$('#prepayValue').html('余额:' + data.prepay);
+					$('#pointsValue').html('积分:' + data.points);
+					$('#level').html('级别:' + data.userLevel);
+					$('#image').attr('src', createImageUrl(data.headPicId));
+					$('#feeling').html( data.feelingText);
+				} else {
+					showTipDialog(data.msg);
+					return false;
+				}
+			});
+			//如果是系统用户,显示批量支付入口
+			if (cachedUserInfo.userId==1){
+				$('#batchPayWithAlipay').show();
+			}
+		} else {
+			$('#image').attr('src', createImageUrl(1));//默认头像id
+			$('#userName').html('点击头像登陆');
+			$('#authSate').html('认证状态:未知');
+			$('#prepayValue').html('余额:未知');
+			$('#pointsValue').html('积分:未知');
+			$('#level').html('级别:未知');
+		}
+	}
+
+	function viewUserInfo() {
+		//如果未登陆过，则进入登陆页面
+		//userId为用户ID
+		var userInfo = getLoginUserInfo();
+		if (userInfo != null) {
+			//进入用户信息页面
+			if (userInfo.userType == 'private') {//个人用户
+				changeSubPage('privateUserInfo', 'wodePage');
+			} else {//企业用户
+				changeSubPage('companyUserInfo', 'wodePage');
+			}
+		}
+	}
+
+	function changePage(obj) {
+		var userInfo = getLoginUserInfo();
+		if (userInfo == null) {//未登陆过，则显示登陆页面
+			return;
+		}
+		var id = obj.id;
+		changeSubPage(id, 'wodePage');
+	}
+
+	function clearCache() {
+		//清理缓存下来的html,css,js
+		if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+			window.applicationCache.update();
+			showTipDialog('sucess');
+		}
+	}
+	
+	//进入自己的主页
+	function toMyHomePage(){
+		//如果未登陆过，则进入登陆页面
+		//userId为用户ID
+		var userInfo = getLoginUserInfo();
+		if (userInfo != null) {
+			//进入用户信息页面
+			if (userInfo.userType == 'private') {//个人用户
+				changeSubPage('privateHomePage', 'wodePage','privateUserId='+userInfo.userId);
+			} else {//企业用户
+				changeSubPage('companyHomePage', 'wodePage','companyUserId='+userInfo.userId);
+			}
+		}
+	}
+	
+</script>
 </html>

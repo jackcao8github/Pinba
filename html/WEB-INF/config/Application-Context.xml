@@ -26,15 +26,21 @@
 			<value>10</value>
 		</property>
 		<property name="maxActive">
-			<value>10</value>
+			<value>100</value>
 		</property>
 		<property name="maxIdle">
 			<value>10</value>
 		</property>
 		<property name="minIdle">
-			<value>10</value>
+			<value>1</value>
 		</property>
-		<property name="testOnReturn" value="false" />
+		<property name="testOnReturn" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery" value="select 1 from dual" />
+		
+		<property name="timeBetweenEvictionRunsMillis" value="20000"/>
+        <property name="minEvictableIdleTimeMillis" value="-1"/>
 	</bean>
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -136,6 +142,26 @@
         </property>
     </bean>
     <bean id="charDAO" class="com.webapp.common.dao.CharSpecDAO">
+        <property name="dataSource">
+            <ref local="dataSource" />
+        </property>
+    </bean>
+    
+    <bean id="albumDAOProxy"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <ref local="albumDAO" />
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="albumDAO" class="com.webapp.common.dao.AlbumManagerDAO">
         <property name="dataSource">
             <ref local="dataSource" />
         </property>

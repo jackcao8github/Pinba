@@ -62,7 +62,7 @@ public class CharSpecDAO extends AbstractDAO {
 							if (charSpecValueBean.getSelected()!=null&&charSpecValueBean.getSelected().length()>0){
 								value.put("selected",charSpecValueBean.getSelected());
 							}
-							
+							value.put("effCond", charSpecValueBean.getEffCond());
 							values.put(charSpecValueBean.getRealValue(),value);
 						}
 					}
