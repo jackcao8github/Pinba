@@ -15,8 +15,8 @@ function fillOptions(ctrlId,effCond) {
 	}
 	var ctrl = $("#" + ctrlId);
 	ctrl.html(optionhtml);
-	ctrl.selectmenu();
-	ctrl.selectmenu('refresh', true);
+	/*ctrl.selectmenu();
+	ctrl.selectmenu('refresh', true);*/
 }
 
 Array.prototype.contains = function(item){
@@ -44,8 +44,8 @@ function selectOptions(ctrlId,realValues,effCond) {
 	}
 	var ctrl = $("#" + ctrlId);
 	ctrl.html(optionhtml);
-	ctrl.selectmenu();
-	ctrl.selectmenu('refresh', true);
+	/*ctrl.selectmenu();
+	ctrl.selectmenu('refresh', true);*/
 }
 function getDisplayEnumValue(charCode,realValue){
 	if (realValue==null)

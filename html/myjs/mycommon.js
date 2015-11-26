@@ -1,5 +1,7 @@
 document.write('<script type="text/javascript" src="'+getContextPath()+'/js/json2.js"></script>');// 引入json库
 document.write('<script type="text/javascript" src="'+getContextPath()+'/myjs/charspecvalue.js"></script>');// 引入json库
+document.write('<link rel="stylesheet" href="'+getContextPath()+'/mycss/mycommon.css" />');// 引入json库
+
 // 生成一个随机数
 function GetRandomNum(min, max) {
 	var r = Math.random() * (max - min);
