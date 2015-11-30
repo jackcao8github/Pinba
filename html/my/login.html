@@ -3,85 +3,85 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
-
-<script src="../js/jquery-1.11.3.min.js"></script>
-<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
 
 </head>
 <body>
 	<div data-role="page" id="loginPage">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"
+					onclick="closeSubPage();return false;"><i
+					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">登陆趣章鱼</a>
+			</div>
+		</nav>
 
-		<div data-role="header" data-position="fixed" data-fullscreen="false" data-tap-toggle="false"> 
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-				onclick="closeSubPage();return false;">Back</a>
-			<h1>登陆趣章鱼</h1>
-		</div>
-		<div data-role="content" class="ui-mini">
-			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="userName">用户名:</label> <input type="text"
-						name="userName" id="userName" value="" placeholder="用户ID或手机号"
-						required>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="password">密码:</label> <input type="password"
-						name="password" id="password" value="" placeholder="密码"
-						required placeholder="最短6位，最长10位，只可包含数字字母"
-						pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
-				</div>
-				<div data-role="fieldcontain">
-				<label for="verifyCode">验证码:</label>
-					<div style="display: inline-flex; width: 100%">
-						<div style="width: 70%; height: 100%;">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required>
-						</div>
-						<a data-mini="true" href="#"
-							style="width: 30%; height: 100%; margin-top: 8px;"><img
-							id="verifyImg" src=""></img></a>
-					</div>
-				</div>
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="login()">登陆</a>
+		<div id="form" class="form-horizontal">
+			<div class="input-group">
+				<span class="input-group-addon" id="userNameAddon"><i
+					class="fa fa-user fa-fw"></i></span> <input type="text"
+					class="form-control" aria-describedby="userNameAddon"
+					name="userName" id="userName" value="" placeholder="用户ID或手机号"
+					required>
 			</div>
 
-			<ul data-role="listview" style="margin:0;">
-				<li data-role="list-divider">密码不记得了?</li>
-				<li data-icon=""><a onclick="changePass()">修改密码</a></li>
-				<li data-role="list-divider">还没有帐号?</li>
-				<li data-icon=""><a onclick="register4Private()">个人注册</a></li>
-				<li data-icon=""><a 
-					onclick="register4Company()">企业注册</a></li>
-			</ul>
+			<div class="input-group">
+				<span class="input-group-addon" id="passwordAddon"><i
+					class="fa fa-key fa-fw"></i></span> <input type="password"
+					class="form-control" aria-describedby="passwordAddon"
+					name="password" id="password" value=""
+					placeholder="最短6位，最长10位，只可包含数字字母" required
+					pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
+			</div>
 
+			<div class="input-group">
+				<span class="input-group-addon"><i class="fa fa-check fa-fw"></i></span>
+				<input type="text" class="form-control" aria-label="验证码"
+					name="verifyCode" id="verifyCode" value="" placeholder="验证码"
+					required> <span class="input-group-addon"><img
+					id="verifyImg" src=""></img></span>
+			</div>
+
+			<button  class="btn btn-primary btn-lg btn-block" style="margin-top:5px;"
+				onclick="login()"><i class="fa fa-check fa-fw"></i>登陆</button>
 		</div>
+		
+		<ul class="list-group" style="margin-top: 5px;">
+			<li class="list-group-item disabled"><i class="fa fa-exclamation-circle"></i>密码不记得了?</li>
+			<li class="list-group-item" onclick="changePass()">修改密码<i class="fa fa-angle-right pull-right"></i></li>
+			<li class="list-group-item disabled"><i class="fa fa-exclamation-circle"></i>还没有帐号?</li>
+			<li class="list-group-item" onclick="register4Private()">个人注册<i class="fa fa-angle-right pull-right"></i></li>
+			<li class="list-group-item" onclick="register4Company()">企业注册<i class="fa fa-angle-right pull-right"></i></li>
+		</ul>
 	</div>
 </body>
 
 
 <script src="../myjs/mycommon.js"></script>
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
 <script src="../js/jQuery.md5.js" type="text/javascript"></script>
 <script src="../js/BigInt.js" type="text/javascript"></script>
 <script src="../js/RSA.js" type="text/javascript"></script>
 <script src="../js/Barrett.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				//加载验证码
-                loadVerifyImage('verifyImg');
-			});
+	$(document).ready(function() {
+		//加载验证码
+		loadVerifyImage('verifyImg');
+	});
 
-	
 	function login() {
 		//form表单校验不通过
-        if(checkFormNullable('form')==false){
-            return;
-        }
-		
+		if (checkFormNullable('form') == false) {
+			return;
+		}
+
 		var userName = $('#userName').val();
 		var password = $('#password').val();
 		var verifyCode = $('#verifyCode').val();
@@ -91,7 +91,7 @@
 		userInfo.loginCode = userName;
 		userInfo.password = password;
 		userInfo.verifyCode = verifyCode;
-		
+
 		ajaxReq('userAction', {
 			method : 'login',
 			userInfo : json2Str(userInfo)
@@ -99,25 +99,24 @@
 			if (data.flag == 'success') {//登陆成功后返回主页面
 				localStorage.userInfo = json2Str(data);//
 				//上传用户当前坐标
-				if (localStorage.latitude!=null){
-					 userInfo = {};
-		                userInfo.userId = data.userId;
-		                userInfo.latitude = localStorage.latitude;
-		                userInfo.longitude = localStorage.longitude;
-		                userInfo.cityName = localStorage.city;
-		                
-		                ajaxReq('userAction', {
-		                    method : 'logUserPosition',
-		                    userInfo : json2Str(userInfo)
-		                }, function(data) {
-		                    if (data.flag == 'success') {//登陆成功后返回主页面
-		                    } else {
-		                    }
-		                });
+				if (localStorage.latitude != null) {
+					userInfo = {};
+					userInfo.userId = data.userId;
+					userInfo.latitude = localStorage.latitude;
+					userInfo.longitude = localStorage.longitude;
+					userInfo.cityName = localStorage.city;
+
+					ajaxReq('userAction', {
+						method : 'logUserPosition',
+						userInfo : json2Str(userInfo)
+					}, function(data) {
+						if (data.flag == 'success') {//登陆成功后返回主页面
+						} else {
+						}
+					});
 				}
-			   
-				
-		        //关闭登陆页面
+
+				//关闭登陆页面
 				closeSubPage();
 			} else {
 				showTipDialog(data.msg);

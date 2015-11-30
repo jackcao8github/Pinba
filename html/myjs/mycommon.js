@@ -323,7 +323,7 @@ function changeSubPage(newpageid, oldpageid, params) {
 		oldpageid = $('[data-role="page"]').attr('id');
 	}
 	
-	var newZIndex = 1000;
+	var newZIndex = 10000;
 	var oldZIndex = parent.$('iframe').css('z-index');
 	if (oldZIndex!='auto'){
 		newZIndex ++;

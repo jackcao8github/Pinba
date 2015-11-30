@@ -22,9 +22,10 @@ body {
 	color: #fff;
 	text-align: center;
 }
+
 .swiper-slide2 {
 	/* border-radius: 50px; */
-	text-align : center;
+	text-align: center;
 	color: #fff;
 	background: #4390ee;
 	margin-left: 2px;
@@ -44,114 +45,90 @@ body {
 	align-items: center;
 	text-align: center;
 }
-.slide-active{
-background: #49a430;
+
+.slide-active {
+	background: #49a430;
 }
 </style>
 
 </head>
-<body onscroll="loadNextPage()">
+<body>
 	<div data-role="page" id="searchResultPage">
-		<!-- <div class="header">
-			<div class="headercontent">
-				返回按钮
-				<div class="headerclose">
-					<a onclick="closeSubPage();return false;"><i
-						class="fa fa-close fa-lg"></i></a>
-				</div>
-
-			<p class="text-center">工作查询</p>
-			<button type="button" class="btn btn-default navbar-btn pull-right" onclick="showSearchCond()">Search</button>
-		</div>
-		</div> -->
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#example-navbar-collapse">
+					data-target="#example-navbar-collapse" id="moreQryBtn">
 					<span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				
+
 				<a class="navbar-brand" href="#"
 					onclick="closeSubPage();return false;"><i
-					class="fa fa-close fa-lg"></i></a>
-					<a class="navbar-brand">查询结果</a>
+					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">查询结果</a>
 			</div>
 			<div class="collapse navbar-collapse" id="example-navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">iOS</a></li>
-					<li><a href="#">SVN</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> Java <b class="caret"></b>
+						data-toggle="dropdown"> 排序方式 <b class="caret"></b> <span
+							class="badge" id="orderByName">发布时间</span>
 					</a>
-						<ul class="dropdown-menu">
-							<li><a href="#">jmeter</a></li>
-							<li><a href="#">EJB</a></li>
-							<li><a href="#">Jasper Report</a></li>
-							<li class="divider"></li>
-							<li><a href="#">分离的链接</a></li>
-							<li class="divider"></li>
-							<li><a href="#">另一个分离的链接</a></li>
+						<ul class="dropdown-menu" id="orderBy">
+							<li  class="active"><a href="#" value="newest">发布时间</a></li>
+							<li ><a href="#" value="best">评价</a></li>
+						</ul></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> 工作区域 <b class="caret"></b><span
+							class="badge" id="workAreaName">不限</span>
+					</a>
+						<ul class="dropdown-menu" id="workArea">
+
+						</ul></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> 学历要求 <b class="caret"></b><span
+							class="badge" id="expectDegreeName">不限</span>
+					</a>
+						<ul class="dropdown-menu" id="expectDegree">
+
+						</ul></li>
+
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> 工作经验 <b class="caret"></b><span
+							class="badge" id="expectExperienceName">不限</span>
+					</a>
+						<ul class="dropdown-menu" id="expectExperience">
+
+						</ul></li>
+
+
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> 年龄要求 <b class="caret"></b><span
+							class="badge" id="expectAgeName">不限</span>
+					</a>
+						<ul class="dropdown-menu" id="expectAge">
+
 						</ul></li>
 				</ul>
+				<button class="btn btn-primary btn-lg btn-block" style="margin-bottom:5px;" onclick="refresh()" id="refreshBtn"><i class="fa fa-search fa-fw"></i>确定</button>
 			</div>
 		</nav>
 
-		<div data-role="content" class="ui-mini"  >
-		<div class="swiper-container" style="height: 25px;" id="postSwiper">
-				<div class="swiper-wrapper" id="postList"></div>
-				<!-- Add Pagination -->
-				<!-- <div class="swiper-pagination"></div>
+		<div class="swiper-container" id="postSwiper"
+			style="position: fixed; left: 0; top: 0; height: 25px; margin-bottom: 5px;">
+			<div class="swiper-wrapper" id="postList"></div>
+			<!-- Add Pagination -->
+			<!-- <div class="swiper-pagination"></div>
 			<div class="swiper-button-next"></div>
 			<div class="swiper-button-prev"></div> -->
 		</div>
-			<!-- 查询条件 -->
-			<div id="searchCondForm" style="display: none;">
-				<fieldset data-role="controlgroup" data-mini="true">
-					<legend>排序条件:</legend>
-					<input type="radio" name="orderBy" id="newest" value="newest"
-						checked="checked"> <label for="newest">最新发布时间</label> <input
-						type="radio" name="orderBy" id="best" value="best"> <label
-						for="best">最好评价</label>
-				</fieldset>
-
-
-				<div data-role="fieldcontain">
-					<label for="workArea" class="select">区域:</label> <select
-						name="workArea" id="workArea">
-
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="expectDegree" class="select">学历要求:</label> <select
-						name="expectDegree" id="expectDegree">
-
-					</select>
-				</div>
-
-				<div data-role="fieldcontain">
-					<label for="expectExperience" class="select">工作经验要求:</label> <select
-						name="expectExperience" id="expectExperience">
-
-					</select>
-				</div>
-				<div data-role="fieldcontain">
-					<label for="expectAge" class="select">年龄要求:</label> <select
-						name="expectAge" id="expectAge">
-
-					</select>
-				</div>
-				<a data-role="button" class="submmitBtn" data-icon="check"  onclick="refresh()"
-					id="refreshBtn">确定</a>
-			</div>
-			
-		</div>
-			<ul data-role="listview" id="workList">
+		
+		<div id="resultDiv" style="margin-top: 90px; width: 100%;">
+			<ul class="list-group" id="workList">
 
 			</ul>
+		</div>
 		<div class="location">
-		<i class="fa fa-chevron-up fa-lg"></i>
-	</div>
+			<i class="fa fa-chevron-up fa-lg"></i>
+		</div>
 	</div>
 </body>
 <script src="../js/jquery-1.11.3.min.js"></script>
@@ -164,70 +141,76 @@ background: #49a430;
 	} */
 	var searchKey = '';//查询条件关键字
 	var postCode = 'all';//工作岗位
-	$(document).ready(function() {
-		//初始化下拉框控件
-		$('select').each(function(index, item) {
-			if (item.id == "workArea") {
-				fillOptions(item.id, localStorage.city);
-			} else {
-				fillOptions(item.id);
-			}
-		});
-		init();
-		//生成岗位列表
-		var postList = getEnumValues('post');
-		var postListHtml = '';
-		if (postList != null) {
-			var liHtml = '<div class="swiper-slide swiper-slide2 -class-" onclick="qryByPostCode(this,\'-post_code-\')">-post_name-</div>';
-			//增加"全部工作"
-			postListHtml += liHtml.replace('-post_code-',
-					'all').replace('-post_name-',
-					'全部工作');
-			if (postCode=='all'){
-				postListHtml = postListHtml.replace('-class-','slide-active');
-			}else{
-				if (postCode!=null&&postCode!=''){
-					postListHtml += liHtml.replace('-post_code-',
-							postCode).replace('-post_name-',
-					getDisplayEnumValue('post',postCode)).replace('-class-','slide-active');
-				}
-			}
-			
-			
-			
-			for ( var item in postList) {
-					var extendClass= '';
-					if (item==postCode){
-					}else{
-						postListHtml += liHtml.replace('-post_code-',
-								item).replace('-post_name-',
-								postList[item].value).replace('-class-',extendClass);
-					}
-			}
-			
-			$('#postList').html(postListHtml);
-		}
-		//计算得到一次可以看到的slide数量
-		var slideNumInOneView = 5;
-		var width = $('#postSwiper').css('width');
-		slideNumInOneView = parseInt(width)/65;
-		var swiper = new Swiper('#postSwiper', {
-			/* initialSlide :initialSlide, */
-			slidesPerView : slideNumInOneView,
-			freeMode : true
-		});
-		
-		$('.location').click(function() {
-			$('html,body').animate({
-				scrollTop : '0px'
-			}, 800);
-		});
-	});
+	$(document)
+			.ready(
+					function() {
+						//初始化下拉框控件
+						$('.dropdown-menu').each(function(index, item) {
+							if (item.id == "workArea") {
+								fillLis(item.id, localStorage.city);
+							} else {
+								fillLis(item.id);
+							}
+						});
+						init();
+						//生成岗位列表
+						var postList = getEnumValues('post');
+						var postListHtml = '';
+						if (postList != null) {
+							var liHtml = '<div class="swiper-slide swiper-slide2 -class-" onclick="qryByPostCode(this,\'-post_code-\')">-post_name-</div>';
+							//增加"全部工作"
+							postListHtml += liHtml
+									.replace('-post_code-', 'all').replace(
+											'-post_name-', '全部工作');
+							if (postCode == 'all') {
+								postListHtml = postListHtml.replace('-class-',
+										'slide-active');
+							} else {
+								if (postCode != null && postCode != '') {
+									postListHtml += liHtml.replace(
+											'-post_code-', postCode).replace(
+											'-post_name-',
+											getDisplayEnumValue('post',
+													postCode)).replace(
+											'-class-', 'slide-active');
+								}
+							}
+
+							for ( var item in postList) {
+								var extendClass = '';
+								if (item == postCode) {
+								} else {
+									postListHtml += liHtml.replace(
+											'-post_code-', item)
+											.replace('-post_name-',
+													postList[item].value)
+											.replace('-class-', extendClass);
+								}
+							}
+
+							$('#postList').html(postListHtml);
+						}
+						//计算得到一次可以看到的slide数量
+						var slideNumInOneView = 5;
+						var width = $('#postSwiper').css('width');
+						slideNumInOneView = parseInt(width) / 65;
+						var swiper = new Swiper('#postSwiper', {
+							/* initialSlide :initialSlide, */
+							slidesPerView : slideNumInOneView,
+							freeMode : true
+						});
+
+						$('.location').click(function() {
+							$('body').animate({
+								scrollTop : '0px'
+							}, 800);
+						});
+					});
 
 	function init() {
 		searchKey = getQueryString('searchKey');
 		postCode = getQueryString('postCode');
-		if (postCode==null){
+		if (postCode == null) {
 			postCode = 'all';
 		}
 		if (searchKey != null || postCode != null) {
@@ -244,37 +227,36 @@ background: #49a430;
 		loadWorkList();
 	}
 	function loadWorkList() {
-		if (nextWorkPageFlag==false){
+		if (nextWorkPageFlag == false) {
 			return;
 		}
 		var workInfo = {};
 		workInfo.page = workPage;
 		workInfo.cityName = localStorage.city;
 		workInfo.workType = 'partTime';//兼职/全职招聘
-		if (searchKey!=null)
+		if (searchKey != null)
 			workInfo.searchKey = searchKey;
 		workInfo.effExpDateFlag = 'true';//只加载生失效时间内的
-		workInfo.orderBy = $('[name="orderBy"]:checked').val();
-		
-		var workArea = $('#workArea').val();
-		if (workArea!='nolimit'){
+		workInfo.orderBy = $('#orderBy').attr('value');
+
+		var workArea = $('#workArea').attr('value');
+		if (workArea!=null&&workArea != 'nolimit') {
 			workInfo.workArea = workArea;
 		}
-		var expectDegree = $('#expectDegree').val();
-		if (expectDegree!='nolimit'){
+		var expectDegree = $('#expectDegree').attr('value');
+		if (expectDegree!=null&&expectDegree != 'nolimit') {
 			workInfo.expectDegree = expectDegree;
 		}
-		var expectExperience = $('#expectExperience').val();
-		if (expectExperience!='nolimit'){
+		var expectExperience = $('#expectExperience').attr('value');
+		if (expectExperience!=null&&expectExperience != 'nolimit') {
 			workInfo.expectExperience = expectExperience;
 		}
-		var expectAge = $('#expectAge').val();
-		if (expectAge!='nolimit'){
+		var expectAge = $('#expectAge').attr('value');
+		if (expectAge!=null&&expectAge != 'nolimit') {
 			workInfo.expectAge = expectAge;
 		}
 
-		
-		if (postCode != null&&postCode!='all'&&postCode!='') {
+		if (postCode != null && postCode != 'all' && postCode != '') {
 			workInfo.postCode = postCode;
 		}
 
@@ -286,7 +268,7 @@ background: #49a430;
 				if (data.length > 0) {
 					workPage++;
 					fillWorkList('workList', data);
-				}else{
+				} else {
 					/* showTipDialog('没有数据了!'); */
 					nextWorkPageFlag = false;
 				}
@@ -295,9 +277,9 @@ background: #49a430;
 			}
 		});
 	}
-
+	window.onscroll = loadNextPage;
 	/* 加载下一面 */
-	function loadNextPage(){
+	function loadNextPage() {
 		var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
@@ -312,26 +294,21 @@ background: #49a430;
 
 	function refresh() {
 		$('#workList').html('');
-		$('#searchCondForm').toggle();
-		
+		$('#moreQryBtn').click();
 		workPage = 1;
 		nextWorkPageFlag = true;
 		loadWorkList();
 	}
-	function qryByPostCode(obj,postCode2){
+	function qryByPostCode(obj, postCode2) {
 		postCode = postCode2;
-		
+
 		$('#workList').html('');
 		$('.slide-active').removeClass('slide-active');
 		$(obj).addClass('slide-active');
-		
+
 		workPage = 1;
 		nextWorkPageFlag = true;
 		loadWorkList();
-	}
-	
-	function showSearchCond(){
-		$('#searchCondForm').toggle();
 	}
 </script>
 </html>

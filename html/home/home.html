@@ -185,7 +185,7 @@ color:white;text-align:center;line-height:80px;border-radius:5px;float:left;heig
 		<p class="section-divider" id="yourLike">猜你喜欢</p>
 		<div id="workDiv">
 			<!-- <div class="swipe"> -->
-			<ul data-role="listview" id="workList" style="margin: 0"
+			<ul id="workList" style="margin: 0"
 				class="list-group">
 
 			</ul>
@@ -348,7 +348,7 @@ color:white;text-align:center;line-height:80px;border-radius:5px;float:left;heig
 							changeSubPage('search', 'homePage');
 						});
 						 $('.location').click(function() {
-								$('#homePage').animate({
+								$('body').animate({
 									scrollTop : '0px'
 								}, 800);
 							});

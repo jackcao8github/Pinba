@@ -12,9 +12,36 @@
 </head>
 <body>
 	<div data-role="page" id="searchPage">
-		<div class="header">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"
+					onclick="closeSubPage();return false;"><i
+					class="fa fa-close fa-lg"></i></a>
+				<div class="navbar-right" style="padding-top:8px;padding-right:5px;">
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false" id="selectType">
+								工作 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#" onclick="selectType('work','工作')">工作</a></li>
+								<li><a href="#" onclick="selectType('company','公司')">公司</a></li>
+							</ul>
+						</div>
+						<input type="hidden" id="searchType" value="work"> <input
+							type="text" class="form-control" aria-label="..." name="keyword"
+							id="keyword"> <span class="input-group-addon"><i
+							class="fa fa-search fa-lg" id="searchBtn"></i></span>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- <div class="header">
 			<div class="headercontent">
-				<!-- 返回按钮 -->
+				返回按钮
 				<div class="headerclose">
 					<a onclick="closeSubPage();return false;"><i
 						class="fa fa-close fa-lg"></i></a>
@@ -38,15 +65,15 @@
 								<li><a href="#" onclick="selectType('company','公司')">公司</a></li>
 							</ul>
 						</div>
-						<!-- /btn-group -->
+						/btn-group
 						<input type="hidden" id="searchType" value="work"> <input
 							type="text" class="form-control" aria-label="..." name="keyword"
 							id="keyword">
 					</div>
-					<!-- /input-group -->
+					/input-group
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<div class="pagecontent">
 			<!-- 显示查询历史 -->
@@ -64,15 +91,14 @@
 
 <script src="../js/jquery-1.11.3.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-		
+
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
-function selectType(type,typeName)
-{
-	$('#searchType').val(type);
-	$('#selectType').html(typeName+' <span class="caret"></span>');
-}
+	function selectType(type, typeName) {
+		$('#searchType').val(type);
+		$('#selectType').html(typeName + ' <span class="caret"></span>');
+	}
 	$(document)
 			.ready(
 					function() {
