@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
 
 <style type="text/css">
 li {
@@ -21,16 +21,17 @@ li {
 <body>
 	<div data-role="page" id="workdetailPage">
 		<!-- 返回按钮 -->
-		<div data-role="header" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="header">
-			<a href="#" data-rel="back"
-				class="ui-btn ui-btn-left ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-icon-carat-l"
-				onclick="closeSubPage();return false;">Back</a>
-			<h1 id="resumeType">兼职简历</h1>
-
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
 			<a onclick="modResume()" id="modBtn" style="display:none"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit">修改简历</a>
-		</div>
+				<a class="navbar-brand" href="#"
+					onclick="closeSubPage();return false;"><i
+					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">兼职简历</a>
+			</div>
+		</nav>
+		
+		
 		<ul data-role="listview">
 			<li data-role="list-divider">基本信息</li>
 			<li data-icon="false" style="padding: 0em 1em">
