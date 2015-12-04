@@ -6,7 +6,8 @@
 	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 </head>
 <body>
 	<div data-role="page" id="myMoneyBagPage">
@@ -34,20 +35,22 @@
 			</div>
 		</div>
 
-		<div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#prepayDiv" class="ui-btn-active">余额</a></li>
-					<li><a href="#depositDiv" onclick="show('deposit')">保证金</a></li>
-					<li><a href="#pointsDiv" onclick="show('points')">积分</a></li>
 
-					<!-- <li><a href="#friendList">优惠券</a></li> -->
-					<!-- <li><a href="#friendList">红包</a></li> -->
-				</ul>
-			</div>
+		<div data-role="navbar">
+			<ul class="nav nav-tabs nav-justified" role="tablist">
+				<li role="presentation" class="active"><a href="#prepayDiv">余额</a></li>
+				<li role="presentation"><a href="#depositDiv"
+					onclick="show('deposit')">保证金</a></li>
+				<li role="presentation"><a href="#pointsDiv"
+					onclick="show('points')">积分</a></li>
 
-			<div id="pointsDiv">
-				<ul data-role="listview">
+				<!-- <li><a href="#friendList">优惠券</a></li> -->
+				<!-- <li><a href="#friendList">红包</a></li> -->
+			</ul>
+		</div>
+		<div id="tabs" class="tab-content">
+			<div id="pointsDiv" role="tabpanel" class="tab-pane">
+				<ul class="list-group">
 					<li data-role="list-divider">当前你有积分<strong id="points">200</strong><span
 						class="ui-li-count"><a>积分有什么用?</a></span></li>
 
@@ -57,22 +60,22 @@
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul data-role="listview" id="pointsHisList">
+					<ul class="list-group" id="pointsHisList">
 					</ul>
 				</div>
 			</div>
-			<div id="prepayDiv">
-				<ul data-role="listview">
+			<div id="prepayDiv" role="tabpanel" class="tab-pane active">
+				<ul class="list-group">
 					<li data-role="list-divider">当前你有余额<strong id="prepay">200</strong>元<span
 						class="ui-li-count"><a>余额能干什么?</a></span></li>
-					<li data-icon="false">
+					<li class="list-group-item">
 						<fieldset class="ui-grid-a ui-mini">
 							<div class="ui-block-a">
-								<a data-role="button" data-mini="true" data-icon=""
+								<a role="button" data-mini="true" data-icon=""
 									onclick="topup('prepay')">充值</a>
 							</div>
 							<div class="ui-block-b">
-								<a data-role="button" data-mini="true" data-icon=""
+								<a role="button" data-mini="true" data-icon=""
 									onclick="toCash('prepay')">提取</a>
 							</div>
 						</fieldset>
@@ -83,22 +86,22 @@
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul data-role="listview" id="prepayHisList">
+					<ul class="list-group" id="prepayHisList">
 					</ul>
 				</div>
 			</div>
-			<div id="depositDiv">
-				<ul data-role="listview">
+			<div id="depositDiv" role="tabpanel" class="tab-pane">
+				<ul class="list-group">
 					<li data-role="list-divider">当前你有保证金<strong id="deposit">2000</strong>元<span
 						class="ui-li-count"><a>保证金是什么?</a></span></li>
-					<li data-icon="false">
+					<li class="list-group-item">
 						<fieldset class="ui-grid-a  ui-mini">
 							<div class="ui-block-a">
-								<a data-role="button" data-mini="true" data-icon=""
+								<a role="button" data-mini="true" data-icon=""
 									onclick="topup('deposit')">增加保证金</a>
 							</div>
 							<div class="ui-block-b">
-								<a data-role="button" data-mini="true" data-icon=""
+								<a role="button" data-mini="true" data-icon=""
 									onclick="toCash('deposit')">提取保证金</a>
 							</div>
 						</fieldset>
@@ -109,7 +112,7 @@
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul data-role="listview" id="depositHisList">
+					<ul class="list-group" id="depositHisList">
 					</ul>
 				</div>
 			</div>
@@ -199,7 +202,7 @@
 			$('#' + listId)
 					.append(
 							'<li data-role="list-divider">明细<span class="ui-li-count"><a>更多明细...</a></span></li>');
-			var litemp = '<li data-icon="false"><a><h3>-value-</h3><p>-optype-</p><p class="ui-li-aside"><strong>-time-</strong></p></a></li>';
+			var litemp = '<li class="list-group-item"><a><h3>-value-</h3><p>-optype-</p><p class="ui-li-aside"><strong>-time-</strong></p></a></li>';
 
 			for (var i = 0; listData.length > i; i++) {
 				var params = {};
@@ -212,14 +215,13 @@
 				$('#' + listId).append(lihtml);
 			}
 
-			$('#' + listId).listview("refresh");
-		}else{
+		} else {
 			//显示无数据提示
-			if (listId=='pointsHisList'){
+			if (listId == 'pointsHisList') {
 				$('#pointsDiv .pullNoData').show();
-			}else if (listId=='prepayHisList'){
+			} else if (listId == 'prepayHisList') {
 				$('#prepayDiv .pullNoData').show();
-			}else if (listId=='depositHisList'){
+			} else if (listId == 'depositHisList') {
 				$('#depositDiv .pullNoData').show();
 			}
 		}

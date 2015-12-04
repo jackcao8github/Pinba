@@ -19,33 +19,33 @@
 		</nav>
 		<div data-role="content">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="cellphone">员工手机号:</label> <input type="text"
+				<div class="form-group">
+					<label for="cellphone">员工手机号:</label> <input type="text" class="form-control"
 						name="cellphone" id="cellphone" value="" placeholder="通过员工手机号找到员工">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="workTimeBegin">开始工作时间:</label> <input type="date"
 						name="workTimeBegin" id="workTimeBegin" value=""
 						required placeholder="开始工作时间">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="workTimeEnd">结束工作时间:</label> <input type="date"
 						name="workTimeEnd" id="workTimeEnd" value="" required
 						placeholder="结束工作时间">
 				</div>
-				<div data-role="fieldcontain">
-					<label for="workAddress">工作地点:</label> <input type="text"
+				<div class="form-group">
+					<label for="workAddress">工作地点:</label> <input type="text" class="form-control"
 						name="workAddress" id="workAddress" value="" required
 						placeholder="工作地点">
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="workRemark">备注:</label>
-					<textarea cols="40" rows="8" name="workRemark" id="workRemark"
+					<textarea class="form-control"cols="40" rows="8" name="workRemark" id="workRemark"
 						data-mini="true" required placeholder="备注"></textarea>
 				</div>
 
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="hired()">提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" onclick="hired()">提交</a>
 			</div>
 		</div>
 	</div>

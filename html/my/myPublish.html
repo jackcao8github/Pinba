@@ -23,7 +23,7 @@
 			</div>
 		</nav>
             <!-- <div data-role="popup" id="popupMenu">
-                <ul data-role="listview" data-inset="true" style="min-width: 210px;"
+                <ul class="list-group" data-inset="true" style="min-width: 210px;"
                     id="resumeList">
                     <li onclick="gotoInterviewPage()">查看简历</li>
                     <li onclick="gotoHiredPage()">复制工作</li>
@@ -33,10 +33,10 @@
 		<div class="swipe">
 		    <div class="pullDownFresh"><div class="pullDownFreshText">下拉刷新</div></div>
 		    <div class="pullNoData">没有数据!你可以下拉刷新!</div>
-			<ul data-role="listview" id="workListUL" data-split-icon="gear">
+			<ul class="list-group" id="workListUL" data-split-icon="gear">
 			</ul>
 			</div>
-			<a data-role="button" data-mini="true" data-icon="plus" class="submmitBtn"
+			<a role="button" data-mini="true" data-icon="plus" class="submmitBtn"
                     onclick="localStorage.changePageParams='';changeSubPage('work', 'myPubPage')">发布招聘信息</a>
 		</div>
 	</div>
@@ -112,7 +112,6 @@
 								lihtmls += lihtml;
 							}
 							$('#workListUL').append(lihtmls);
-							$('#workListUL').listview("refresh");
 						} else {
 							$('.pullNoData').show();
 						}

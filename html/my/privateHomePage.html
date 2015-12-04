@@ -48,16 +48,16 @@ margin:0;
 		</div>
 		<!-- 第一块显示公司信息 -->
 		<div class="firstblock">
-			<ul data-role="listview" class="ui-mini" id="userInfoDiv" style="display:none;margin:0;">
-				<li data-icon="false">用户编号 <span class="ui-li-count" id="userId"></span></li>
-				<li data-icon="false"><a href="#">性别 <span
+			<ul class="list-group" class="ui-mini" id="userInfoDiv" style="display:none;margin:0;">
+				<li class="list-group-item">用户编号 <span class="ui-li-count" id="userId"></span></li>
+				<li class="list-group-item"><a href="#">性别 <span
 						class="ui-li-count" id="sex"></span></a></li>
-				<li data-icon="false"><a href="#">年龄 <span
+				<li class="list-group-item"><a href="#">年龄 <span
 						class="ui-li-count" id="age"></span></a></li>
 				<li>手机<span class="ui-li-count" id="cellphone"></span></li>
-				<li data-icon="false"><a href="#">邮箱 <span
+				<li class="list-group-item"><a href="#">邮箱 <span
 						class="ui-li-count" id="email"></span></a></li>
-				<li data-icon="false" >QQ<span class="ui-li-count" id="qq"></span></li>
+				<li class="list-group-item" >QQ<span class="ui-li-count" id="qq"></span></li>
 			</ul>
 			<div class="showHideBtn" state="hide" onclick="showHidePost('pubPartTimeWork',this)">显示个人信息</div>
 		</div>
@@ -82,16 +82,16 @@ margin:0;
 
 			</div>
 
-			<ul data-role="listview" id="workListUL">
+			<ul class="list-group" id="workListUL">
 			</ul>
 		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">
-				<!-- <a href="#" id="addFocusBtn" data-role="button" data-icon="heart">关注</a> -->
-				<a href="#" id="addFriendBtn" data-role="button" data-icon="plus">加好友</a>
-				<!-- <a href="#" id="dialTel" data-role="button" data-icon="phone" onclick="toDial()">电话联系</a> -->
-				<!-- <a href="#" id="sendMsg" data-role="button" data-icon="mail" onclick="toSendMsg()">私信</a> -->
+				<!-- <a href="#" id="addFocusBtn" role="button" data-icon="heart">关注</a> -->
+				<a href="#" id="addFriendBtn" role="button" data-icon="plus">加好友</a>
+				<!-- <a href="#" id="dialTel" role="button" data-icon="phone" onclick="toDial()">电话联系</a> -->
+				<!-- <a href="#" id="sendMsg" role="button" data-icon="mail" onclick="toSendMsg()">私信</a> -->
 			</div>
 		</div>
 		</div>

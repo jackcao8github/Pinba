@@ -47,15 +47,15 @@ function refreshPos(){
 			</div>
 			<form>
 				<fieldset data-role="controlgroup" data-type="horizontal">
-					<label for="select-h-2a">综合排名</label> <select name="select-h-2a"
+					<label for="select-h-2a">综合排名</label> <select class="form-control" name="select-h-2a"
 						id="select-h-2a">
 						<option value="#">最新</option>
 						<option value="#">距离</option>
-					</select> <label for="select-h-2b">分类</label> <select name="select-h-2b"
+					</select> <label for="select-h-2b">分类</label> <select class="form-control" name="select-h-2b"
 						id="select-h-2b">
 						<option value="#">美食类</option>
 						<option value="#">娱乐类</option>
-					</select> <label for="select-h-2c">商圈</label> <select name="select-h-2c"
+					</select> <label for="select-h-2c">商圈</label> <select class="form-control" name="select-h-2c"
 						id="select-h-2c">
 						<option value="#">新街口</option>
 						<option value="#">夫子庙</option>
@@ -63,9 +63,9 @@ function refreshPos(){
 					</select>
 				</fieldset>
 			</form>
-			<ul data-role="listview" id="activityList"
+			<ul class="list-group" id="activityList"
 				style="min-height: inherit; height: auto;">
-				<li data-icon="false"><a href="showPinActivityInfo.html"
+				<li class="list-group-item"><a href="showPinActivityInfo.html"
 					style="padding-top: 0px; padding-bottom: 0px; background-color: white"
 					data-transition="slidedown"> <img
 						src="images/pro/restau01_mini.jpg" /> <!-- 发起人上传的图片 -->
@@ -83,7 +83,7 @@ function refreshPos(){
 						</div>
 				</a></li>
 
-				<li data-icon="false"><a href="showPinActivityInfo.html"
+				<li class="list-group-item"><a href="showPinActivityInfo.html"
 					style="padding-top: 0px; padding-bottom: 0px; background-color: white"
 					data-transition="slidedown"> <img
 						src="images/pro/restau02_mini.jpg " />
@@ -103,22 +103,6 @@ function refreshPos(){
 
 			</ul>
 		</div>
-		<!-- <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-			<div data-role="navbar" data-grid="d">
-				<ul>
-					<li><a id="homeBtn" href="home.html" data-icon="home"
-						data-ajax="false">首页</a></li>
-					<li><a id="pinleBtn" href="pinle.html" data-icon="bars"
-						class="ui-btn-active" data-ajax="false">拼乐</a></li>
-					<li><a id="fabuBtn" href="fabu.html" data-icon="grid"
-						data-ajax="false">发布</a></li>
-					<li><a id="faxianBtn" href="faxian.html" data-icon="eye"
-						data-ajax="false">发现</a></li>
-					<li><a id="wodeBtn" href="wode.html" data-icon="user"
-						data-ajax="false">我的</a></li>
-				</ul>
-			</div>
-		</div> -->
 	</div>
 </body>
 </html>

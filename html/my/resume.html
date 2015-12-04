@@ -18,57 +18,57 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="resumeName">简历名称:</label> <input type="text"
+				<div class="form-group">
+					<label for="resumeName">简历名称:</label> <input type="text" class="form-control"
 						name="resumeName" id="resumeName" value="" required>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="resumeType" class="select">简历类型:</label> <select
+				<div class="form-group">
+					<label for="resumeType" class="select">简历类型:</label> <select class="form-control"
 						name="resumeType" id="resumeType" >
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="realName">真实姓名:</label> <input type="text"
+				<div class="form-group">
+					<label for="realName">真实姓名:</label> <input type="text" class="form-control"
 						name="realName" id="realName" value="" required>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="IDNO">身份证:</label> <input type="text"
+				<div class="form-group">
+					<label for="IDNO">身份证:</label> <input type="text" class="form-control"
 						name="IDNO" id="IDNO" value="" required>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="stature">身高(CM):</label> <input type="text"
+				<div class="form-group">
+					<label for="stature">身高(CM):</label> <input type="text" class="form-control"
 						name="stature" id="stature" value="" required pattern="[0-9]{3}" placeholder="身高">
 				</div>
-				<div data-role="fieldcontain">
-					<label for="cellphone">联系手机:</label> <input type="text"
+				<div class="form-group">
+					<label for="cellphone">联系手机:</label> <input type="text" class="form-control"
 						name="cellphone" id="cellphone" value="" required pattern="[0-9]{11}">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="email">联系邮箱:</label> <input type="email" name="email"
 						id="email" value="" required>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="sex" class="select">性别:</label> <select name="sex"
+				<div class="form-group">
+					<label for="sex" class="select">性别:</label> <select class="form-control" name="sex"
 						id="sex" >
 						<option value="male" selected>男</option>
 						<option value="female">女</option>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="age">年龄:</label> <input type="text" name="age" id="age"
+				<div class="form-group">
+					<label for="age">年龄:</label> <input type="text" class="form-control" name="age" id="age"
 						value="" required>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="expectPost" class="select">期望职位:</label> <select
+				<div class="form-group">
+					<label for="expectPost" class="select">期望职位:</label> <select class="form-control"
 						name="expectPost" multiple="multiple" id="expectPost"
 						>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="expectWorkArea" class="select">期望区域:</label> <select
+				<div class="form-group">
+					<label for="expectWorkArea" class="select">期望区域:</label> <select class="form-control"
 						name="expectWorkArea" multiple="multiple" id="expectWorkArea"
 						>
 					</select>
@@ -85,15 +85,15 @@
                         value="10" min="0" max="200">
                 </div>
 
-				<div data-role="fieldcontain">
-					<label for="dayCharge">期望工资当天结算:</label> <select name="dayCharge"
+				<div class="form-group">
+					<label for="dayCharge">期望工资当天结算:</label> <select class="form-control" name="dayCharge"
 						id="dayCharge" >
 						<option value="no">No</option>
 						<option value="yes" selected="">Yes</option>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for=foodAndLodging>期望提供食宿:</label><select
+				<div class="form-group">
+					<label for=foodAndLodging>期望提供食宿:</label><select class="form-control"
 						name="foodAndLodging" id="foodAndLodging" >
 						<option value="no">No</option>
 						<option value="yes" selected="">Yes</option>
@@ -101,43 +101,43 @@
 				</div>
 
 
-				<div data-role="fieldcontain">
-					<label for="degree" class="select">学历:</label> <select
+				<div class="form-group">
+					<label for="degree" class="select">学历:</label> <select class="form-control"
 						name="degree" id="degree" >
 						<option value="gaozhong" selected>高中</option>
 						<option value="bengke">本科</option>
 						<option value="suoshi">硕士</option>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="experience" class="select">工作经验(年):</label> <input
-						type="text" name="experience" id="experience" value="0"
+						type="text" class="form-control" name="experience" id="experience" value="0"
 						required placeholder="工作经验(年)" pattern="[0-9]{1,2}"
 						title="必须是整数">
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="workHisList">工作经历:</label>
-					<textarea cols="40" rows="8" name="workHisList" id="workHisList"
+					<textarea class="form-control"cols="40" rows="8" name="workHisList" id="workHisList"
 						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="eduHisList">教育经历:</label>
-					<textarea cols="40" rows="8" name="eduHisList" id="eduHisList"
+					<textarea class="form-control"cols="40" rows="8" name="eduHisList" id="eduHisList"
 						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="selfReview">自我评价:</label>
-					<textarea cols="40" rows="8" name="selfReview" id="selfReview"
+					<textarea class="form-control"cols="40" rows="8" name="selfReview" id="selfReview"
 						required placeholder="让用人单位更好了解你" data-mini="true"></textarea>
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="verifyCode">验证码:</label>
 					<fieldset class="ui-grid-a">
 						<div class="ui-block-a">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
+							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
 								placeholder="验证码" required>
 						</div>
 						<div class="ui-block-b">
@@ -147,7 +147,7 @@
 					</fieldset>
 					<!-- <div style="display: inline-flex; width: 100%">
 						<div style="width: 40%; height: 100%;">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
+							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
 								placeholder="验证码" required>
 						</div>
 						<a data-mini="true" href="#"
@@ -156,7 +156,7 @@
 					</div> -->
 				</div>
 
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="publish()"  >提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" onclick="publish()"  >提交</a>
 			</div>
 		</div>
 	</div>

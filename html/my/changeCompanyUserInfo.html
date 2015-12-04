@@ -20,51 +20,51 @@
 		<div data-role="content" class="ui-mini">
 			<div id="form">
 				
-				<div data-role="fieldcontain">
-					<label for="userName">企业名称:</label> <input type="text"
+				<div class="form-group">
+					<label for="userName">企业名称:</label> <input type="text" class="form-control"
 						name="userName" id="userName" value="" required>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="address">企业地址:</label> <input type="text"
+				<div class="form-group">
+					<label for="address">企业地址:</label> <input type="text" class="form-control"
 						name="address" id="address" value="" required>
 				</div>
 
 
-				<div data-role="fieldcontain">
-					<label for="url">公司网址:</label> <input type="text" name="url"
+				<div class="form-group">
+					<label for="url">公司网址:</label> <input type="text" class="form-control" name="url"
 						id="url" value="">
 				</div>
-                <div data-role="fieldcontain">
-                    <label for="email">企业邮箱:</label> <input type="text" name="email"
+                <div class="form-group">
+                    <label for="email">企业邮箱:</label> <input type="text" class="form-control" name="email"
                         id="email" value="">
                 </div>
 
-                <div data-role="fieldcontain">
-                    <label for="contacter">联系人:</label> <input type="text"
+                <div class="form-group">
+                    <label for="contacter">联系人:</label> <input type="text" class="form-control"
                         name="contacter" id="contacter" value="" required>
                 </div>
-                <div data-role="fieldcontain">
-                    <label for="qq">QQ:</label> <input type="text"
+                <div class="form-group">
+                    <label for="qq">QQ:</label> <input type="text" class="form-control"
                         name="qq" id="qq" value="">
                 </div>
-				<div data-role="fieldcontain">
-					<label for="size" class="select">企业规模:</label> <select name="size"
+				<div class="form-group">
+					<label for="size" class="select">企业规模:</label> <select class="form-control" name="size"
 						id="size"  required>
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="industry" class="select">所属行业:</label> <select
+				<div class="form-group">
+					<label for="industry" class="select">所属行业:</label> <select class="form-control"
 						name="industry" id="industry" 
 						required>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="selfReview">公司介绍:</label>
-					<textarea cols="40" rows="8" name="selfReview" id="selfReview"
+					<textarea class="form-control"cols="40" rows="8" name="selfReview" id="selfReview"
 						required placeholder="" data-mini="true"></textarea>
 				</div>
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="modCompany()">提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" onclick="modCompany()">提交</a>
 			</div>
 		</div>
 	</div>

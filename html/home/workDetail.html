@@ -24,9 +24,9 @@
 			
 			</div>
 		</nav>
-		<ul data-role="listview" data-inset="true" id="workDetailDiv">
+		<ul class="list-group" data-inset="true" id="workDetailDiv">
 			<li data-role="list-divider" ><span id="workName"></span><span class="ui-li-count">工作编号:<span id="workId"></span></span></li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>人数:</p>
@@ -77,7 +77,7 @@
 				</div>
 			</li>
 			<li data-role="list-divider">待遇</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 			     <div style="overflow: hidden">
                     <div style="float: left; width: 30%; color: #a3a3a3">
                         <p>薪资单位:</p>
@@ -128,7 +128,7 @@
 				</div>
 			</li>
 			<li data-role="list-divider">要求</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>学历:</p>
@@ -155,18 +155,18 @@
 				</div>
 			</li>
 			<li data-role="list-divider">工作内容</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<p style="white-space: pre-line;" id="content"></p>
 			</li>
 		</ul>
-		<ul data-role="listview" id="companyInfoUL">
+		<ul class="list-group" id="companyInfoUL">
 			<li data-role="list-divider" onclick="toCompanyHomepage()">公司信息<span class="ui-li-count">
 				<div style="float: right; color: #f63">
 						<i class="fa fa-star"></i><i class="fa fa-star"></i><i
 							class="fa fa-star"></i><i class="fa fa-star"></i><i
 							class="fa fa-star-half-full"></i>
 					</div></span></li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司名称:</p>
@@ -232,14 +232,14 @@
 			<li>联系时请说是在趣章鱼网看到的!</li>
 		</ul>
 		<!-- 其它公司的相同岗位招聘 -->
-		<ul data-role="listview" id="samePostWorkList">
+		<ul class="list-group" id="samePostWorkList">
 			<li data-role="list-divider">其它公司的相同岗位招聘</li>
 		</ul>
-		<ul data-role="listview" id="workListUL">
+		<ul class="list-group" id="workListUL">
 			</ul>
         <!-- 简历选择框 -->
 		<div data-role="popup" id="popupMenu">
-			<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+			<ul class="list-group" data-inset="true" style="min-width: 210px;"
 				id="resumeList">
 				<li data-role="list-divider"><h3>选择简历</h3></li>
 			</ul>
@@ -248,13 +248,13 @@
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">
-				<!-- <a href="#" id="addFocusBtn" data-role="button" data-icon="heart">0</a> -->
-				<a href="#" id="sendResumeBtn" data-role="button" data-icon="mail">投递简历</a>
-				<a href="#" id="dialTel" data-role="button" data-icon="phone" onclick="toDial()">电话联系</a>
-				<a href="#" id="sendMsg" data-role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
+				<!-- <a href="#" id="addFocusBtn" role="button" data-icon="heart">0</a> -->
+				<a href="#" id="sendResumeBtn" role="button" data-icon="mail">投递简历</a>
+				<a href="#" id="dialTel" role="button" data-icon="phone" onclick="toDial()">电话联系</a>
+				<a href="#" id="sendMsg" role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
 				
 				<a onclick="modWork()" id="modBtn" style="display:none"
-				data-role="button" data-icon="edit">修改</a>
+				role="button" data-icon="edit">修改</a>
 			</div>
 		</div>
 	</div>
@@ -349,10 +349,6 @@
 																	$('#resumeList')
 																			.append(
 																					lihtmls);
-																	$(
-																			'#resumeList')
-																			.listview(
-																					"refresh");
 
 																	//打开简历选择框
 																	$('#popupMenu')

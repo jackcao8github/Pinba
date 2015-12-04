@@ -19,25 +19,25 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="interviewTime">面试时间:</label> <input type="text"
+				<div class="form-group">
+					<label for="interviewTime">面试时间:</label> <input type="text" class="form-control"
 						name="interviewTime" id="interviewTime" value=""
 						required placeholder="面试时间">
 				</div>
-				<div data-role="fieldcontain">
-					<label for="interviewAddress">面试地点:</label> <input type="text"
+				<div class="form-group">
+					<label for="interviewAddress">面试地点:</label> <input type="text" class="form-control"
 						name="interviewAddress" id="interviewAddress" value=""
 						required placeholder="面试地点">
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="interviewRemark">备注:</label>
-					<textarea cols="40" rows="8" name="interviewRemark"
+					<textarea class="form-control"cols="40" rows="8" name="interviewRemark"
 						id="interviewRemark" data-mini="true"
 						placeholder="备注"></textarea>
 				</div>
 
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="bookInterview()">提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" onclick="bookInterview()">提交</a>
 			</div>
 		</div>
 	</div>

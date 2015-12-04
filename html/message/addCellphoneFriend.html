@@ -20,13 +20,13 @@
 		<!-- 手机号加好友-->
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="friendKey">好友手机或用户号:</label> <input type="text"
+				<div class="form-group">
+					<label for="friendKey">好友手机或用户号:</label> <input type="text" class="form-control"
 						name="friendKey" id="friendKey" value="" required pattern="[0-9]*"
 						placeholder="好友手机或用户号">
 				</div>
 			</div>
-			<a data-role="button" class="submmitBtn ui-mini"
+			<a role="button" class="submmitBtn ui-mini"
 				onclick="addCellphoneFriend()" data-icon="check" id="pubBtn">确定</a>
 		</div>
 	</div>

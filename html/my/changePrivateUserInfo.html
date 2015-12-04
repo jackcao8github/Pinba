@@ -18,32 +18,32 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="userName">昵称:</label> <input type="text"
+				<div class="form-group">
+					<label for="userName">昵称:</label> <input type="text" class="form-control"
 						name="userName" id="userName" value="" required
 						placeholder="用于显示，不用于登陆，可修改。">
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="sex" class="select">性别:</label> <select name="sex"
+				<div class="form-group">
+					<label for="sex" class="select">性别:</label> <select class="form-control" name="sex"
 						id="sex" >
 						<option value="male" selected>男</option>
 						<option value="female">女</option>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="age">年龄:</label> <input type="text" name="age" id="age"
+				<div class="form-group">
+					<label for="age">年龄:</label> <input type="text" class="form-control" name="age" id="age"
 						value="" required>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="email">邮箱:</label> <input type="text" name="email"
+				<div class="form-group">
+					<label for="email">邮箱:</label> <input type="text" class="form-control" name="email"
 						id="email" value="" required>
 				</div>
-				<div data-role="fieldcontain">
-                    <label for="qq">QQ:</label> <input type="text"
+				<div class="form-group">
+                    <label for="qq">QQ:</label> <input type="text" class="form-control"
                         name="qq" id="qq" value="">
                 </div>
-				<a data-role="button" class="submmitBtn" data-icon="check" onclick="modPrivate()">提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" onclick="modPrivate()">提交</a>
 			</div>
 
 		</div>

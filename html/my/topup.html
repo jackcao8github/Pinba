@@ -18,8 +18,8 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="value">金额:</label> <input type="text" name="value"
+				<div class="form-group">
+					<label for="value">金额:</label> <input type="text" class="form-control" name="value"
 						id="value" value="" required placeholder="充值金额支持小数点2位，只能包含数字和."
 						pattern="">
 				</div>
@@ -28,7 +28,7 @@
 					<label for="alipay">支付宝</label> <input type="radio" name="alipay"
 						id="alipay" value="alipay" checked="checked">
 				</fieldset>
-				<a data-role="button" class="submmitBtn" data-icon="check" data-mini="true" onclick="submmit()"
+				<a role="button" class="btn btn-success btn-lg btn-block" data-mini="true" onclick="submmit()"
 					data-icon="check">提交</a>
 			</div>
 

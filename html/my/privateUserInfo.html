@@ -32,7 +32,7 @@
 		</div>
 		<!-- 简历选择框 -->
 		<!-- <div data-role="popup" id="popupMenu">
-			<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+			<ul class="list-group" data-inset="true" style="min-width: 210px;"
 				id="selectHeadPicSrc">
 				<li><a href="#" onclick="selectFromFile()">从相册选择</a></li>
 				<li><a href="#" onclick="selectFromCamera()">使用相机拍摄</a></li>
@@ -44,23 +44,23 @@
 
 		<!-- 第一块 -->
 		<div class="firstblock">
-			<ul data-role="listview" class="ui-mini" id="userInfoDiv">
-				<li data-icon="false">用户编号 <span class="ui-li-count" id="userId"></span></li>
-				<li data-icon="false"><a href="#">昵称 <span
+			<ul class="list-group" class="ui-mini" id="userInfoDiv">
+				<li class="list-group-item">用户编号 <span class="ui-li-count" id="userId"></span></li>
+				<li class="list-group-item"><a href="#">昵称 <span
 						class="ui-li-count" id="userName"></span></a></li>
-				<li data-icon="false"><a href="#">性别 <span
+				<li class="list-group-item"><a href="#">性别 <span
 						class="ui-li-count" id="sex"></span></a></li>
-				<li data-icon="false"><a href="#">年龄 <span
+				<li class="list-group-item"><a href="#">年龄 <span
 						class="ui-li-count" id="age"></span></a></li>
 				<li><a onclick="changeSubPage('changeCellphone', 'userInfoPage')">手机<span class="ui-li-count" id="cellphone"></span> </a></li>
-				<li data-icon="false"><a href="#">邮箱 <span
+				<li class="list-group-item"><a href="#">邮箱 <span
 						class="ui-li-count" id="email"></span></a></li>
-				<li data-icon="false" >QQ<span class="ui-li-count" id="qq"></span></li>
+				<li class="list-group-item" >QQ<span class="ui-li-count" id="qq"></span></li>
 				<li><a href="#" id="changePass" onclick="changeSubPage('changePass', 'userInfoPage')">修改密码 </a></li>
 			</ul>
 
 			<div class="h1"></div>
-			<a data-role="button" style="background: red" onclick="logout()" data-mini="true">退出当前帐户</a>
+			<a role="button" style="background: red" onclick="logout()" data-mini="true">退出当前帐户</a>
 		</div>
 
 	</div>
@@ -218,17 +218,7 @@
 	
 	function changeHeadPic(){
 		$('#imgFile').click();
-		/* $('#popupMenu').popup();
-		$('#popupMenu').popup('open'); */
 	}
 	
-	/* function selectFromFile(){
-		$('#imgFile').click();
-		$('#popupMenu').popup('close');
-	}
-	
-	function selectFromCamera(){
-		$('#popupMenu').popup('close');
-	} */
 </script>
 </html>

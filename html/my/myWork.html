@@ -2,43 +2,46 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 </head>
 <body>
 	<div data-role="page" id="myWorkPage">
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#"
 					onclick="closeSubPage();return false;"><i
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的工作</a>
 			</div>
 		</nav>
-		<div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#workList" class="ui-btn-active"
-						onclick="getWorkList()">工作记录</a></li>
-					<li><a href="#resumeList" id="messageTabLi"
-						onclick="getResumeList()">简历</a></li>
-					<li><a href="#reqworkList" onclick="getReqWorkList()">求职记录</a></li>
-				</ul>
-			</div>
 
-			<div id="resumeList">
+		<div data-role="navbar">
+			<ul class="nav nav-tabs nav-justified" role="tablist">
+				<li role="presentation" class="active"><a href="#workList"
+					onclick="getWorkList()">工作记录</a></li>
+				<li role="presentation"><a href="#resumeList" id="messageTabLi"
+					onclick="getResumeList()">简历</a></li>
+				<li role="presentation"><a href="#reqworkList"
+					onclick="getReqWorkList()">求职记录</a></li>
+			</ul>
+		</div>
+		<div id="tabs" class="tab-content">
+			<div id="resumeList" role="tabpanel" class="tab-pane active">
 				<div class="swipe">
 					<div class="pullDownFresh">
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul data-role="listview" id="resumeListUL">
+					<ul class="list-group" id="resumeListUL">
 
 					</ul>
 
-					<a data-role="button" data-mini="true" data-icon="plus" class="submmitBtn"
-						onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
+					<a role="button" data-mini="true" data-icon="plus"
+						class="submmitBtn" onclick="changeSubPage('resume', 'myWorkPage')">增加一个简历</a>
 				</div>
 			</div>
 
@@ -54,37 +57,38 @@
 					class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini">取消</a>
 			</div>
 
-			<div id="workList">
+			<div id="workList" role="tabpanel" class="tab-pane">
 				<div class="swipe">
 					<div class="pullDownFresh">
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					
-				</div>
-				<ul data-role="listview" id="hiredWorkList">
-					</ul>
 
-					<ul data-role="listview" id="interviewWorkList">
-					</ul>
-
-					<ul data-role="listview" id="completeWorkList">
-					</ul>
-			</div>
-		<div id="reqworkList">
-			<div class="swipe">
-				<div class="pullDownFresh">
-					<div class="pullDownFreshText">下拉刷新</div>
 				</div>
-				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-				<ul data-role="listview" id="reqWorkListUL">
+				<ul class="list-group" id="hiredWorkList">
 				</ul>
 
-				<a data-role="button" data-mini="true" data-icon="plus"  class="submmitBtn"
-					onclick="changeSubPage('reqwork', 'myWorkPage')">发布求职信息</a>
+				<ul class="list-group" id="interviewWorkList">
+				</ul>
+
+				<ul class="list-group" id="completeWorkList">
+				</ul>
+			</div>
+			<div id="reqworkList" role="tabpanel" class="tab-pane">
+				<div class="swipe">
+					<div class="pullDownFresh">
+						<div class="pullDownFreshText">下拉刷新</div>
+					</div>
+					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+					<ul class="list-group" id="reqWorkListUL">
+					</ul>
+
+					<a role="button" data-mini="true" data-icon="plus"
+						class="submmitBtn"
+						onclick="changeSubPage('reqwork', 'myWorkPage')">发布求职信息</a>
+				</div>
 			</div>
 		</div>
-	</div>
 
 	</div>
 </body>
@@ -99,9 +103,9 @@
 		bindSwipeEvent();
 		getWorkList();
 	});
-/* 	function swipeRight() {
-		closeSubPage();
-	} */
+	/* 	function swipeRight() {
+	 closeSubPage();
+	 } */
 
 	function openResumeDetail(obj) {
 		var resumeid = $(obj).attr('resumeId');
@@ -117,16 +121,16 @@
 		changeSubPage('reqWorkDetail', 'myWorkPage', 'workId=' + workId);
 	}
 	function swipeDown() {
-		if (activeNav == 'workList'){
+		if (activeNav == 'workList') {
 			getWorkList();
-		}else if (activeNav == 'resumeList'){
-            getResumeList();
-        }else if (activeNav == 'reqWorkList'){
-            getReqWorkList();
-        }
-		
+		} else if (activeNav == 'resumeList') {
+			getResumeList();
+		} else if (activeNav == 'reqWorkList') {
+			getReqWorkList();
+		}
+
 	}
-	
+
 	var activeNav = '';
 	function getWorkList() {
 		activeNav = 'workList';
@@ -149,7 +153,7 @@
 					var interviewWorkArr = [];
 					var completedWorkArr = [];
 
-					for ( var i = 0; data.length > i; i++) {
+					for (var i = 0; data.length > i; i++) {
 						if (data[i].state == 'hired'
 								|| data[i].state == 'checkIn') {//已录用
 							hiredWorkArr.push(data[i]);
@@ -171,7 +175,9 @@
 						fillCompletedWorkList(completedWorkArr);
 					}
 
-					if (hiredWorkArr.length == 0&&interviewWorkArr.length == 0&&completedWorkArr.length == 0){
+					if (hiredWorkArr.length == 0
+							&& interviewWorkArr.length == 0
+							&& completedWorkArr.length == 0) {
 						$('#workList .pullNoData').show();
 					}
 				} else {
@@ -235,7 +241,7 @@
 		$('#hiredWorkList').html('');//清除已有li
 
 		var ulHtml = '<li data-role="list-divider">未完成</li>';
-		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+		var liTemplate = '<li class="list-group-item"><a onclick="openWork(this)" workId="-workId-" \
 			style="padding-top: 0px; padding-bottom: 0px;"> \
 				<h2>-workName-</h2>\
 				<p>用人单位:-userName-</p> \
@@ -243,7 +249,7 @@
 				<p>工作地点:-workAddress-</p> \
 		</a></li>';
 
-		var liTemplate2 = '<li data-icon="false">\
+		var liTemplate2 = '<li class="list-group-item">\
 			<fieldset class="ui-grid-a">\
 				<div class="ui-block-a">\
 					<button \
@@ -253,7 +259,7 @@
 				class="ui-btn ui-corner-all ui-btn-a ui-mini submmitBtn" workId="-workId-" onclick="check(this)" id="checkOutBtn">签退</a>\
 				</div></fieldset></li>';
 
-		for ( var i = 0; arr.length > i; i++) {
+		for (var i = 0; arr.length > i; i++) {
 			var repValueArr = {};
 			repValueArr['-workId-'] = arr[i].workId;
 			repValueArr['-workName-'] = arr[i].workName;
@@ -278,12 +284,11 @@
 		}
 
 		$('#hiredWorkList').append(ulHtml);
-		$('#hiredWorkList').listview("refresh");
 	}
 
 	function fillInterviewedWorkList(arr) {
 		var ulHtml = '<li data-role="list-divider">预约面试</li>';
-		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+		var liTemplate = '<li class="list-group-item"><a onclick="openWork(this)" workId="-workId-" \
 			style="padding-top: 0px; padding-bottom: 0px;"> \
 				<h2>-workName-</h2>\
 				<p>用人单位:-userName-</p> \
@@ -291,7 +296,7 @@
 				<p>面试地点:-interviewAddress-</p> \
 		</a></li>';
 
-		for ( var i = 0; arr.length > i; i++) {
+		for (var i = 0; arr.length > i; i++) {
 			var repValueArr = {};
 			repValueArr['-workId-'] = arr[i].workId;
 			repValueArr['-workName-'] = arr[i].workName;
@@ -304,53 +309,53 @@
 		}
 		$('#interviewWorkList').html('');
 		$('#interviewWorkList').append(ulHtml);
-		$('#interviewWorkList').listview("refresh");
 	}
 	function fillCompletedWorkList(arr) {
 		var ulHtml = '<li data-role="list-divider">已完成</li>';
-		var liTemplate = '<li data-icon="false"><a onclick="openWork(this)" workId="-workId-" \
+		var liTemplate = '<li class="list-group-item"><a onclick="openWork(this)" workId="-workId-" \
 			style="padding-top: 0px; padding-bottom: 0px;"> \
 				<h2>-workName-</h2>\
 				<p>用人单位:-userName-</p>\
 				<p>应发薪资:-money-</p><p>发放状态:-payState-</p></a> \
 				<a onclick="toAssess(-workId-)"></a></li>';
 
-		for ( var i = 0; arr.length > i; i++) {
+		for (var i = 0; arr.length > i; i++) {
 			var repValueArr = {};
 			repValueArr['-workId-'] = arr[i].workId;
 			repValueArr['-workName-'] = arr[i].workName;
 			repValueArr['-userName-'] = arr[i].userName;
-			
-			if (arr[i].newTotalPay!=null){
+
+			if (arr[i].newTotalPay != null) {
 				repValueArr['-money-'] = arr[i].newTotalPay;
-			}else{
+			} else {
 				repValueArr['-money-'] = arr[i].totalPay;
 			}
-			
-			if (arr[i].payState!=null){
-				repValueArr['-payState-'] = getDisplayEnumValue('batchPayState',arr[i].payState);
-				
-				if (arr[i].payState=='fail'&&arr[i].payRemark!=null){
-					var failReason = getDisplayEnumValue('payFailReason', arr[i].payRemark);
-					repValueArr['-payState-'] = repValueArr['-payState-'] + ',失败原因:'+failReason;
-				}else if (arr[i].payState=='success'){
-					repValueArr['-payState-'] = repValueArr['-payState-'] + ',批次号:'+arr[i].batchNo;
+
+			if (arr[i].payState != null) {
+				repValueArr['-payState-'] = getDisplayEnumValue(
+						'batchPayState', arr[i].payState);
+
+				if (arr[i].payState == 'fail' && arr[i].payRemark != null) {
+					var failReason = getDisplayEnumValue('payFailReason',
+							arr[i].payRemark);
+					repValueArr['-payState-'] = repValueArr['-payState-']
+							+ ',失败原因:' + failReason;
+				} else if (arr[i].payState == 'success') {
+					repValueArr['-payState-'] = repValueArr['-payState-']
+							+ ',批次号:' + arr[i].batchNo;
 				}
-			}else{
+			} else {
 				repValueArr['-payState-'] = '未发放';
 			}
-			
-			
-			
+
 			var liHtml = replaceAll(liTemplate, repValueArr);
 			ulHtml += liHtml;
 		}
 		$('#completeWorkList').html('');
 		$('#completeWorkList').append(ulHtml);
-		$('#completeWorkList').listview("refresh");
 	}
-	
-	function toAssess(workId){
+
+	function toAssess(workId) {
 		changeSubPage('workAssessment', 'myWorkPage', 'workId=' + workId);
 	}
 	function getResumeList() {
@@ -372,7 +377,7 @@
 					function(data) {
 						if (data.length > 0) {
 							var lihtmls = '';
-							for ( var i = 0; data.length > i; i++) {
+							for (var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
 								var lihtml = '<li><a onclick="openResumeDetail(this)" resumeId="'
 										+ resumeobj.resumeId
@@ -388,7 +393,6 @@
 								lihtmls += lihtml;
 							}
 							$('#resumeListUL').append(lihtmls);
-							$('#resumeListUL').listview("refresh");
 						} else {
 							$('#resumeList .pullNoData').show();
 						}
@@ -417,7 +421,7 @@
 						if (data.length > 0) {
 							var lihtmls = '';
 							var litemplate = '<li><a onclick="openReqWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+</p></a></li>';
-							for ( var i = 0; data.length > i; i++) {
+							for (var i = 0; data.length > i; i++) {
 								var workObj = data[i];
 								var lihtml = litemplate.replace('+workId+',
 										workObj.workId).replace('+workName+',
@@ -433,7 +437,6 @@
 								lihtmls += lihtml;
 							}
 							$('#reqWorkListUL').append(lihtmls);
-							$('#reqWorkListUL').listview("refresh");
 						} else {
 							$('#reqworkList .pullNoData').show();
 						}

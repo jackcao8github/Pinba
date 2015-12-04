@@ -199,59 +199,59 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="workName">标题:</label> <input type="text"
+				<div class="form-group">
+					<label for="workName">标题:</label> <input type="text" class="form-control"
 						name="workName" id="workName" value="" required
 						placeholder="工作简介">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="content">工作内容:</label>
-					<textarea cols="40" rows="8" name="content" id="content"
+					<textarea class="form-control"cols="40" rows="8" name="content" id="content"
 						data-mini="true" required placeholder="工作详细内容">工作内容</textarea>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="numberOfRecruit">人数:</label> <input type="text"
+				<div class="form-group">
+					<label for="numberOfRecruit">人数:</label> <input type="text" class="form-control"
 						name="numberOfRecruit" id="numberOfRecruit" value="10"
 						required placeholder="招聘人数" pattern="[0-9]{1,3}"
 						title="必须是整数">
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="post" class="select">职位:</label> <select name="post"
+				<div class="form-group">
+					<label for="post" class="select">职位:</label> <select class="form-control" name="post"
 						id="post" >
 
 					</select>
 				</div>
 
 
-				<div data-role="fieldcontain">
-					<label for="workArea" class="select">区域:</label> <select
+				<div class="form-group">
+					<label for="workArea" class="select">区域:</label> <select class="form-control"
 						name="workArea" id="workArea"
 						required>
 
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="address">详细地址:</label> <input type="text"
+				<div class="form-group">
+					<label for="address">详细地址:</label> <input type="text" class="form-control"
 						name="address" id="address" value="" required>
 				</div>
 
 
-				<div data-role="fieldcontain">
-					<label for="expectDegree" class="select">学历要求:</label> <select
+				<div class="form-group">
+					<label for="expectDegree" class="select">学历要求:</label> <select class="form-control"
 						name="expectDegree" id="expectDegree" >
 
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="expectExperience" class="select">工作经验要求:</label> <select
+				<div class="form-group">
+					<label for="expectExperience" class="select">工作经验要求:</label> <select class="form-control"
 						name="expectExperience" id="expectExperience">
 
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="expectAge" class="select">年龄要求:</label> <select
+				<div class="form-group">
+					<label for="expectAge" class="select">年龄要求:</label> <select class="form-control"
 						name="expectAge" id="expectAge" >
 
 					</select>
@@ -268,45 +268,45 @@
 						value="10" min="0" max="200">
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="sallaryPeriod">工资结算周期:</label> <select name="sallaryPeriod"
+				<div class="form-group">
+					<label for="sallaryPeriod">工资结算周期:</label> <select class="form-control" name="sallaryPeriod"
 						id="sallaryPeriod"  data-mini="true">
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="sallaryChargeType">工资结算方式:</label> <select name="sallaryChargeType"
+				<div class="form-group">
+					<label for="sallaryChargeType">工资结算方式:</label> <select class="form-control" name="sallaryChargeType"
 						id="sallaryChargeType"  data-mini="true">
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
-					<label for="food">提供饮食:</label><select
+				<div class="form-group">
+					<label for="food">提供饮食:</label><select class="form-control"
 						name="food" id="food" 
 						data-mini="true">
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="lodging">提供住宿:</label><select
+				<div class="form-group">
+					<label for="lodging">提供住宿:</label><select class="form-control"
 						name="lodging" id="lodging" 
 						data-mini="true">
 					</select>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="effDate">生效时间:</label> <input type="date"
 						name="effDate" id="effDate" value="" required
 						placeholder="别人在此时间后才能看到你的求职">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="expDate">失效时间:</label> <input type="date"
 						name="expDate" id="expDate" value="" required
 						placeholder="别人在此时间后将不再能看不到你的求职">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="verifyCode">验证码:</label>
 					<div style="display: inline-flex; width: 100%">
 						<div style="width: 70%; height: 100%;">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
+							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
 								placeholder="验证码" required>
 						</div>
 						<a data-mini="true" href="#"
@@ -314,7 +314,7 @@
 							src="" id="verifyImg"></img></a>
 					</div>
 				</div>
-				<a data-role="button" class="submmitBtn" onclick="publish()" data-icon="check"  id="pubBtn">发布</a>
+				<a role="button" class="submmitBtn" onclick="publish()" data-icon="check"  id="pubBtn">发布</a>
 			</div>
 		</div>
 	</div>

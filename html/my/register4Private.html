@@ -2,11 +2,13 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 
 </head>
 <body>
@@ -20,62 +22,58 @@
 		</nav>
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="ptel">手机号码:</label>
-					<div style="display: inline-flex; width: 100%">
-						<div style="width: 70%; height: 100%;">
-							<input type="tel" name="ptel" id="ptel" value=""
-								required pattern="[0-9]{11}" title="11位手机号码"
-								placeholder="可用于登陆，一个号码只能注册一次。">
-						</div>
-						<a data-mini="true" onclick="sendTelVerifyCode(this)"
-							class="ui-btn" id="sendVerifyBtn" for="ptel"
-							style="width: 30%; height: 100%; margin-top: 5px;">发送验证码</a>
+					<div class="input-group">
+						<input type="tel" class="form-control" name="ptel" id="ptel"
+							value="" required pattern="[0-9]{11}" title="11位手机号码"
+							placeholder="可用于登陆，一个号码只能注册一次。"> <span
+							class="input-group-addon" id="sendVerifyBtn"
+							onclick="sendTelVerifyCode(this)">发送验证码</span>
 					</div>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="pmsgverifyCode">短信验证码:</label> <input type="text"
-						name="pmsgverifyCode" id="pmsgverifyCode" value=""
-						required placeholder="输入你手机上收到的验证码。">
+						class="form-control" name="pmsgverifyCode" id="pmsgverifyCode"
+						value="" required placeholder="输入你手机上收到的验证码。">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="ppassword">密码:</label> <input type="password"
 						name="ppassword" id="ppassword" value="" autocomplete="off"
 						required placeholder="最短6位，最长10位，只可包含数字字母"
 						pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
 				</div>
-				
-				<div data-role="fieldcontain">
-					<label for="nickName">昵称:</label> <input type="text" name="nickName"
-						id="nickName" value="" required
-						placeholder="用于显示，不用于登陆，可修改。">
+
+				<div class="form-group">
+					<label for="nickName">昵称:</label> <input type="text"
+						class="form-control" name="nickName" id="nickName" value=""
+						required placeholder="用于显示，不用于登陆，可修改。">
 				</div>
-				<div data-role="fieldcontain">
-					<label for="sex" class="select">性别:</label> <select name="sex"
-						id="sex" >
+				<div class="form-group">
+					<label for="sex" class="select">性别:</label> <select
+						class="form-control" name="sex" id="sex">
 						<option value="male" selected>男</option>
 						<option value="female">女</option>
 					</select>
 				</div>
-				<div data-role="fieldcontain">
-					<label for="age">年龄:</label> <input type="text" name="age" id="age"
-						value="" required>
+				<div class="form-group">
+					<label for="age">年龄:</label> <input type="text"
+						class="form-control" name="age" id="age" value="" required>
 				</div>
-				
-				
-				<div data-role="fieldcontain">
-                    <label for="refererCellphone">推荐人手机:</label> <input type="text"
-                        name="refererCellphone" id="refererCellphone" value=""
-                        placeholder="推荐人的11位手机号码。">
-                </div>
-				
-				<fieldset data-role="controlgroup">
-						<label for="agreeContractP">已阅读并同意用户协议</label><input
-							type="checkbox" name="agreeContractP" id="agreeContractP"
-							required checked>
-				</fieldset>
-				<a href="#" onclick="showContract()">用户协议</a>
-				<a data-role="button" class="submmitBtn" data-icon="check"  onclick="reg4Private()">注册</a>
+
+
+				<div class="form-group">
+					<label for="refererCellphone">推荐人手机:</label> <input type="text"
+						class="form-control" name="refererCellphone" id="refererCellphone"
+						value="" placeholder="推荐人的11位手机号码。">
+				</div>
+
+				<div class="checkbox">
+					<label for="agreeContractP">已阅读并同意用户协议</label><input
+						type="checkbox" name="agreeContractP" id="agreeContractP" required>
+				</div>
+				<a href="#" onclick="showContract()">用户协议</a> <a role="button"
+					class="btn btn-success btn-lg btn-block" onclick="reg4Private()">注册</a>
 			</div>
 		</div>
 	</div>
@@ -93,21 +91,21 @@
 
 	function reg4Private() {
 		//form表单校验不通过
-        if(checkFormNullable('form')==false){
-            return;
-        }
+		if (checkFormNullable('form') == false) {
+			return;
+		}
 		var cellphone = $('#ptel').val();
 		var userName = $('#nickName').val();
 		var password = $('#ppassword').val();
 		var verifyCode = $('#pmsgverifyCode').val();
-	    var refererCellphone = $('#refererCellphone').val();
-	    var sex =  $('#sex').val();
-	    var age =  $('#age').val();
-	    
+		var refererCellphone = $('#refererCellphone').val();
+		var sex = $('#sex').val();
+		var age = $('#age').val();
+
 		var userInfo = {};
 		userInfo.userName = userName;
 		userInfo.password = $.md5(password);
-		
+
 		userInfo.msgVerifyCode = verifyCode;
 		userInfo.cellphone = cellphone;
 		userInfo.refererCellphone = refererCellphone;//推荐人手机
@@ -143,10 +141,10 @@
 			showTipDialog('手机号不能为空!');
 			return;
 		}
-		if(typeof($("#sendVerifyBtn").attr("disabled"))!="undefined"){
+		if (typeof ($("#sendVerifyBtn").attr("disabled")) != "undefined") {
 			return;
 		}
-		$('#sendVerifyBtn').attr('disabled',true);
+		$('#sendVerifyBtn').attr('disabled', true);
 		var userInfo = {};
 		userInfo.cellphone = $('#ptel').val();
 		//调用验证码短信发送接口

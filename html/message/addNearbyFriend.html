@@ -24,7 +24,7 @@
 				</div>
 				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
 			
-				<ul data-role="listview" id="nearbyUserListUL">
+				<ul class="list-group" id="nearbyUserListUL">
 				</ul>
 				</div>
 	</div>
@@ -84,7 +84,7 @@ function loadNearbyUserList() {
 }
 function fillUserList(arr){
 	var ulHtml = '';
-	var liTemplate = '<li data-icon="false"><a href="#" onclick="toViewFriendInfo(\'-friendId-\',\'-friendType-\')"><img style="margin:5px;height:70px;width:70px;border-radius:50px;top:10px;" src="-friendHeadPic-"></img> \
+	var liTemplate = '<li class="list-group-item"><a href="#" onclick="toViewFriendInfo(\'-friendId-\',\'-friendType-\')"><img style="margin:5px;height:70px;width:70px;border-radius:50px;top:10px;" src="-friendHeadPic-"></img> \
 		<h3>-friendName-</h3>-feelingText- \
 		<p style="float:left;">-friendTypeName--privateFriend-&nbsp;|&nbsp;<i class="fa fa-street-view"></i>-distance-米</p> \
 	</a></li>';
@@ -120,7 +120,6 @@ function fillUserList(arr){
 	}
 
 	$('#nearbyUserListUL').append(ulHtml);
-	$('#nearbyUserListUL').listview("refresh");
 }
 //查看用户信息
 function toViewFriendInfo(friendId,friendUserType){

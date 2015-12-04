@@ -447,36 +447,14 @@ function closeSubPage(destpageid) {
  * tipMsg 提示内容
  * seconds 显示时长
  */
-function showTipDialog(tipMsg,seconds) {
-	//alert(tipMsg);
-	/*// 删除已有提示框
+function showTipDialog(tipMsg, seconds) {
 	if ($('#tipMsgDialog').length > 0) {
 		$('#tipMsgDialog').remove();
 	}
-	// 创建新提示枉
-	$('<div data-role="popup" id="tipMsgDialog" data-theme="a" style="min-width:210px;" class="ui-corner-all" data-dismissible="true">'
-					+ '<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">'
-					+ '<p style="color:red">' + tipMsg + '</p></div></div>')
-			.appendTo('body');
-	var popObj = $('#tipMsgDialog');
-	popObj.popup({
-		transition : "slideup"
-	});// 打开时有slide效果
-	popObj.popup("open");
-	// 1秒后关闭
-	setTimeout(function() {
-		$('#tipMsgDialog').popup('close');
-	}, 1000);*/
-	
-	if ($('#tipMsgDialog').length > 0) {
-	}else{
-		$('<div id="tipMsgDialog" class="tipMsgDialog" >'
-				+ '<h3></h3></div>')
-		.appendTo('body');
-	}
-	$('#tipMsgDialog h3').html(tipMsg);
-	$('#tipMsgDialog').show();
-	if (seconds==null){
+
+	$('<div id="tipMsgDialog" class="alert alert-info" role="alert">'
+					+ tipMsg + '</div>').appendTo('body');
+	if (seconds == null) {
 		seconds = 2000;
 	}
 	setTimeout(function() {
@@ -493,113 +471,34 @@ function showConfirmDialog(confirmMsg, okFun,noFun) {
 		$('#confirmMsgDialog').remove();
 	}
 	 
-			
 	// 创建新提示枉
-	var htmlTemplate = '<div id="confirmMsgDialog"> \
-		<div class="modal-data"> \
-		<h3>-confirmMsg-</h3> \
-			<a id="okBtn" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline optionConfirm">是</a> \
-			<a id="noBtn" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline optionCancel">否</a> \
-		</div></div>';
+	var htmlTemplate = '<div id="confirmMsgDialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
+		<div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"> \
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+		<h4 class="modal-title" id="myModalLabel">操作确认</h4></div><div class="modal-body"> \
+		<p>-confirmMsg-</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal" id="noBtn">Close</button> \
+		<button type="button" class="btn btn-primary" id="okBtn">Save changes</button></div></div></div></div>';
 	
 	var html = htmlTemplate.replace('-confirmMsg-',confirmMsg);
 	$(html).appendTo('body');
-	$('#confirmMsgDialog').css('visibility','visible');
-	
 	$('#confirmMsgDialog #okBtn').click(function(){
-		$('#confirmMsgDialog').css('visibility','hidden');
+		$('#confirmMsgDialog').modal('hide');
 		if (okFun!=null){
 			okFun();
 		}
 	});
 	$('#confirmMsgDialog #noBtn').click(function(){
-		$('#confirmMsgDialog').css('visibility','hidden');
+		$('#confirmMsgDialog').modal('hide');
 		if (noFun!=null){
 			noFun();
 		}
 	});
-}
-
-/*
- * 显示信息项修改对话框 infoCode为信息项编码，也是控件id
- */
-function showModDialog(infoCode) {
-	// 删除已有提示框
-	if ($('#modDialog').length > 0) {
-		$('#modDialog').remove();
-	}
-	// 创建信息项修改对话框
-	var html = '<div data-role="popup" id="modDialog" data-confirmed="no" data-transition="pop" data-dismissible="false">\
-		<div role="main" class="ui-content">+CONTENT+\
-		</div></div>';
-
-	// 根据infoCode指定的信息项来决定是显示下拉框，还是显示输入框
-	var infoType = '';
-	var maxInfoLength = 10;
-	var oldValue = $('#infoCode').html();
-
-	var formHtml = '<form action="" onsubmit="return modConfirm()">';
-	if (infoType == 'enum') {
-		var isMulti = 'yes';
-
-		var selectHtml = '<fieldset data-role="controlgroup"> ';
-
-		if (isMulti == 'yes') {
-			selectHtml += '<input type="checkbox" name="checkbox-1a" id="checkbox-1a" checked="">\
-			    <label for="checkbox-1a">Cheetos</label> \
-			    <input type="checkbox" name="checkbox-2a" id="checkbox-2a">\
-			    <label for="checkbox-2a">Doritos</label>\
-			    <input type="checkbox" name="checkbox-3a" id="checkbox-3a">\
-			    <label for="checkbox-3a">Fritos</label>\
-			    <input type="checkbox" name="checkbox-4a" id="checkbox-4a">\
-			    <label for="checkbox-4a">Sun Chips</label>';
-		} else {
-			selectHtml += '<input type="radio" name="dialogCtrlId" id="checkbox-1a" checked="">\
-				    <label for="checkbox-1a">Cheetos</label> \
-				    <input type="radio" name="dialogCtrlId" id="checkbox-2a">\
-				    <label for="checkbox-2a">Doritos</label>\
-				    <input type="radio" name="dialogCtrlId" id="checkbox-3a">\
-				    <label for="checkbox-3a">Fritos</label>\
-				    <input type="radio" name="dialogCtrlId" id="checkbox-4a">\
-				    <label for="checkbox-4a">Sun Chips</label>';
-		}
-
-		selectHtml += '</fieldset>';
-		formHmtl += selectHtml;
-	} else if (infoType == 'string') {
-		if (maxInfoLength > 1024) {// textarea
-			formHmtl += '<textarea cols="40" rows="8" type="textarea" name="dialogCtrlId" id="dialogCtrlId" required placeholder=""></textarea>';
-		} else {// 普通输入框
-			formHmtl += '<input type="text" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required placeholder="">';
-		}
-	} else if (infoType == 'number') {
-		formHmtl += '<input type="text" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required placeholder="必须是整数" pattern="[0-9]{1,3}" title="必须是整数">';
-	} else if (infoType == 'date') {
-		formHmtl += '<input type="date" name="dialogCtrlId" id="dialogCtrlId" value="+OLDVALUE+" required>';
-	}
-
-	formHmtl += '<button class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b optionConfirm" type="submmit">提交</button>';
-	formHmtl += '<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b optionCancel" data-rel="back" data-transition="flow">取消</a>';
-	formHmtl += '</form>';
-
-	$(html).appendTo('body');
-	var popObj = $('#modDialog');
-	popObj.popup();
-	$('#modDialog').popup("open");
-}
-
-function modConfirm() {
-	var newValue = '';
-	newValue = $('#dialogCtrlId').html();
-
-	$('#infoCode').html(newValue);
-	$('#modDialog').popup("close");
+	$('#confirmMsgDialog').modal('show');
 }
 
 // 向求职列表中增加求职信息
 function fillReqWorkList(workListId, data) {
-	var newhtml = '<li  onclick="openReqWorkDetail(this)" workId="+workId+"><a\
-       >\
+	var newhtml = '<li  onclick="openReqWorkDetail(this)" workId="+workId+"><a> \
     <div style="overflow: hidden;">\
         <p style="float: left; font-weight: bold;">+workName+</p>\
         <p style="color: black; float: right">+time+</p>\
@@ -642,8 +541,6 @@ function fillReqWorkList(workListId, data) {
 				'+condition+', conditionStr).replace('+req+', reqInfo);
 		$('#' + workListId).append(html);
 	}
-
-	/*$('#' + workListId).listview("refresh");*/
 }
 
 // 向工作列表中增加工作
@@ -689,8 +586,6 @@ function fillWorkList(workListId, data) {
 
 		$('#' + workListId).append(html);
 	}
-
-	/*$('#' + workListId).listview("refresh");*/
 }
 
 function createCreditHtml(userCredit) {

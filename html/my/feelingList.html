@@ -24,11 +24,11 @@
 				<div class="pullDownFreshText">下拉刷新</div>
 			</div>
 			<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-			<ul data-role="listview" id="feelingList" style="margin:0" data-split-icon="delete">
+			<ul class="list-group" id="feelingList" style="margin:0" data-split-icon="delete">
 
 			</ul>
 		</div>
-		<a data-role="button" data-mini="true" data-icon="plus" class="submmitBtn"
+		<a role="button" data-mini="true" data-icon="plus" class="submmitBtn"
 			onclick="changeSubPage('addFeeling','feelingListPage')">增加心情</a>
 			<!-- </div> -->
 	</div>
@@ -115,7 +115,6 @@
 			var liHtml = replaceAll(litemplate, params);
 
 			$('#feelingList').append(liHtml);
-			$('#feelingList').listview("refresh");
 		}
 
 	}

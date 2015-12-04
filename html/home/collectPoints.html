@@ -147,7 +147,7 @@ table {
 		<!-- <div data-role="content"> -->
 		<div id="cal">
 			<div id="top">
-				公元<select data-role="none"></select>年<select data-role="none"></select>月
+				公元<select class="form-control" data-role="none"></select>年<select class="form-control" data-role="none"></select>月
 				农历<span></span>年[<span></span>年] <input data-role="none"
 					type="button" value="回到今天" title="点击后跳转回今天" style="padding: 0px">
 			</div>
@@ -167,7 +167,7 @@ table {
  -->
 		<!-- <div data-role="content"> -->
 		<p class="section-divider" id="yourLike">心情列表</p>
-			<ul data-role="listview" id="feelingList" style="margin: 0">
+			<ul class="list-group" id="feelingList" style="margin: 0">
 
 			</ul>
 	<!-- 	</div> -->
@@ -742,7 +742,7 @@ table {
 	
 	function fillList(data) {
 		$('#feelingList').html('');
-		var litemplate = '<li data-icon="false"><a>-image-<h3 style="white-space:pre-wrap">-feelingText-</h3><p>-createDate-</p></a></li>';
+		var litemplate = '<li class="list-group-item"><a>-image-<h3 style="white-space:pre-wrap">-feelingText-</h3><p>-createDate-</p></a></li>';
 
 		var ulHtml = '';
 		for ( var i = 0; data.length > i; i++) {
@@ -761,7 +761,6 @@ table {
 			var liHtml = replaceAll(litemplate, params);
 
 			$('#feelingList').append(liHtml);
-			$('#feelingList').listview("refresh");
 		}
 	}
 </script>

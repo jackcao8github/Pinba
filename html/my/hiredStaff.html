@@ -19,30 +19,30 @@
 		</nav>
         <div data-role="content" class="ui-mini">
             <div id="form">
-                <div data-role="fieldcontain">
-                    <label for="workTimeBegin">开始工作时间:</label> <input type="text"
+                <div class="form-group">
+                    <label for="workTimeBegin">开始工作时间:</label> <input type="text" class="form-control"
                         name="workTimeBegin" id="workTimeBegin" value=""
                         required placeholder="开始工作时间">
                 </div>
-                 <div data-role="fieldcontain">
-                    <label for="workTimeEnd">结束工作时间:</label> <input type="text"
+                 <div class="form-group">
+                    <label for="workTimeEnd">结束工作时间:</label> <input type="text" class="form-control"
                         name="workTimeEnd" id="workTimeEnd" value=""
                         required placeholder="结束工作时间">
                 </div>
-                <div data-role="fieldcontain">
-                    <label for="workAddress">工作地点:</label> <input type="text"
+                <div class="form-group">
+                    <label for="workAddress">工作地点:</label> <input type="text" class="form-control"
                         name="workAddress" id="workAddress" value=""
                         required placeholder="工作地点">
                 </div>
 
-                <div data-role="fieldcontain">
+                <div class="form-group">
                     <label for="workRemark">备注:</label>
-                    <textarea cols="40" rows="8" name="workRemark"
+                    <textarea class="form-control"cols="40" rows="8" name="workRemark"
                         id="workRemark" data-mini="true"
                         placeholder="备注"></textarea>
                 </div>
 
-                <a data-role="button" class="submmitBtn" data-icon="check" onclick="bookInterview()">提交</a>
+                <a role="button" class="btn btn-success btn-lg btn-block" onclick="bookInterview()">提交</a>
             </div>
         </div>
     </div>

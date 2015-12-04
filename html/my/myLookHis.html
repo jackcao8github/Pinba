@@ -2,10 +2,12 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 
 <style>
 </style>
@@ -21,16 +23,20 @@
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的浏览记录</a>
 			</div>
 		</nav>
-		<div id="tabs" data-role="tabs">
 			<div id="workList">
-			<div class="swipe">
-			<div style="width:100%;height:0;background-color:#3388cc;position:relative;top:0;left:0" class="pullDownFresh"><div style="color:white;text-align:center;line-height:50px;height:50px;width:100%;position:absolute;bottom:0;left:0" class="pullDownFreshText">下拉刷新</div></div>
-				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-				<ul data-role="listview" id="workListUL" data-split-icon="delete">
-				</ul>
+				<div class="swipe">
+					<div
+						style="width: 100%; height: 0; background-color: #3388cc; position: relative; top: 0; left: 0"
+						class="pullDownFresh">
+						<div
+							style="color: white; text-align: center; line-height: 50px; height: 50px; width: 100%; position: absolute; bottom: 0; left: 0"
+							class="pullDownFreshText">下拉刷新</div>
+					</div>
+					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+					<ul class="list-group" id="workListUL" data-split-icon="delete">
+					</ul>
+				</div>
 			</div>
-			</div>
-		</div>
 	</div>
 </body>
 
@@ -38,85 +44,86 @@
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script src="../myjs/mycommon.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-	//绑定控件滑动事件
-    bindSwipeEvent();
-	getWorkList();
-});
-function swipeRight() {
-	closeSubPage();
-}
-
-function swipeDown(){
-	$('#workListUL').html('');
-	page = 1;
-	nextPageFlag = true;
-    getWorkList();
-}
-function openWorkDetail(obj) {
-	var workId = $(obj).attr('workId');
-	changeSubPage('workDetail', 'lookHisPage', 'workId=' + workId);
-}
-function getWorkList() {
-	if (nextPageFlag==false){
-		return;
+	$(document).ready(function() {
+		//绑定控件滑动事件
+		bindSwipeEvent();
+		getWorkList();
+	});
+	function swipeRight() {
+		closeSubPage();
 	}
-	var workInfo = {};
-	var cachedUserInfo = getLoginUserInfo();
-	if (cachedUserInfo != null) {
-		workInfo.userId = cachedUserInfo.userId;
-		workInfo.userToken = cachedUserInfo.userToken;
-		workInfo.page = page;
-		workInfo.workType = 'partTime';//兼职招聘
-		ajaxReq(
-				'workAction',
-				{
-					method : 'getLookedWorkList',
-					workInfo : json2Str(workInfo)
-				},
-				function(data) {
-					if (data.length>0) {
-						if (data.length==20){
-							page++;
-						}else{
-							nextPageFlag = false;
-						}
-						var lihtmls = '';
-						var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
-						litemplate += '</li>';
-						for ( var i = 0; data.length > i; i++) {
-							var workObj = data[i];
-							var lihtml = litemplate.replace(/\+workId\+/g,
-									workObj.workId).replace('+workName+',
-									workObj.workName).replace('+workType+',
-											getDisplayEnumValue('workType',workObj.workType)).replace('+effDate+',
-									workObj.effDate).replace('+expDate+',
-									workObj.expDate).replace(
-									'+focusNumber+', workObj.focusNumber)
-									.replace('+lookNumber+',
-											workObj.lookNumber).replace(
-											'+resumeNumber+',
-											workObj.resumeNumber);
-							lihtmls += lihtml;
-						}
-						$('#workListUL').append(lihtmls);
-						$('#workListUL').listview("refresh");
-					} else {
-						$('.pullNoData').show();
-					}
-				});
-	}
-}
 
-var page = 1;
-var nextPageFlag = true;
-function loadNextPage(){
-	var scrolltop = $(document).scrollTop();
-	var docHeight = $(document).height();
-	var winHeight = $(window).height();
-	if (scrolltop>0&&scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+	function swipeDown() {
+		$('#workListUL').html('');
+		page = 1;
+		nextPageFlag = true;
 		getWorkList();
 	}
-}
+	function openWorkDetail(obj) {
+		var workId = $(obj).attr('workId');
+		changeSubPage('workDetail', 'lookHisPage', 'workId=' + workId);
+	}
+	function getWorkList() {
+		if (nextPageFlag == false) {
+			return;
+		}
+		var workInfo = {};
+		var cachedUserInfo = getLoginUserInfo();
+		if (cachedUserInfo != null) {
+			workInfo.userId = cachedUserInfo.userId;
+			workInfo.userToken = cachedUserInfo.userToken;
+			workInfo.page = page;
+			workInfo.workType = 'partTime';//兼职招聘
+			ajaxReq(
+					'workAction',
+					{
+						method : 'getLookedWorkList',
+						workInfo : json2Str(workInfo)
+					},
+					function(data) {
+						if (data.length > 0) {
+							if (data.length == 20) {
+								page++;
+							} else {
+								nextPageFlag = false;
+							}
+							var lihtmls = '';
+							var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
+							litemplate += '</li>';
+							for (var i = 0; data.length > i; i++) {
+								var workObj = data[i];
+								var lihtml = litemplate.replace(/\+workId\+/g,
+										workObj.workId).replace('+workName+',
+										workObj.workName).replace(
+										'+workType+',
+										getDisplayEnumValue('workType',
+												workObj.workType)).replace(
+										'+effDate+', workObj.effDate).replace(
+										'+expDate+', workObj.expDate).replace(
+										'+focusNumber+', workObj.focusNumber)
+										.replace('+lookNumber+',
+												workObj.lookNumber).replace(
+												'+resumeNumber+',
+												workObj.resumeNumber);
+								lihtmls += lihtml;
+							}
+							$('#workListUL').append(lihtmls);
+						} else {
+							$('.pullNoData').show();
+						}
+					});
+		}
+	}
+
+	var page = 1;
+	var nextPageFlag = true;
+	function loadNextPage() {
+		var scrolltop = $(document).scrollTop();
+		var docHeight = $(document).height();
+		var winHeight = $(window).height();
+		if (scrolltop > 0 && scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+			getWorkList();
+		}
+	}
 </script>
 </html>

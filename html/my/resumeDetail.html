@@ -32,9 +32,9 @@ li {
 		</nav>
 		
 		
-		<ul data-role="listview">
+		<ul class="list-group">
 			<li data-role="list-divider">基本信息</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>姓名:</p>
@@ -110,7 +110,7 @@ li {
 				</div>
 			</li>
 			<li data-role="list-divider">期望待遇</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				 <div style="overflow: hidden">
                     <div style="float: left; width: 30%; color: #a3a3a3">
                         <p>薪资单位:</p>
@@ -145,16 +145,16 @@ li {
 				</div>
 			</li>
 			<li data-role="list-divider">工作经历</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<p style="white-space: pre-line;" id="workHisList"></p>
 			</li>
 
 			<li data-role="list-divider">教育经历</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<p style="white-space: pre-line;" id="eduHisList"></p>
 			</li>
 			<li data-role="list-divider">自我评价</li>
-			<li data-icon="false" style="padding: 0em 1em">
+			<li class="list-group-item" style="padding: 0em 1em">
 				<p style="white-space: pre-line;" id="selfReview"></p>
 			</li>
 		</ul>
@@ -163,9 +163,9 @@ li {
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">
-			<a href="#" data-role="button" data-icon="plus" onclick="addFocus()">关注</a>
-			<a href="#" data-role="button" data-icon="phone" id="cellphone" onclick="toDial()">联系TA</a>
-			<a href="#" id="sendMsg" data-role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
+			<a href="#" role="button" data-icon="plus" onclick="addFocus()">关注</a>
+			<a href="#" role="button" data-icon="phone" id="cellphone" onclick="toDial()">联系TA</a>
+			<a href="#" id="sendMsg" role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
 			</div>
 		</div>
 	</div>

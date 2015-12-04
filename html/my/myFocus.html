@@ -16,15 +16,6 @@
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的关注</a>
 			</div>
 		</nav>
-		<!-- <div id="tabs" data-role="tabs">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#workList" class="ui-btn-active"
-						id="workListBtn">招聘</a></li>
-					<li><a href="#friendList">求职者</a></li>
-					<li><a href="#messageList" id="messageTabLi">公司</a></li>
-				</ul>
-			</div> -->
 		<div id="workList">
 			<div class="swipe">
 				<div
@@ -35,7 +26,7 @@
 						class="pullDownFreshText">下拉刷新</div>
 				</div>
 				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-				<ul data-role="listview" id="workListUL" data-split-icon="delete">
+				<ul class="list-group" id="workListUL" data-split-icon="delete">
 				</ul>
 			</div>
 		</div>
@@ -134,7 +125,6 @@
 								lihtmls += lihtml;
 							}
 							$('#workListUL').append(lihtmls);
-							$('#workListUL').listview("refresh");
 						} else {
 							$('.pullNoData').show();
 						}

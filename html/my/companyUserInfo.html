@@ -32,22 +32,22 @@
             accept="image/*" />
 		<!-- 第一块 -->
 		<div class="firstblock">
-			<ul data-role="listview" class="ui-mini" id="userInfoDiv">
-				<li data-icon="false">公司编号 <span class="ui-li-count" id="userId"></span></li>
-				<li data-icon="false" >名称 <span class="ui-li-count" id="userName"></span></li>
+			<ul class="list-group" class="ui-mini" id="userInfoDiv">
+				<li class="list-group-item">公司编号 <span class="ui-li-count" id="userId"></span></li>
+				<li class="list-group-item" >名称 <span class="ui-li-count" id="userName"></span></li>
 				<li><a onclick="changeSubPage('changeCellphone', 'userInfoPage')">手机<span class="ui-li-count" id="cellphone"></span> </a></li>
-				<li data-icon="false" >邮箱 <span class="ui-li-count" id="email"></span></li>
-				<li data-icon="false" >联系人 <span class="ui-li-count" id="contacter"></span></li>
-				<li data-icon="false" >QQ <span class="ui-li-count" id="qq"></span></li>
-				<li data-icon="false" >公司地址<span class="ui-li-count" id="address"></span></li>
-				<li data-icon="false" >公司规模<span class="ui-li-count" id="size"></span></li>
-				<li data-icon="false" >公司行业<span class="ui-li-count" id="industry"></span></li>
-				<li data-icon="false" >公司介绍<p id="selfReview" style="white-space: pre-wrap;"></p></li>
+				<li class="list-group-item" >邮箱 <span class="ui-li-count" id="email"></span></li>
+				<li class="list-group-item" >联系人 <span class="ui-li-count" id="contacter"></span></li>
+				<li class="list-group-item" >QQ <span class="ui-li-count" id="qq"></span></li>
+				<li class="list-group-item" >公司地址<span class="ui-li-count" id="address"></span></li>
+				<li class="list-group-item" >公司规模<span class="ui-li-count" id="size"></span></li>
+				<li class="list-group-item" >公司行业<span class="ui-li-count" id="industry"></span></li>
+				<li class="list-group-item" >公司介绍<p id="selfReview" style="white-space: pre-wrap;"></p></li>
 			     <li><a onclick="changeSubPage('changePass', 'userInfoPage')">修改密码 </a></li>
 			</ul>
 
 			<div class="h1"></div>
-			<a data-role="button" style="background: red" onclick="logout()" data-mini="true">退出当前帐户</a>
+			<a role="button" style="background: red" onclick="logout()" data-mini="true">退出当前帐户</a>
 		</div>
 
 	</div>
@@ -173,8 +173,6 @@
 	
 	function changeHeadPic(){
         $('#imgFile').click();
-        /* $('#popupMenu').popup();
-        $('#popupMenu').popup('open'); */
     }
 
 	function swipeRight() {

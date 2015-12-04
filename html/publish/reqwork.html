@@ -197,37 +197,37 @@
 		
 		<div data-role="content" class="ui-mini">
 			<div id="form">
-				<div data-role="fieldcontain">
-					<label for="workName">标题:</label> <input type="text"
+				<div class="form-group">
+					<label for="workName">标题:</label> <input type="text" class="form-control"
 						name="workName" id="workName" value="" required
 						placeholder="工作简介">
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="content">工作内容:</label>
-					<textarea cols="40" rows="8" name="content" id="content"
+					<textarea class="form-control"cols="40" rows="8" name="content" id="content"
 						data-mini="true" required placeholder="工作详细内容">工作内容</textarea>
 				</div>
 
 
-				<div data-role="fieldcontain">
-					<label for="resumeId" class="select">求职简历:</label> <select required
+				<div class="form-group">
+					<label for="resumeId" class="select">求职简历:</label> <select class="form-control" required
 						name="resumeId" id="resumeId">
 					</select>
 				</div>
 
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="effDate">生效时间:</label> <input type="date"
 						name="effDate" id="effDate" value="" required>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="expDate">失效时间:</label> <input type="date"
 						name="expDate" id="expDate" value="" required>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="verifyCode">验证码:</label>
 					<div style="display: inline-flex; width: 100%">
 						<div style="width: 70%; height: 100%;">
-							<input type="text" name="verifyCode" id="verifyCode" value=""
+							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
 								placeholder="验证码" required>
 						</div>
 						<a data-mini="true" href="#"
@@ -235,7 +235,7 @@
 							src="" id="verifyImg"></img></a>
 					</div>
 				</div>
-				<a data-role="button" class="submmitBtn" data-icon="check" id="pubBtn" onclick="publish()"  >发布</a>
+				<a role="button" class="btn btn-success btn-lg btn-block" id="pubBtn" onclick="publish()"  >发布</a>
 			</div>
 
 		</div>

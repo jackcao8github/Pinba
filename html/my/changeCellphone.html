@@ -20,29 +20,27 @@
 		<div data-role="content" class="ui-mini">
 
 			<div  id="form">
-			<div data-role="fieldcontain">
-					<label for="oldCellphone">原手机号码:</label> <input type="text"
+			<div class="form-group">
+					<label for="oldCellphone">原手机号码:</label> <input type="text" class="form-control"
 						name="oldCellphone" id="oldCellphone" value="" disabled>
 				</div>
-				<div data-role="fieldcontain">
+				<div class="form-group">
 					<label for="newCellphone">新手机号码:</label>
-					<div style="display: inline-flex; width: 100%">
-                        <div style="width: 70%; height: 100%;">
-                            <input type="tel" name="newCellphone" id="newCellphone" value=""
-                                required pattern="[0-9]{11}" title="11位手机号码"
-                                placeholder="11位手机号码">
-                        </div>
-                        <a data-mini="true" onclick="sendTelVerifyCode(this)"
-                            class="ui-btn" id="sendVerifyBtn" for="tel"
-                            style="width: 30%; height: 100%; margin-top: 5px;">发送验证码</a>
-                    </div>
+                            
+                        <div class="input-group">
+							<input type="tel" class="form-control" name="newCellphone" id="newCellphone" value=""
+								required pattern="[0-9]{11}" title="11位手机号码"
+								placeholder="可用于登陆，一个号码只能注册一次。">
+								
+							<span class="input-group-addon" id="sendVerifyBtn" onclick="sendTelVerifyCode(this)">发送验证码</span>
+					</div>    
 				</div>
-				<div data-role="fieldcontain">
-					<label for="msgverifyCode">短信验证码:</label> <input type="text"
+				<div class="form-group">
+					<label for="msgverifyCode">短信验证码:</label> <input type="text" class="form-control"
 						name="msgverifyCode" id="msgverifyCode" value=""
 						required placeholder="输入你手机上收到的验证码。">
 				</div>
-				<a data-role="button" class="submmitBtn" data-icon="check"  onclick="changeCellphone()">修改手机</a>
+				<a role="button" class="btn btn-success btn-lg btn-block"  onclick="changeCellphone()">修改手机</a>
 			</div>
 		</div>
 	</div>

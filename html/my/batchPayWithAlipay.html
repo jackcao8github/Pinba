@@ -23,9 +23,9 @@
 					<div class="pullDownFreshText">下拉刷新</div>
 				</div>
 				<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-				<ul id="needPayList" data-role="listview">
+				<ul id="needPayList" class="list-group">
 				</ul>
-				<a data-role="button" data-mini="true" data-icon="check"
+				<a role="button" data-mini="true" data-icon="check"
 					class="submmitBtn" onclick="submmit()">确认支付</a>
 			</div>
 		</div>
@@ -81,7 +81,6 @@
 					receiver.seq = i+1;//一批次内的支付顺序
 					receiverList.push(receiver);
 				}
-				$('#needPayList').listview("refresh");
 			}else{
 				$('.pullNoData').show();
 				showTipDialog('没有需要支付的工资!');
