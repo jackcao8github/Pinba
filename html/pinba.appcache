@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#version=0.129
+#version=0.130
 ./index.html
 ./my/bookInterview.html
 ./my/changeCompanyUserInfo.html
@@ -36,14 +36,12 @@ CACHE MANIFEST
 ./publish/reqwork.html
 ./publish/work.html
 ./js/jquery-1.11.3.min.js
-./js/jquery.mobile-1.4.5.min.js
 ./js/jQuery.md5.js
 ./myjs/myswipe.js
 ./myjs/mycommon.js
 ./myjs/BMap.js
 ./css/font-awesome.min.css
 ./css/idangerous.swiper.css
-./css/jquery.mobile-1.4.5.min.css
 ./mycss/mygrid.css
 ./mycss/mytalkpanel.css
 ./mycss/mycommon.css

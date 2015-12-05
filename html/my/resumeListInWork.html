@@ -47,7 +47,7 @@
 
 			<!-- 简历选择框 -->
 			<div data-role="popup" id="popupMenu">
-				<ul class="list-group" data-inset="true" style="min-width: 210px;"
+				<ul class="list-group"  style="min-width: 210px;"
 					id="resumeList">
 					<li onclick="gotoInterviewPage()">预约面试</li>
 					<li onclick="gotoHiredPage()">直接录用</li>
@@ -72,8 +72,8 @@
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
 					<ul class="list-group" id="hiredResumeListUL">
 					</ul>
-					<a role="button" data-mini="true" data-icon="plus"
-						class="submmitBtn" onclick="queryAddStaff()">增加员工</a>
+					<a role="button"  data-icon="plus"
+						class="btn btn-success btn-lg btn-block" onclick="queryAddStaff()">增加员工</a>
 				</div>
 			</div>
 
@@ -97,8 +97,8 @@
 						data-split-icon="bullets">
 					</ul>
 
-					<a role="button" data-mini="true" data-icon="check"
-						class="submmitBtn" onclick="toPay()">支付工资</a>
+					<a role="button"  
+						class="btn btn-success btn-lg btn-block" onclick="toPay()">支付工资</a>
 				</div>
 			</div>
 		</div>

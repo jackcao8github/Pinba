@@ -2,12 +2,14 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 <link rel="stylesheet" href="../css/mobiscroll.custom-2.5.0.min.css" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 <script src="../js/mobiscroll.js"></script>
 </head>
 <body>
@@ -22,28 +24,28 @@
 		<div data-role="content" class="ui-mini">
 			<div id="form">
 				<div class="form-group">
-					<label for="oldCheckInTime">原签到时间:</label> <input type="text" class="form-control"
-						name="oldCheckInTime" id="oldCheckInTime" value="" required disabled
-						placeholder="原签到时间">
+					<label for="oldCheckInTime">原签到时间:</label> <input type="text"
+						class="form-control" name="oldCheckInTime" id="oldCheckInTime"
+						value="" required disabled placeholder="原签到时间">
 				</div>
 				<div class="form-group">
-					<label for="oldCheckOutTime">原签退时间:</label> <input type="text" class="form-control"
-						name="oldCheckOutTime" id="oldCheckOutTime" value="" required disabled
-						placeholder="原签退时间">
+					<label for="oldCheckOutTime">原签退时间:</label> <input type="text"
+						class="form-control" name="oldCheckOutTime" id="oldCheckOutTime"
+						value="" required disabled placeholder="原签退时间">
 				</div>
-				
+
 				<div class="form-group">
-					<label for="newCheckInTime">调整后的签到时间:</label> <input type="text" class="form-control"
-						name="newCheckInTime" id="newCheckInTime" value="" required
-						placeholder="调整后的签到时间">
+					<label for="newCheckInTime">调整后的签到时间:</label> <input type="text"
+						class="form-control" name="newCheckInTime" id="newCheckInTime"
+						value="" required placeholder="调整后的签到时间">
 				</div>
 				<div class="form-group">
-					<label for="newCheckOutTime">调整后的签退时间:</label> <input type="text" class="form-control"
-						name="newCheckOutTime" id="newCheckOutTime" value="" required
-						placeholder="调整后的签到时间">
+					<label for="newCheckOutTime">调整后的签退时间:</label> <input type="text"
+						class="form-control" name="newCheckOutTime" id="newCheckOutTime"
+						value="" required placeholder="调整后的签到时间">
 				</div>
-				<a role="button" data-mini="true" class="submmitBtn" onclick="submmit()"
-					data-icon="check">提交</a>
+				<a role="button" class="btn btn-success btn-lg btn-block"
+					onclick="submmit()">提交</a>
 			</div>
 		</div>
 	</div>
@@ -54,18 +56,17 @@
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 
 <script type="text/javascript">
-var userWorkId = 0;
-	$(document).ready(function() {
-		userWorkId = getQueryString('userWorkId');
-		var checkInTime =  getQueryString('checkInTime');
-		var checkOutTime =  getQueryString('checkOutTime');
-		
-		$('#oldCheckInTime').val(checkInTime);
-		$('#oldCheckOutTime').val(checkOutTime);
-		
-		
-		 
-	var newjavascript = {
+	var userWorkId = 0;
+	$(document).ready(
+			function() {
+				userWorkId = getQueryString('userWorkId');
+				var checkInTime = getQueryString('checkInTime');
+				var checkOutTime = getQueryString('checkOutTime');
+
+				$('#oldCheckInTime').val(checkInTime);
+				$('#oldCheckOutTime').val(checkOutTime);
+
+				var newjavascript = {
 					plugdatetime : function($dateTxt, type) {
 						//			           var curr = new Date().getFullYear();
 						var opt = {}
@@ -77,8 +78,8 @@ var userWorkId = 0;
 						};
 						opt.datetime = {
 							preset : 'datetime',
-							minDate : new Date(2010, 1, 01, 00, 00,00),
-							maxDate : new Date(2020, 12, 31, 24, 59,59),
+							minDate : new Date(2010, 1, 01, 00, 00, 00),
+							maxDate : new Date(2020, 12, 31, 24, 59, 59),
 							stepMinute : 1
 						};
 						$dateTxt.val('').scroller('destroy').scroller(
@@ -91,16 +92,17 @@ var userWorkId = 0;
 									yearText : "年",
 									hourText : "时",
 									minuteText : "分",
-									secText: "秒",
+									secText : "秒",
 									setText : '确定',
 									cancelText : '取消',
 									dateFormat : 'yy-mm-dd',
-									timeWheels: 'HHii',  timeFormat: 'HH:ii:ss'
+									timeWheels : 'HHii',
+									timeFormat : 'HH:ii:ss'
 								}));
 					}
 				}
 				newjavascript.plugdatetime($("#newCheckInTime"), "datetime");
-newjavascript.plugdatetime($("#newCheckOutTime"), "datetime");
+				newjavascript.plugdatetime($("#newCheckOutTime"), "datetime");
 			});
 	function swipeRight() {
 		closeSubPage();

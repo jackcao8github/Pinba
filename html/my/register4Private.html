@@ -39,7 +39,7 @@
 				</div>
 				<div class="form-group">
 					<label for="ppassword">密码:</label> <input type="password"
-						name="ppassword" id="ppassword" value="" autocomplete="off"
+						class="form-control" name="ppassword" id="ppassword" value="" autocomplete="off"
 						required placeholder="最短6位，最长10位，只可包含数字字母"
 						pattern="[A-Za-z0-9]{6,10}" title="最短6位，最长10位，只可包含数字字母">
 				</div>
@@ -69,10 +69,12 @@
 				</div>
 
 				<div class="checkbox">
-					<label for="agreeContractP">已阅读并同意用户协议</label><input
-						type="checkbox" name="agreeContractP" id="agreeContractP" required>
+					<label> <input type="checkbox" name="agreeContractP"
+						id="agreeContractP" required> 已阅读并同意用户协议
+						<a href="#" onclick="showContract()">用户协议</a>
+					</label>
 				</div>
-				<a href="#" onclick="showContract()">用户协议</a> <a role="button"
+				 <a role="button"
 					class="btn btn-success btn-lg btn-block" onclick="reg4Private()">注册</a>
 			</div>
 		</div>

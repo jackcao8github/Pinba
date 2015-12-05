@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 
 
-<link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../mycss/mygrid.css" />
-<script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 
 </head>
 <body onscroll="scrollToBottom()">
@@ -20,12 +19,12 @@
 				<a class="navbar-brand" href="#"
 					onclick="closeSubPage();return false;"><i
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">工作详情</a>
-					<a id="reportBtn" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-alert" onclick="toReport()">举报</a>
-			
+			<a id="reportBtn" class="navbar-brand pull-right" onclick="toReport()">举报</a>
 			</div>
 		</nav>
-		<ul class="list-group" data-inset="true" id="workDetailDiv">
-			<li data-role="list-divider" ><span id="workName"></span><span class="ui-li-count">工作编号:<span id="workId"></span></span></li>
+		<div> 
+		<ul class="list-group"  id="workDetailDiv">	
+			<li class="list-group-item" ><span id="workName"></span><span class="ui-li-count">工作编号:<span id="workId"></span></span></li>
 			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
@@ -76,7 +75,7 @@
 					</div>
 				</div>
 			</li>
-			<li data-role="list-divider">待遇</li>
+			<li class="list-group-item">待遇</li>
 			<li class="list-group-item" style="padding: 0em 1em">
 			     <div style="overflow: hidden">
                     <div style="float: left; width: 30%; color: #a3a3a3">
@@ -127,7 +126,7 @@
 					</div>
 				</div>
 			</li>
-			<li data-role="list-divider">要求</li>
+			<li class="list-group-item">要求</li>
 			<li class="list-group-item" style="padding: 0em 1em">
 				<div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
@@ -154,13 +153,13 @@
 					</div>
 				</div>
 			</li>
-			<li data-role="list-divider">工作内容</li>
+			<li class="list-group-item">工作内容</li>
 			<li class="list-group-item" style="padding: 0em 1em">
 				<p style="white-space: pre-line;" id="content"></p>
 			</li>
 		</ul>
 		<ul class="list-group" id="companyInfoUL">
-			<li data-role="list-divider" onclick="toCompanyHomepage()">公司信息<span class="ui-li-count">
+			<li class="list-group-item" onclick="toCompanyHomepage()">公司信息<span class="ui-li-count">
 				<div style="float: right; color: #f63">
 						<i class="fa fa-star"></i><i class="fa fa-star"></i><i
 							class="fa fa-star"></i><i class="fa fa-star"></i><i
@@ -233,18 +232,18 @@
 		</ul>
 		<!-- 其它公司的相同岗位招聘 -->
 		<ul class="list-group" id="samePostWorkList">
-			<li data-role="list-divider">其它公司的相同岗位招聘</li>
+			<li class="list-group-item">其它公司的相同岗位招聘</li>
 		</ul>
 		<ul class="list-group" id="workListUL">
 			</ul>
         <!-- 简历选择框 -->
 		<div data-role="popup" id="popupMenu">
-			<ul class="list-group" data-inset="true" style="min-width: 210px;"
+			<ul class="list-group"  style="min-width: 210px;"
 				id="resumeList">
-				<li data-role="list-divider"><h3>选择简历</h3></li>
+				<li class="list-group-item"><h3>选择简历</h3></li>
 			</ul>
 		</div>
-
+		</div>
 		<div data-role="footer" data-position="fixed" data-fullscreen="false"
 			data-tap-toggle="false" id="footer">
 			<div data-role="controlgroup" data-type="horizontal">
@@ -260,7 +259,7 @@
 	</div>
 </body>
 
-
+<script src="../js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
@@ -335,7 +334,7 @@
 																if (data.length == 0) {
 																	showConfirmDialog("你还没有简历，需要先增加一个简历!",toAddResume);
 																} else {
-																	var lihtmls = '<li data-role="list-divider">选择一个简历</li>';
+																	var lihtmls = '<li class="list-group-item">选择一个简历</li>';
 
 																	for ( var i = 0; data.length > i; i++) {
 																		var resumeobj = data[i];
