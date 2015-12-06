@@ -34,27 +34,35 @@
 	<div data-role="page" id="messagePage">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#"
-					onclick="closeSubPage();return false;"><i
-					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的消息</a> <a
-					href="#" data-icon="plus" class="ui-btn-right"
-					data-iconpos="notext" onclick="toAddFriend()">Options</a>
+				<a class="navbar-brand">我的消息</a>
+
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#example-navbar-collapse" id="addFriendBtn">
+					<span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="example-navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="dropdown"><a href="#" onclick="addFriendByCellphone()">使用手机号</a></li>
+					<li class="dropdown"><a href="#" onclick="addFriendByNearby()">附近的人</a></li>
+				</ul>
 			</div>
 		</nav>
 
-		<!-- 加好友方式选择-->
-		<div data-role="popup" id="popupMenu">
+		 <!-- 加好友方式选择-->
+		<!--<div data-role="popup" id="popupMenu">
 			<ul class="list-group"  style="min-width: 210px;"
 				id="typeList">
 				<li data-role="list-divider">加好友</li>
 				<li><a href="#" onclick="addFriendByCellphone()">使用手机号</a></li>
 				<li><a href="#" onclick="addFriendByNearby()">附近的人</a></li>
 			</ul>
-		</div>
+		</div> -->
 
 
 		<div data-role="navbar">
-			<ul class="nav nav-tabs nav-justified" role="tablist">
+			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#messageList"
 					id="messageTabLi">消息列表</a></li>
 				<li role="presentation"><a href="#friendList">好友列表</a></li>
@@ -102,6 +110,10 @@
 	 } */
 
 	$(document).ready(function() {
+		$('[role="tablist"] a').click(function (e) {
+			  e.preventDefault()
+			  $(this).tab('show')
+			});
 		//绑定控件滑动事件
 		bindSwipeEvent();
 		getLoginUserInfo();
@@ -251,22 +263,14 @@
 		$('#friendListUL').append(ulHtml);
 	}
 
-	//显示加好友方式菜单
-	function toAddFriend() {
-		var userInfo = getLoginUserInfo();
-		if (userInfo == null) {//未登陆过，则显示登陆页面
-			return;
-		}
-		$('#popupMenu').popup('open');
-	}
 	//使用手机号码增加好友
 	function addFriendByCellphone() {
-		$('#popupMenu').popup("close");
+		$('#addFriendBtn').click();
 		changeSubPage('addCellphoneFriend', 'messagePage');
 	}
 	//查找附近的人并加为好友
 	function addFriendByNearby() {
-		$('#popupMenu').popup("close");
+		$('#addFriendBtn').click();
 		changeSubPage('addNearbyFriend', 'messagePage');
 	}
 </script>

@@ -2,223 +2,233 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 
 <link rel="stylesheet" href="../mycss/mygrid.css" />
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../css/bootstrap.min.css" />
-
+<style>
+.location2 {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	margin: 0;
+}
+</style>
 </head>
 <body onscroll="scrollToBottom()">
 	<div data-role="page" id="workdetailPage">
 		<!-- 返回按钮 -->
-		
+
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#"
 					onclick="closeSubPage();return false;"><i
-					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">工作详情</a>
-			<a id="reportBtn" class="navbar-brand pull-right" onclick="toReport()">举报</a>
+					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">工作详情</a> <a
+					id="reportBtn" class="navbar-brand pull-right" onclick="toReport()">举报</a>
 			</div>
 		</nav>
-		<div> 
-		<ul class="list-group"  id="workDetailDiv">	
-			<li class="list-group-item" ><span id="workName"></span><span class="ui-li-count">工作编号:<span id="workId"></span></span></li>
-			<li class="list-group-item" style="padding: 0em 1em">
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>人数:</p>
+		<div>
+			<ul class="list-group" id="workDetailDiv">
+				<li class="list-group-item"><span id="workName"></span><span
+					class="pull-right">工作编号:<span id="workId"></span></span></li>
+				<li class="list-group-item" style="padding: 0em 1em">
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>人数:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="numberOfRecruit"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="numberOfRecruit"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>区域:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="workArea"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>区域:</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>地址:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="address"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="workArea"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>职位:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="post"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>地址:</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>生效时间:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="effDate"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="address"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>截止时间:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="expDate"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>职位:</p>
+				</li>
+				<li class="list-group-item">待遇</li>
+				<li class="list-group-item" style="padding: 0em 1em">
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>薪资单位:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="sallaryType"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="post"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>薪资金额(元):</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="sallaryValue"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-                    <div style="float: left; width: 30%; color: #a3a3a3">
-                        <p>生效时间:</p>
-                    </div>
-                    <div style="float: left; width: 70%">
-                        <p id="effDate"></p>
-                    </div>
-                </div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>截止时间:</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>工资结算周期:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="sallaryPeriod"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="expDate"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>工资结算方式:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="sallaryChargeType"></p>
+						</div>
 					</div>
-				</div>
-			</li>
-			<li class="list-group-item">待遇</li>
-			<li class="list-group-item" style="padding: 0em 1em">
-			     <div style="overflow: hidden">
-                    <div style="float: left; width: 30%; color: #a3a3a3">
-                        <p>薪资单位:</p>
-                    </div>
-                    <div style="float: left; width: 70%">
-                        <p id="sallaryType"></p>
-                    </div>
-                </div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>薪资金额(元):</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>提供餐食:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="food"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="sallaryValue"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>提供住宿:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="lodging"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>工资结算周期:</p>
+				</li>
+				<li class="list-group-item">要求</li>
+				<li class="list-group-item" style="padding: 0em 1em">
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>学历:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="expectDegree"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="sallaryPeriod"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>工作经验:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="expectExperience"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>工资结算方式:</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>年龄:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="expectAge"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="sallaryChargeType"></p>
+				</li>
+				<li class="list-group-item">工作内容</li>
+				<li class="list-group-item" style="padding: 0em 1em">
+					<p style="white-space: pre-line;" id="content"></p>
+				</li>
+			</ul>
+			<ul class="list-group" id="companyInfoUL">
+				<li class="list-group-item" onclick="toCompanyHomepage()">公司信息<i class="fa fa-angle-right pull-right"></i><span
+					class="ui-li-count">
+						<div style="float: right; color: #f63">
+							<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+								class="fa fa-star"></i><i class="fa fa-star"></i><i
+								class="fa fa-star-half-full"></i>
+						</div>
+				</span></li>
+				<li class="list-group-item" style="padding: 0em 1em">
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>公司名称:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p style="white-space: pre-line;" id="userName"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>提供餐食:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="food"></p>
-					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>提供住宿:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="lodging"></p>
-					</div>
-				</div>
-			</li>
-			<li class="list-group-item">要求</li>
-			<li class="list-group-item" style="padding: 0em 1em">
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>学历:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="expectDegree"></p>
-					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>工作经验:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="expectExperience"></p>
-					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>年龄:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p id="expectAge"></p>
-					</div>
-				</div>
-			</li>
-			<li class="list-group-item">工作内容</li>
-			<li class="list-group-item" style="padding: 0em 1em">
-				<p style="white-space: pre-line;" id="content"></p>
-			</li>
-		</ul>
-		<ul class="list-group" id="companyInfoUL">
-			<li class="list-group-item" onclick="toCompanyHomepage()">公司信息<span class="ui-li-count">
-				<div style="float: right; color: #f63">
-						<i class="fa fa-star"></i><i class="fa fa-star"></i><i
-							class="fa fa-star"></i><i class="fa fa-star"></i><i
-							class="fa fa-star-half-full"></i>
-					</div></span></li>
-			<li class="list-group-item" style="padding: 0em 1em">
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>公司名称:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;" id="userName"></p>
-					</div>
-				</div>
 
-				
-				
-				<div style="overflow: hidden">
-                    <div style="float: left; width: 30%; color: #a3a3a3">
-                        <p>联系人:</p>
-                    </div>
-                    <div style="float: left; width: 70%">
-                        <p id="contacter"></p>
-                    </div>
-                </div>
-                <div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>联系电话:</p>
+
+
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>联系人:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="contacter"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="cellphone"></p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>联系电话:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="cellphone"></p>
+						</div>
 					</div>
-				</div>
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>QQ:</p>
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>QQ:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p id="qq"></p>
+						</div>
 					</div>
-					<div style="float: left; width: 70%">
-						<p id="qq"></p>
-					</div>
-				</div>
-				
-				<div style="overflow: hidden">
-					<div style="float: left; width: 30%; color: #a3a3a3">
-						<p>公司地址:</p>
-					</div>
-					<div style="float: left; width: 70%">
-						<p style="white-space: pre-line;" id="address"></p>
-					</div>
-				</div>
-				<!-- <div style="overflow: hidden">
+
+					<div style="overflow: hidden">
+						<div style="float: left; width: 30%; color: #a3a3a3">
+							<p>公司地址:</p>
+						</div>
+						<div style="float: left; width: 70%">
+							<p style="white-space: pre-line;" id="address"></p>
+						</div>
+					</div> <!-- <div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>网址:</p>
 					</div>
 					<div style="float: left; width: 70%">
 						<p id="url"></p>
 					</div>
-				</div> -->
-				<!-- <div style="overflow: hidden">
+				</div> --> <!-- <div style="overflow: hidden">
 					<div style="float: left; width: 30%; color: #a3a3a3">
 						<p>公司介绍:</p>
 					</div>
@@ -226,34 +236,41 @@
 						<p style="white-space: pre-line;" id="selfReview"></p>
 					</div>
 				</div> -->
-			</li>
-			<li><a onclick="toCompanyHomepage()">该公司其它招聘</a></li>
-			<li>联系时请说是在趣章鱼网看到的!</li>
-		</ul>
-		<!-- 其它公司的相同岗位招聘 -->
-		<ul class="list-group" id="samePostWorkList">
-			<li class="list-group-item">其它公司的相同岗位招聘</li>
-		</ul>
-		<ul class="list-group" id="workListUL">
-			</ul>
-        <!-- 简历选择框 -->
-		<div data-role="popup" id="popupMenu">
-			<ul class="list-group"  style="min-width: 210px;"
-				id="resumeList">
-				<li class="list-group-item"><h3>选择简历</h3></li>
-			</ul>
-		</div>
-		</div>
-		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="footer">
-			<div data-role="controlgroup" data-type="horizontal">
-				<!-- <a href="#" id="addFocusBtn" role="button" data-icon="heart">0</a> -->
-				<a href="#" id="sendResumeBtn" role="button" data-icon="mail">投递简历</a>
-				<a href="#" id="dialTel" role="button" data-icon="phone" onclick="toDial()">电话联系</a>
-				<a href="#" id="sendMsg" role="button" data-icon="mail" onclick="toSendMsg()">私信</a>
+				</li>
+				<li class="list-group-item" onclick="toCompanyHomepage()">该公司其它招聘<i class="fa fa-angle-right pull-right"></i></li>
 				
-				<a onclick="modWork()" id="modBtn" style="display:none"
-				role="button" data-icon="edit">修改</a>
+			</ul>
+			
+			<div class="well">联系时请说是在趣章鱼网看到的!</div>
+			<!-- 其它公司的相同岗位招聘 -->
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">其它公司的相同岗位招聘</div>
+				<ul class="list-group" id="workListUL">
+				</ul>
+			</div>
+
+			<!-- 简历选择框 -->
+			<!-- <div data-role="popup" id="popupMenu">
+				<ul class="list-group" style="min-width: 210px;" id="resumeList">
+					<li class="list-group-item"><h3>选择简历</h3></li>
+				</ul>
+			</div> -->
+		</div>
+
+		<div class="location2">
+			<div
+				style="postion: absolute; width: 100%; left: 0; bottom: 0; display: flex; display: -webkit-flex; border-top: 1px solid red;"
+				id="footNavBar">
+				<div class="btn-group btn-group-justified" role="group">
+					<a class="btn btn-default" href="#" id="sendResumeBtn"
+						role="button">投递简历</a> <a class="btn btn-default" href="#"
+						id="dialTel" role="button" onclick="toDial()">电话联系</a> <a
+						class="btn btn-default" href="#" id="sendMsg" role="button"
+						onclick="toSendMsg()">私信</a> <a class="btn btn-default"
+						onclick="modWork()" id="modBtn" style="display: none"
+						role="button">修改</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -263,52 +280,54 @@
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">
-/* 	function swipeRight() {
-		closeSubPage();
-	} */
+	/* 	function swipeRight() {
+	 closeSubPage();
+	 } */
 	var workId = 0;
 	var userId = 0;
-	$(document).ready(function() {
-		//如果不是工作所有者，需要删除修改按钮
-		var modFlag = getQueryString('modFlag');
-		if (modFlag == 'true') {
-			$('#addFocusBtn').remove();
-			$('#sendResumeBtn').remove();
-			$('#dialTel').remove();
-			$('#sendMsg').remove();
-			
-			$('#reportBtn').remove();
-			$('#modBtn').show();
-		} else {
-			$('#modBtn').remove();
-		}
-		//为关注钮增加响应事件
-	  /*  $('#addFocusBtn').bind('click',function() {
-											var cachedUserInfo = getLoginUserInfo();
-											if (cachedUserInfo != null) {
-												var focusInfo = {};
-												focusInfo.userToken = cachedUserInfo.userToken;
-												focusInfo.userId = cachedUserInfo.userId;
-												focusInfo.workId = workId;
+	$(document)
+			.ready(
+					function() {
+						//如果不是工作所有者，需要删除修改按钮
+						var modFlag = getQueryString('modFlag');
+						if (modFlag == 'true') {
+							$('#addFocusBtn').remove();
+							$('#sendResumeBtn').remove();
+							$('#dialTel').remove();
+							$('#sendMsg').remove();
 
-												ajaxReq(
-														'workAction',
-														{
-															method : 'addFocus',
-															focusInfo : json2Str(focusInfo)
-														},
-														function(data) {
-															if (data.flag == 'success') {
-																$(
-																		'#addFocusBtn')
-																		.html(
-																				data.focusNumber);
-															} else {
-																showTipDialog(data.msg);
+							$('#reportBtn').remove();
+							$('#modBtn').show();
+						} else {
+							$('#modBtn').remove();
+						}
+						//为关注钮增加响应事件
+						/*  $('#addFocusBtn').bind('click',function() {
+															var cachedUserInfo = getLoginUserInfo();
+															if (cachedUserInfo != null) {
+																var focusInfo = {};
+																focusInfo.userToken = cachedUserInfo.userToken;
+																focusInfo.userId = cachedUserInfo.userId;
+																focusInfo.workId = workId;
+
+																ajaxReq(
+																		'workAction',
+																		{
+																			method : 'addFocus',
+																			focusInfo : json2Str(focusInfo)
+																		},
+																		function(data) {
+																			if (data.flag == 'success') {
+																				$(
+																						'#addFocusBtn')
+																						.html(
+																								data.focusNumber);
+																			} else {
+																				showTipDialog(data.msg);
+																			}
+																		});
 															}
-														});
-											}
-										}); */
+														}); */
 						//为投简历按钮增加响应事件
 						$('#sendResumeBtn')
 								.bind(
@@ -332,11 +351,13 @@
 														function(data) {
 															if (data.flag != 'fail') {
 																if (data.length == 0) {
-																	showConfirmDialog("你还没有简历，需要先增加一个简历!",toAddResume);
+																	showConfirmDialog(
+																			"你还没有简历，需要先增加一个简历!",
+																			toAddResume);
 																} else {
 																	var lihtmls = '<li class="list-group-item">选择一个简历</li>';
 
-																	for ( var i = 0; data.length > i; i++) {
+																	for (var i = 0; data.length > i; i++) {
 																		var resumeobj = data[i];
 																		var lihtml = '<li><a onclick="sendResume(this)" resumeId="'
 																				+ resumeobj.resumeId
@@ -345,14 +366,17 @@
 																				+ '</a></li>';
 																		lihtmls += lihtml;
 																	}
-																	$('#resumeList')
+																	$(
+																			'#resumeList')
 																			.append(
 																					lihtmls);
 
 																	//打开简历选择框
-																	$('#popupMenu')
+																	$(
+																			'#popupMenu')
 																			.popup();
-																	$('#popupMenu')
+																	$(
+																			'#popupMenu')
 																			.popup(
 																					'open');
 																}
@@ -366,11 +390,9 @@
 						workId = getQueryString('workId');
 						pageInit();
 					});
-	
-	function toAddResume(){
-		changeSubPage(
-				'resume',
-				'workdetailPage');
+
+	function toAddResume() {
+		changeSubPage('resume', 'workdetailPage');
 	}
 	function sendResume(obj) {
 		var resumeId = $(obj).attr('resumeId');
@@ -406,30 +428,30 @@
 		if (cachedUserInfo != null) {
 			workInfo.userToken = cachedUserInfo.userToken;
 			workInfo.readUserId = cachedUserInfo.userId;
-			userId =  cachedUserInfo.userId;
-		}else{
+			userId = cachedUserInfo.userId;
+		} else {
 			userId = 0;
 		}
-			ajaxReq('workAction', {
-				method : 'getWorkInfo',
-				workInfo : json2Str(workInfo)
-			}, function(data) {
-				if (data.flag == 'success') {
-					pubUserInfo = data.userInfo;
-					postCode = data.post;
-					bindData(data, 'workDetailDiv');
-					$('#addFocusBtn').html(data.focusNumber);
-				} else {
-					showTipDialog(data.msg);
-				}
-			});
-		
+		ajaxReq('workAction', {
+			method : 'getWorkInfo',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.flag == 'success') {
+				pubUserInfo = data.userInfo;
+				postCode = data.post;
+				bindData(data, 'workDetailDiv');
+				$('#addFocusBtn').html(data.focusNumber);
+			} else {
+				showTipDialog(data.msg);
+			}
+		});
+
 	}
 	//绑定数据到控件
 	function bindData(jsonData, divId) {
 		for ( var o in jsonData) {
 			var realValue = jsonData[o];
-			
+
 			var ctrl = $('#' + divId + ' #' + o);
 			if (ctrl.length > 0) {
 				//处理下拉框采集的数据
@@ -442,29 +464,30 @@
 			bindData(jsonData.userInfo, 'companyInfoUL');
 		}
 	}
-	
+
 	//修改工作
 	function modWork() {
 		changeSubPage('work', 'workdetailPage', 'workId=' + workId);
 	}
-	
+
 	//查看公司主页
-	function toCompanyHomepage(){
-		changeSubPage('companyHomePage', 'workdetailPage', 'companyUserId=' + pubUserInfo.userId);
+	function toCompanyHomepage() {
+		changeSubPage('companyHomePage', 'workdetailPage', 'companyUserId='
+				+ pubUserInfo.userId);
 	}
-	
+
 	//拔打电话
-	function toDial(){
-		if (window.sysFunc!=null){//sysFunc在android代码中使用webview.addJavascriptInterface(new SysFuncAgent(), "sysFunc")创建
+	function toDial() {
+		if (window.sysFunc != null) {//sysFunc在android代码中使用webview.addJavascriptInterface(new SysFuncAgent(), "sysFunc")创建
 			var cellphone = $('#cellphone').html();
 			window.sysFunc.call(cellphone);
 		}
 	}
-	
+
 	/* 发送私信 */
-	function toSendMsg(){
+	function toSendMsg() {
 		var user = getLoginUserInfo();
-		if (user!=null){
+		if (user != null) {
 			var params = 'friendId=' + pubUserInfo.userId;
 			params += '&friendName=';
 			params += pubUserInfo.userName;
@@ -475,27 +498,27 @@
 		}
 	}
 	/* 举报不良信息 */
-	function toReport(){
+	function toReport() {
 		var user = getLoginUserInfo();
-		if (user!=null){
+		if (user != null) {
 			changeSubPage('report', 'workdetailPage', 'workId=' + workId);
 		}
 	}
-	
+
 	/* 当滚动到底部时，加载其它公司同岗位工作 */
-	function scrollToBottom(){
+	function scrollToBottom() {
 		var scrolltop = $(document).scrollTop();
 		var docHeight = $(document).height();
 		var winHeight = $(window).height();
-		if (scrolltop>0&&scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
+		if (scrolltop > 0 && scrolltop == (docHeight - winHeight)) {//滚动到距底部20%时 */
 			getOtherCompanyWorkList();
 		}
 	}
 	var page = 1;
 	var nextPage = true;
 	/* 查询除当前公司外的其它公司发布的同岗位工作 */
-	function getOtherCompanyWorkList(){
-		if (nextPage==false){
+	function getOtherCompanyWorkList() {
+		if (nextPage == false) {
 			return;
 		}
 		var workInfo = {};
@@ -506,27 +529,24 @@
 		workInfo.effExpDateFlag = 'true';//只加载生失效时间内的
 		workInfo.cityName = localStorage.city;
 		workInfo.orderBy = 'newest';
-		ajaxReq(
-				'workAction',
-				{
-					method : 'getWorkList',
-					workInfo : json2Str(workInfo)
-				},
-				function(data) {
-					if (data.length > 0) {
-						if (data.length!=20){//没有下一页了
-							nextPage = false;
-						}else{
-							page ++;
-						}
-						
-						fillWorkList('workListUL', data);
-					} else {
-						nextPage = false;
-					}
-				});
+		ajaxReq('workAction', {
+			method : 'getWorkList',
+			workInfo : json2Str(workInfo)
+		}, function(data) {
+			if (data.length > 0) {
+				if (data.length != 20) {//没有下一页了
+					nextPage = false;
+				} else {
+					page++;
+				}
+
+				fillWorkList('workListUL', data);
+			} else {
+				nextPage = false;
+			}
+		});
 	}
-	
+
 	function openWork(obj) {
 		var workid = $(obj).attr('workId');
 		changeSubPage('workDetail', 'workdetailPage', 'workId=' + workid);

@@ -33,21 +33,21 @@
 		<!-- 第一块 -->
 		<div class="firstblock">
 			<ul class="list-group" class="ui-mini" id="userInfoDiv">
-				<li class="list-group-item">公司编号 <span class="ui-li-count" id="userId"></span></li>
-				<li class="list-group-item" >名称 <span class="ui-li-count" id="userName"></span></li>
-				<li><a onclick="changeSubPage('changeCellphone', 'userInfoPage')">手机<span class="ui-li-count" id="cellphone"></span> </a></li>
-				<li class="list-group-item" >邮箱 <span class="ui-li-count" id="email"></span></li>
-				<li class="list-group-item" >联系人 <span class="ui-li-count" id="contacter"></span></li>
-				<li class="list-group-item" >QQ <span class="ui-li-count" id="qq"></span></li>
-				<li class="list-group-item" >公司地址<span class="ui-li-count" id="address"></span></li>
-				<li class="list-group-item" >公司规模<span class="ui-li-count" id="size"></span></li>
-				<li class="list-group-item" >公司行业<span class="ui-li-count" id="industry"></span></li>
+				<li class="list-group-item">公司编号 <span class="pull-right" id="userId"></span></li>
+				<li class="list-group-item" >名称 <span class="pull-right" id="userName"></span></li>
+				<li class="list-group-item" onclick="changeSubPage('changeCellphone', 'userInfoPage')">手机<i class="fa fa-angle-right pull-right"></i><span class="pull-right" id="cellphone"></span></li>
+				<li class="list-group-item" >邮箱 <span class="pull-right" id="email"></span></li>
+				<li class="list-group-item" >联系人 <span class="pull-right" id="contacter"></span></li>
+				<li class="list-group-item" >QQ <span class="pull-right" id="qq"></span></li>
+				<li class="list-group-item" >公司地址<span class="pull-right" id="address"></span></li>
+				<li class="list-group-item" >公司规模<span class="pull-right" id="size"></span></li>
+				<li class="list-group-item" >公司行业<span class="pull-right" id="industry"></span></li>
 				<li class="list-group-item" >公司介绍<p id="selfReview" style="white-space: pre-wrap;"></p></li>
-			     <li><a onclick="changeSubPage('changePass', 'userInfoPage')">修改密码 </a></li>
+			     <li class="list-group-item" onclick="changeSubPage('changePass', 'userInfoPage')">修改密码 <i class="fa fa-angle-right pull-right"></i></li>
 			</ul>
 
 			<div class="h1"></div>
-			<a role="button" style="background: red" onclick="logout()" >退出当前帐户</a>
+			<a role="button" class="btn btn-danger btn-lg btn-block" onclick="logout()" >退出当前帐户</a>
 		</div>
 
 	</div>

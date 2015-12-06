@@ -5,7 +5,6 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<script src="../js/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../css/bootstrap.min.css" />
 </head>
@@ -18,26 +17,14 @@
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的钱包</a>
 			</div>
 		</nav>
-		<div class="ui-body ui-body-a ui-corner-all" id="alipayBindState"
-			style="display: none;">
-			<p style="color: red; font-weight: bold;">你还未绑定支付宝。只有绑定支付宝才能完成冲值提现操作。绑定支付宝前需要实名认证。</p>
-			<a class="ui-btn ui-corner-all ui-btn-a ui-mini"
-				onclick="toBindAlipay()">绑定支付宝</a>
-		</div>
-
-		<div class="ui-corner-all custom-corners">
-			<div class="ui-bar ui-bar-a">
-				<h3>绑定的支付宝</h3>
-			</div>
-			<div class="ui-body ui-body-a">
-				<p id="alipayNo"></p>
-				<p id="alipayName"></p>
-			</div>
-		</div>
-
-
+		<div>
+		<!-- 你还未绑定支付宝。只有绑定支付宝才能完成冲值提现操作。绑定支付宝前需要实名认证。 -->
+		<ul class="list-group">
+			<li class="list-group-item" onclick="toBindAlipay()">绑定的支付宝 <i class="fa fa-angle-right pull-right"></i><span class="pull-right" id="alipayNo"></span></li>
+		</ul>
+		
 		<div data-role="navbar">
-			<ul class="nav nav-tabs nav-justified" role="tablist">
+			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#prepayDiv">余额</a></li>
 				<li role="presentation"><a href="#depositDiv"
 					onclick="show('deposit')">保证金</a></li>
@@ -117,10 +104,12 @@
 				</div>
 			</div>
 		</div>
+		</div>
 	</div>
 </body>
 
-
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script src="../myjs/mycommon.js"></script>
 
@@ -130,6 +119,10 @@
 		//绑定控件滑动事件
 		bindSwipeEvent();
 		pageInit();
+		$('[role="tablist"] a').click(function (e) {
+			  e.preventDefault()
+			  $(this).tab('show')
+			});
 	});
 	function swipeRight() {
 		closeSubPage();
@@ -154,11 +147,12 @@
 		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			if (cachedUserInfo.alipayNo == null) {//未绑定过支付宝
-				$('#alipayBindState').show();
+				//$('#alipayBindState').show();
+				$('#alipayNo').html('你还未绑定支付宝!');
 			} else {
-				$('#alipayNo').html('你的支付宝帐号为:' + cachedUserInfo.alipayNo);
-				$('#alipayName').html('你的支付宝帐户名为:' + cachedUserInfo.alipayName);
-				$('#alipayBindState').remove();
+				$('#alipayNo').html(cachedUserInfo.alipayNo);
+				//$('#alipayName').html('你的支付宝帐户名为:' + cachedUserInfo.alipayName);
+				//$('#alipayBindState').remove();
 			}
 			var activeDiv = $('a[class*="ui-btn-active"]').attr('href');
 			if (activeDiv == "#prepayDiv") {

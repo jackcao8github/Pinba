@@ -105,7 +105,7 @@
 								nextPageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
+							var litemplate = '<li class="list-group-item"><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
 							litemplate += '<a href="#" onclick="delFocus(this)" workId="+workId+">删除关注</a></li>';
 							for ( var i = 0; data.length > i; i++) {
 								var workObj = data[i];

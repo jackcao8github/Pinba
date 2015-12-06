@@ -5,7 +5,6 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<script src="../js/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../css/bootstrap.min.css" />
 </head>
@@ -19,94 +18,96 @@
 			</div>
 		</nav>
 
-		<ul class="nav nav-tabs nav-justified" role="tablist">
-			<li role="presentation" class="active"><a href="#newResumeList"
-				onclick="getNewResumeList()">未录用</a></li>
-			<li role="presentation"><a href="#reservedResumeList"
-				id="messageTabLi" onclick="getReserveResumeList()">已预约</a></li>
-			<li role="presentation"><a href="#hiredResumeList"
-				onclick="getHiredResumeList()">已录用</a></li>
-			<li role="presentation"><a href="#checkInList"
-				onclick="getCheckInList()">已签到</a></li>
-			<li role="presentation"><a href="#checkOutList"
-				onclick="getCheckOutList()">已签退</a></li>
-		</ul>
-		<div id="tabs" class="tab-content">
-			<div id="newResumeList" role="tabpanel" class="tab-pane active">
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
-					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="newResumeListUL"
-						data-split-icon="bullets">
+		<div>
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#newResumeList"
+					onclick="getNewResumeList()">未录用</a></li>
+				<li role="presentation"><a href="#reservedResumeList"
+					id="messageTabLi" onclick="getReserveResumeList()">已预约</a></li>
+				<li role="presentation"><a href="#hiredResumeList"
+					onclick="getHiredResumeList()">已录用</a></li>
+				<li role="presentation"><a href="#checkInList"
+					onclick="getCheckInList()">已签到</a></li>
+				<li role="presentation"><a href="#checkOutList"
+					onclick="getCheckOutList()">已签退</a></li>
+			</ul>
+			<div id="tabs" class="tab-content">
+				<div id="newResumeList" role="tabpanel" class="tab-pane active">
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="newResumeListUL"
+							data-split-icon="bullets">
 
+						</ul>
+					</div>
+				</div>
+
+				<!-- 简历选择框 -->
+				<div data-role="popup" id="popupMenu">
+					<ul class="list-group" style="min-width: 210px;" id="resumeList">
+						<li onclick="gotoInterviewPage()">预约面试</li>
+						<li onclick="gotoHiredPage()">直接录用</li>
 					</ul>
 				</div>
-			</div>
-
-			<!-- 简历选择框 -->
-			<div data-role="popup" id="popupMenu">
-				<ul class="list-group"  style="min-width: 210px;"
-					id="resumeList">
-					<li onclick="gotoInterviewPage()">预约面试</li>
-					<li onclick="gotoHiredPage()">直接录用</li>
-				</ul>
-			</div>
-			<div id="reservedResumeList" role="tabpanel" class="tab-pane">
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
+				<div id="reservedResumeList" role="tabpanel" class="tab-pane">
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="reservedResumeListUL"
+							data-split-icon="bullets">
+						</ul>
 					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="reservedResumeListUL"
-						data-split-icon="bullets">
-					</ul>
 				</div>
-			</div>
-			<div id="hiredResumeList" role="tabpanel" class="tab-pane">
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
+				<div id="hiredResumeList" role="tabpanel" class="tab-pane">
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="hiredResumeListUL">
+						</ul>
+						<a role="button" data-icon="plus"
+							class="btn btn-success btn-lg btn-block"
+							onclick="queryAddStaff()">增加员工</a>
 					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="hiredResumeListUL">
-					</ul>
-					<a role="button"  data-icon="plus"
-						class="btn btn-success btn-lg btn-block" onclick="queryAddStaff()">增加员工</a>
 				</div>
-			</div>
 
-			<div id="checkInList" role="tabpanel" class="tab-pane">
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
+				<div id="checkInList" role="tabpanel" class="tab-pane">
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="checkInListUL">
+						</ul>
 					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="checkInListUL">
-					</ul>
 				</div>
-			</div>
-			<div id="checkOutList" role="tabpanel" class="tab-pane">
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
-					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="checkOutListUL"
-						data-split-icon="bullets">
-					</ul>
+				<div id="checkOutList" role="tabpanel" class="tab-pane">
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="checkOutListUL"
+							data-split-icon="bullets">
+						</ul>
 
-					<a role="button"  
-						class="btn btn-success btn-lg btn-block" onclick="toPay()">支付工资</a>
+						<a role="button" class="btn btn-success btn-lg btn-block"
+							onclick="toPay()">支付工资</a>
+					</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 </body>
 
-
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <script src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 
@@ -117,6 +118,10 @@
 		//绑定控件滑动事件
 		bindSwipeEvent();
 		pageInit();
+		$('[role="tablist"] a').click(function(e) {
+			e.preventDefault()
+			$(this).tab('show')
+		});
 	});
 
 	function pageInit() {

@@ -5,7 +5,6 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1, user-scalable=no" />
 
-<script src="../js/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
 <link rel="stylesheet" href="../css/bootstrap.min.css" />
 </head>
@@ -20,7 +19,7 @@
 		</nav>
 
 		<div data-role="navbar">
-			<ul class="nav nav-tabs nav-justified" role="tablist">
+			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#workList"
 					onclick="getWorkList()">工作记录</a></li>
 				<li role="presentation"><a href="#resumeList" id="messageTabLi"
@@ -92,8 +91,8 @@
 
 	</div>
 </body>
-
-
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <script src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 
@@ -102,6 +101,10 @@
 		//绑定控件滑动事件
 		bindSwipeEvent();
 		getWorkList();
+		$('[role="tablist"] a').click(function (e) {
+			  e.preventDefault()
+			  $(this).tab('show')
+			});
 	});
 	/* 	function swipeRight() {
 	 closeSubPage();

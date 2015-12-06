@@ -24,6 +24,14 @@ border-right:0;
 .statItem p{
 margin:0;
 }
+
+.location2 {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	margin: 0;
+}
 </style>
 
 
@@ -37,6 +45,7 @@ margin:0;
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">公司主页</a>
 			</div>
 		</nav>
+		<div>
 		<div class="login">
 			<img src="/PinBa/image?imageId=1" id="image" alt=""
 				class="personal_logo">
@@ -99,14 +108,15 @@ margin:0;
 			<ul class="list-group" id="workListUL">
 			</ul>
 		</div>
-		<div data-role="footer" data-position="fixed" data-fullscreen="false"
-			data-tap-toggle="false" id="footer">
-			<div data-role="controlgroup" data-type="horizontal">
-				<!-- <a href="#" id="addFocusBtn" role="button" data-icon="heart">关注</a> -->
-				<a href="#" id="addFriendBtn" role="button" data-icon="plus">加好友</a>
-				<!-- <a href="#" id="dialTel" role="button" data-icon="phone" onclick="toDial()">电话联系</a> -->
-				<!-- <a href="#" id="sendMsg" role="button" data-icon="mail" onclick="toSendMsg()">私信</a> -->
+		<div class="location2">
+			<div
+				style="postion: absolute; width: 100%; left: 0; bottom: 0; display: flex; display: -webkit-flex; border-top: 1px solid red;"
+				id="footNavBar">
+				<div class="btn-group btn-group-justified" role="group">
+					<a class="btn btn-default" href="#" role="button" id="addFriendBtn">关注</a>
+				</div>
 			</div>
+		</div>
 		</div>
 		</div>
 	</body>
