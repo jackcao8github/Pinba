@@ -8,145 +8,121 @@
 <link href="css/font-awesome.min.css" rel="stylesheet">
 
 <style type="text/css">
-html,body{
-margin:0;
-}
-.location2 {
-	position: fixed;
-	left: 0px;
-	bottom: 0px;
-	width: 100%;
-	margin:0;
-}
 
-#footNavBar > a {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: block;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1 1 0;
-  -moz-flex: 1 1 0;
-  -ms-flex: 1 1 0;
-  flex: 1 1 0;
-  text-align: center;
-  color:#4390ee;
-}
-.active{
-color:orange!important;
+.active {
+	color: orange !important;
 }
 </style>
 
 </head>
 
 <body>
-	<div style="position:absolute;" id="indexPage">
+	<div style="position: absolute;" id="indexPage">
 		<iframe id="homeFrame" name="homeFrame" src="home/home.html"
-			style="display:block;width: 100%; border: 0;max-height:100%;" scrolling="auto" frameborder="0"
-			></iframe>
+			style="display: block; width: 100%; border: 0; max-height: 100%;"
+			scrolling="auto" frameborder="0"></iframe>
 
 		<!-- <iframe id="pinleFrame" name="pinleFrame" 
 			style="width:100%;display: none;" scrolling="auto"
 			frameborder="0" ></iframe> -->
 
 		<iframe id="fabuFrame" name="fabuFrame"
-			style="width: 100%; display: none; border: 0;max-height:100%;" scrolling="auto"
-			frameborder="0"></iframe>
+			style="width: 100%; display: none; border: 0; max-height: 100%;"
+			scrolling="auto" frameborder="0"></iframe>
 
 		<!-- <iframe id="faxianFrame" name="faxianFrame"
 			style="width: 100%; display: none;" scrolling="auto" frameborder="0"></iframe> -->
 
 		<iframe id="wodeFrame" name="wodeFrame"
-			style="width: 100%; display: none; border: 0;max-height:100%;" scrolling="auto"
-			frameborder="0"></iframe>
+			style="width: 100%; display: none; border: 0; max-height: 100%;"
+			scrolling="auto" frameborder="0"></iframe>
 		<iframe id="messageFrame" name="messageFrame"
-			style="width: 100%; display: none;border: 0;max-height:100%;" scrolling="auto" frameborder="0"></iframe>
-		<div class="location2">
+			style="width: 100%; display: none; border: 0; max-height: 100%;"
+			scrolling="auto" frameborder="0"></iframe>
+		<div class="pagefooter">
 			<a href="#" onclick="showFooter()" style="display: none"
 				class="ui-btn ui-shadow ui-corner-all ui-icon-bullets ui-btn-icon-notext ui-btn-b ui-btn-inline"></a>
-			<div
-				style="postion: absolute; width: 100%; left: 0; bottom: 0;display:flex;display:-webkit-flex;border-top:1px solid red;"
-				id="footNavBar">
-					<a id="home" data-role="none"
-							onclick="switchIframe(this)" class="active"><i class="fa fa-home fa-2x"></i><br>首页</a>
-						<!-- <li><a id="pinle" href="#" data-icon="bars"
+			<div class="pagefooternav" id="footNavBar">
+				<a id="home" onclick="switchIframe(this)" class="active"><i
+					class="fa fa-home fa-2x"></i><br>首页</a>
+				<!-- <li><a id="pinle" href="#" data-icon="bars"
 						onclick="switchIframe(this)" >拼乐</a></li> -->
-						<!-- <li><a id="faxian" href="#" data-icon="eye"
+				<!-- <li><a id="faxian" href="#" data-icon="eye"
 							onclick="switchIframe(this)">发现</a></li> -->
-						<a id="fabu" data-role="none"
-							onclick="switchIframe(this)"><i class="fa fa-pencil fa-2x"></i><br>发布</a>
-						<a id="message" data-role="none"
-							onclick="switchIframe(this)"><i class="fa fa-comments-o fa-2x"></i><br>消息</a>
-						<a id="wode" data-role="none"
-							onclick="switchIframe(this)"><i class="fa fa-user fa-2x"></i><br>我的</a>
+				<a id="fabu" onclick="switchIframe(this)"><i
+					class="fa fa-pencil fa-2x"></i><br>发布</a> <a id="message"
+					onclick="switchIframe(this)"><i class="fa fa-comments-o fa-2x"></i><br>消息</a>
+				<a id="wode" onclick="switchIframe(this)"><i
+					class="fa fa-user fa-2x"></i><br>我的</a>
 			</div>
 		</div>
 	</div>
-	
+
 	<script src="js/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="myjs/mycommon.js"></script>
+	<script type="text/javascript" src="myjs/mycommon.js"></script>
 
-<script type="text/javascript">
-	var footHeight = 0;
-	$(document).ready(function(){
-		footHeight = parseInt($('#footNavBar').css('height'));
-		resizeIFrame({id:"homeFrame"});
-		changeSubPage('lauchSplash','indexPage');
-	});
-	var frameIdSrcMap = {
-		"homeFrame" : "home/home.html",
-		"pinleFrame" : "together/pinle.html",
-		"fabuFrame" : "publish/fabu.html",
-		"faxianFrame" : "nearby/faxian.html",
-		"wodeFrame" : "my/wode.html",
-		"messageFrame" : "message/message.html"
-	};
-	var displayFrameId = 'homeFrame';
-	var clientWindowHeight = 0;
-	function switchIframeByClick(btnId) {
-		$('#' + btnId).click();
-	}
-	/* 切换iframe
-		先隐藏当前活动iframe
-		然后显示目标iframe
-	 */
-	function switchIframe(obj) {
-		if (displayFrameId != '') {
-			$('#' + displayFrameId).hide();
-		}
-		var id = obj.id;
-		var iframeid = id + 'Frame';
-		$('#' + iframeid).show();
-		$('#' + iframeid).css('display', 'block');//将iframe设置为block后，去除默认的2px边框，此边框会引起页面滚动
-
-		if (null == $('#' + iframeid).attr('src')) {
-			$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
-		}
-
-		resizeIFrame({
-			'id' : iframeid
+	<script type="text/javascript">
+		var footHeight = 0;
+		$(document).ready(function() {
+			footHeight = parseInt($('#footNavBar').css('height'));
+			resizeIFrame({
+				id : "homeFrame"
+			});
+			changeSubPage('lauchSplash', 'indexPage');
 		});
-		displayFrameId = iframeid;
-		$('.active').removeClass('active');
-		$(obj).addClass('active');
-	}
-	function resizeIFrame(obj) {
-		var ifr = document.getElementById(obj.id);
-		if (clientWindowHeight == 0) {
-			clientWindowHeight = window.innerHeight
-					|| document.documentElement.clientHeight
-					|| document.body.clientHeight;
-
-			clientWindowHeight = clientWindowHeight;
+		var frameIdSrcMap = {
+			"homeFrame" : "home/home.html",
+			"pinleFrame" : "together/pinle.html",
+			"fabuFrame" : "publish/fabu.html",
+			"faxianFrame" : "nearby/faxian.html",
+			"wodeFrame" : "my/wode.html",
+			"messageFrame" : "message/message.html"
+		};
+		var displayFrameId = 'homeFrame';
+		var clientWindowHeight = 0;
+		function switchIframeByClick(btnId) {
+			$('#' + btnId).click();
 		}
-		ifr.style.width = window.innerWidth + 'px';
-		ifr.style.height = clientWindowHeight - parseInt(footHeight) + 'px';
-	}
+		/* 切换iframe
+			先隐藏当前活动iframe
+			然后显示目标iframe
+		 */
+		function switchIframe(obj) {
+			if (displayFrameId != '') {
+				$('#' + displayFrameId).hide();
+			}
+			var id = obj.id;
+			var iframeid = id + 'Frame';
+			$('#' + iframeid).show();
+			$('#' + iframeid).css('display', 'block');//将iframe设置为block后，去除默认的2px边框，此边框会引起页面滚动
 
-	function showFooter() {
-		$('#footNavBar').toggle();
-	}
-</script>
+			if (null == $('#' + iframeid).attr('src')) {
+				$('#' + iframeid).attr('src', frameIdSrcMap[iframeid]);
+			}
+
+			resizeIFrame({
+				'id' : iframeid
+			});
+			displayFrameId = iframeid;
+			$('.active').removeClass('active');
+			$(obj).addClass('active');
+		}
+		function resizeIFrame(obj) {
+			var ifr = document.getElementById(obj.id);
+			if (clientWindowHeight == 0) {
+				clientWindowHeight = window.innerHeight
+						|| document.documentElement.clientHeight
+						|| document.body.clientHeight;
+
+				clientWindowHeight = clientWindowHeight;
+			}
+			ifr.style.width = window.innerWidth + 'px';
+			ifr.style.height = clientWindowHeight - parseInt(footHeight) + 'px';
+		}
+
+		function showFooter() {
+			$('#footNavBar').toggle();
+		}
+	</script>
 </body>
 </html>

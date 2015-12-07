@@ -37,19 +37,11 @@
 .statItem p {
 	margin: 0;
 }
-
-.location2 {
-	position: fixed;
-	left: 0px;
-	bottom: 0px;
-	width: 100%;
-	margin: 0;
-}
 </style>
 
 </head>
 <body onscroll="scrollend()">
-	<div data-role="page" id="userHomePage">
+	<div class="page" id="userHomePage">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#"
@@ -124,9 +116,9 @@
 				</ul>
 			</div>
 		</div>
-		<div class="location2">
+		<div class="pagefooter">
 			<div
-				style="postion: absolute; width: 100%; left: 0; bottom: 0; display: flex; display: -webkit-flex; border-top: 1px solid red;"
+				class="pagefooternav"
 				id="footNavBar">
 				<div class="btn-group btn-group-justified" role="group">
 					<a class="btn btn-default" href="#" role="button" id="addFriendBtn">关注</a>

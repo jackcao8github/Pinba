@@ -7,13 +7,12 @@
 
 <link rel="stylesheet" href="../mycss/mygrid.css" />
 <link rel="stylesheet" href="../css/font-awesome.min.css" />
-
-<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 <style>
 </style>
 </head>
 <body>
-	<div data-role="page" id="wodePage" data-dom-cache="true">
+	<div class="page" id="wodePage">
 		<div data-role="none">
 			<div class="login">
 				<img id="image" src="" alt="" class="personal_logo"
@@ -27,136 +26,72 @@
 				</div>
 			</div>
 
-			<div class="firstblock">
-				<div class="item" id="myHomePage" onclick="toMyHomePage()">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的主页</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i>
-				</div>
-				<div class="h1"></div>
-				<div class="item" id="feelingList" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的心情</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+			<ul class="list-group">
+				<li class="list-group-item" id="myHomePage" onclick="toMyHomePage()">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i>我的主页
+					<i class="fa fa-angle-right pull-right"></i>
+				</li>
+				<li class="list-group-item" id="feelingList" onclick="changePage(this)">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i>我的心情
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint" id="feeling"></span>
-				</div>
-			</div>
-			<div class="h10"></div>
-			<div class="secondblock">
-				<div class="h1"></div>
-				<div class="item" id="myWork" onclick="changePage(this)">
+				</li>
+				
+				<li class="list-group-item" id="myWork" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的工作</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">简历/求职记录/工作记录</span>
-				</div>
-				<!-- <div class="h1"></div>
-				<div class="item" id="myOrder" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订单</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div> -->
-
-
-
-				<div class="h1"></div>
-				<div class="item" id="myPublish" onclick="changePage(this)">
+				</li>
+				
+				<li class="list-group-item" id="myPublish" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的招聘</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">招聘管理/员工操作</span>
-				</div>
+				</li>
 
-				<div class="h1"></div>
-				<div class="item" id="myMoneyBag" onclick="changePage(this)">
+				<li class="list-group-item" id="myMoneyBag" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的钱包</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">余额/保证金/积分</span>
-				</div>
+				</li>
 
-				<div class="h1"></div>
-				<div class="item" id="batchPayWithAlipay" onclick="changePage(this)" style="display:none;">
+				<li class="list-group-item" id="batchPayWithAlipay" onclick="changePage(this)" style="display:none;">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>批量支付工资</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">批量支付工资到员工支付宝</span>
-				</div>
-			</div>
-
-
-			<!-- 第二块 -->
-			<div class="h10"></div>
-			<div class="secondblock">
-				<div class="item" id="uploadAuthFile"
+				</li>
+				
+				<li class="list-group-item" id="uploadAuthFile"
 					onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>实名认证</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i> <span
+					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">认证资料上传</span>
-				</div>
+				</li>
 
-				<div class="h1"></div>
-				<div class="item" id="myFocus" onclick="changePage(this)">
+				<li class="list-group-item" id="myFocus" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的关注</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i><span
+					<i class="fa fa-angle-right pull-right"></i><span
 						class="fr hint">关注的工作</span>
-				</div>
-				<!-- <div class="h1"></div>
-				<div class="item" id="mySub" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的订阅</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div> -->
-				<!-- <div class="h1"></div>
-				<div class="item" id="myPromotion" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的推广</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div> -->
-				<!-- <div class="h1"></div>
-				<div class="item" id="verifyOfferVoucher" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>核销商品码</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i> <span
-						class="fr hint">商品码/优惠券码/活动码</span>
-				</div> -->
-			</div>
-
-			<!-- 第三块 -->
-			<div class="h10"></div>
-			<div class="thirdblock">
-				<div class="item" id="myLookHis" onclick="changePage(this)">
+				</li>
+				
+				<li class="list-group-item" id="myLookHis" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>最近浏览</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i><span
+					<i class="fa fa-angle-right pull-right"></i><span
 						class="fr hint">查看过的工作</span>
-				</div>
-				<div class="h1"></div>
-				<div class="item" id="serviceCenter" onclick="changePage(this)">
+				</li>
+				<li class="list-group-item" id="serviceCenter" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>服务中心</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr"
-						style="color: #f63; line-height: 50px; margin-right: 5px;"></i>
-				</div>
-				<!-- <div class="h1"></div>
-				<div class="item" id="tobeBusiness" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为商家</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div> -->
-				<!-- <div class="h1"></div>
-				<div class="item" id="tobeVIPMemeber" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>成为会员</span>
-					<i class="fa fa-chevron-right fa-lg fa-fw fr" style="color: #f63;line-height:50px;margin-right:5px;"></i>
-				</div> -->
-				<!-- <div class="h1"></div>
-				<div class="item" id="clearCache" onclick="clearCache(this)">
-					<i class="fa fa-cog fa-spin fa-lg fa-fw" style="color: #f63"></i> <span>清除缓存</span>
-				</div> -->
-			</div>
+					<i class="fa fa-angle-right pull-right"></i>
+				</li>
+			</ul>
 		</div>
 	</div>
 
 </body>
 
 
-
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <script type="text/javascript">

@@ -31,7 +31,7 @@
 
 </head>
 <body>
-	<div data-role="page" id="messagePage">
+	<div class="page" id="messagePage">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<a class="navbar-brand">我的消息</a>
@@ -86,7 +86,7 @@
 						<div class="pullDownFreshText">下拉刷新</div>
 					</div>
 					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="friendListUL">
+					<ul class="media-list list-group" id="friendListUL">
 					</ul>
 				</div>
 			</div>
@@ -155,14 +155,14 @@
 		$('#messageListUL').html('');//清除已有li
 
 		var ulHtml = '';
-		var liTemplate = '<li class="list-group-item"><a href="#" onclick="toMsgPage(this,\'-friendId-\',\'-friendName-\',\'-msgType-\',\'-headPicImageId-\')"> \
-			<h3>-msgTypeName-</h3> \
-			<p>-friendName-</p> \
+		var liTemplate = '<li class="list-group-item" onclick="toMsgPage(this,\'-friendId-\',\'-friendName-\',\'-msgType-\',\'-headPicImageId-\')"> \
+			<h4 class="list-group-item-heading">-msgTypeName-</h4> \
+			<p class="list-group-item-text">-friendName-</p> \
 				<p>-msgContent-</p> \
 				<p class="ui-li-aside"> \
 				<strong>-msgTime-</strong></p> \
 			<div class="msgStatus -state-"></div> \
-		</a></li>';
+		</li>';
 
 		for (var i = 0; arr.length > i; i++) {
 			var repValueArr = {};
@@ -220,11 +220,12 @@
 	}
 	function fillFriendList(arr) {
 		var ulHtml = '';
-		var liTemplate = '<li class="list-group-item"><a href="#" onclick="toMsgPage(\'-friendId-\',\'-friendName-\',\'friendMsg\',\'-friendHeadPicImageId-\')"><img style="margin:5px;height:70px;width:70px;border-radius:50px;top:10px;" src="-friendHeadPic-"></img> \
-			<h3>-friendName-</h3> \
-			<p>-friendFeelingText-</p> \
-			<p style="float:left;">-friendType--privateFriend-&nbsp;|&nbsp;<i class="fa fa-street-view"></i>-distance-米</p> \
-		</a></li>';
+		var liTemplate = '<li class="media list-group-item" style="margin-top:0" onclick="toMsgPage(\'-friendId-\',\'-friendName-\',\'friendMsg\',\'-friendHeadPicImageId-\')"><div class="media-left"><a href="#"><img class="media-object" src="-friendHeadPic-" alt="..." style="width:64px;"></a></div>\
+			<div class="media-body">\
+	      <h4 class="media-heading">-friendName-</h4>\
+	      <p>-friendFeelingText-</p> \
+	      <p>-friendType--privateFriend-&nbsp;|&nbsp;<i class="fa fa-street-view"></i>-distance-米</p>\
+	    </div></li>';
 
 		for (var i = 0; arr.length > i; i++) {
 			var repValueArr = {};
