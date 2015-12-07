@@ -199,7 +199,7 @@
 								newResumePageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>员工名称:-realName-</h3><p>员工手机:-cellphone-</p>';
+							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
 							litemplate += '<a href="#" resumeId="-resumeId-" onclick="popupInterviewOrHired(this)">预约</a></li>';
 
 							for (var i = 0; data.length > i; i++) {
@@ -249,9 +249,8 @@
 								reservePageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>员工名称:-realName-</h3><p>员工手机:-cellphone-</p>';
-							litemplate += '<p>预约时间:-interviewTime-&nbsp;|&nbsp;预约地点:-interviewAddress-</p>';
-							litemplate += '</a>';
+							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
+							litemplate += '<p class="list-group-item-text">预约时间:-interviewTime-&nbsp;|&nbsp;预约地点:-interviewAddress-</p>';
 
 							litemplate += '<a href="#" resumeId="-resumeId-" onclick="gotoHiredPage(this)">录用</a></li>';
 							for (var i = 0; data.length > i; i++) {
@@ -305,9 +304,9 @@
 								hiredPageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>员工名称:-realName-</h3><p>员工手机:-cellphone-</p>';
-							litemplate += '<p>计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-&nbsp;|&nbsp;计划工作地点:-workAddress-</p>';
-							litemplate += '</a></li>';
+							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
+							litemplate += '<p class="list-group-item-text">计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-&nbsp;|&nbsp;计划工作地点:-workAddress-</p>';
+							litemplate += '</li>';
 							for (var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
 
@@ -388,10 +387,10 @@
 								checkInPageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>员工名称:-realName-</h3><p>员工手机:-cellphone-</p>';
-							litemplate += '<p>计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-</p>';
-							litemplate += '<p>实际签到时间:-checkInTime-</p>';
-							litemplate += '</a></li>';
+							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
+							litemplate += '<p class="list-group-item-text">计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-</p>';
+							litemplate += '<p class="list-group-item-text">实际:-checkInTime-</p>';
+							litemplate += '</li>';
 							for (var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
 
@@ -448,18 +447,18 @@
 
 							for (var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
-								var litemplate = '<li><a onclick="openResumeDetail(this)" resumeId="-resumeId-"><h3>员工名称:-realName-&nbsp;|&nbsp;员工手机:-cellphone-</h3>';
-								litemplate += '<p>计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-</p>';
-								litemplate += '<p>实际签到时间:-checkInTime-&nbsp;|&nbsp;实际签退时间:-checkOutTime-</p>';
-								litemplate += '<p>工作时长:-time-&nbsp;|&nbsp;应发薪资:-money-</p>';
+								var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-&nbsp;|&nbsp;员工手机:-cellphone-</h4>';
+								litemplate += '<p class="list-group-item-text">计划签到时间:-workTimeBegin-&nbsp;|&nbsp;计划签退时间:-workTimeEnd-</p>';
+								litemplate += '<p class="list-group-item-text">实际签到时间:-checkInTime-&nbsp;|&nbsp;实际签退时间:-checkOutTime-</p>';
+								litemplate += '<p class="list-group-item-text">工作时长:-time-&nbsp;|&nbsp;应发薪资:-money-</p>';
 								if (resumeobj.workInfo.sallaryChargeType == 'online') {//在线支付，需要显示支付宝帐号及支付状态
-									litemplate += '<p>支付宝帐号:-alipayNo-&nbsp;|&nbsp;支付宝户名:-alipayName-</p>';
-									litemplate += '<p>支付批次号:-batchNo-</p>';
-									litemplate += '<p>支付结果:-state-</p>';
+									litemplate += '<p class="list-group-item-text">支付宝帐号:-alipayNo-&nbsp;|&nbsp;支付宝户名:-alipayName-</p>';
+									litemplate += '<p class="list-group-item-text">支付批次号:-batchNo-</p>';
+									litemplate += '<p class="list-group-item-text">支付结果:-state-</p>';
 								} else {
-									litemplate += '<p>支付方式:线下支付</p>';
+									litemplate += '<p class="list-group-item-text">支付方式:线下支付</p>';
 								}
-								litemplate += '</a><a href="#" onclick="toModifyChecInOut(\'-userWorkId-\',\'-checkInTime-\',\'-checkOutTime-\',\'-batchNo-\',\'-chageType-\')"></a></li>';
+								litemplate += '<a href="#" onclick="toModifyChecInOut(\'-userWorkId-\',\'-checkInTime-\',\'-checkOutTime-\',\'-batchNo-\',\'-chageType-\')"></a></li>';
 
 								var replaceArr = {};
 								replaceArr['-resumeId-'] = resumeobj.resumeId;

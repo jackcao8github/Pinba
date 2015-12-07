@@ -18,92 +18,78 @@
 			</div>
 		</nav>
 		<div>
-		<!-- 你还未绑定支付宝。只有绑定支付宝才能完成冲值提现操作。绑定支付宝前需要实名认证。 -->
-		<ul class="list-group">
-			<li class="list-group-item" onclick="toBindAlipay()">绑定的支付宝 <i class="fa fa-angle-right pull-right"></i><span class="pull-right" id="alipayNo"></span></li>
-		</ul>
-		
-		<div data-role="navbar">
-			<ul class="nav nav-tabs" role="tablist">
-				<li role="presentation" class="active"><a href="#prepayDiv">余额</a></li>
-				<li role="presentation"><a href="#depositDiv"
-					onclick="show('deposit')">保证金</a></li>
-				<li role="presentation"><a href="#pointsDiv"
-					onclick="show('points')">积分</a></li>
-
-				<!-- <li><a href="#friendList">优惠券</a></li> -->
-				<!-- <li><a href="#friendList">红包</a></li> -->
+			<!-- 你还未绑定支付宝。只有绑定支付宝才能完成冲值提现操作。绑定支付宝前需要实名认证。 -->
+			<ul class="list-group">
+				<li class="list-group-item" onclick="toBindAlipay()">绑定的支付宝 <i
+					class="fa fa-angle-right pull-right"></i><span class="pull-right"
+					id="alipayNo"></span></li>
 			</ul>
-		</div>
-		<div id="tabs" class="tab-content">
-			<div id="pointsDiv" role="tabpanel" class="tab-pane">
-				<ul class="list-group">
-					<li data-role="list-divider">当前你有积分<strong id="points">200</strong><span
-						class="ui-li-count"><a>积分有什么用?</a></span></li>
 
+			<div data-role="navbar">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#prepayDiv">余额</a></li>
+					<li role="presentation"><a href="#depositDiv"
+						onclick="show('deposit')">保证金</a></li>
+					<li role="presentation"><a href="#pointsDiv"
+						onclick="show('points')">积分</a></li>
+
+					<!-- <li><a href="#friendList">优惠券</a></li> -->
+					<!-- <li><a href="#friendList">红包</a></li> -->
 				</ul>
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
-					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="pointsHisList">
+			</div>
+			<div id="tabs" class="tab-content">
+				<div id="pointsDiv" role="tabpanel" class="tab-pane">
+					<ul class="list-group">
+						<li class="list-group-item">当前你有积分<strong id="points">200</strong><span
+							class="pull-right"><a>积分有什么用?</a></span></li>
+
 					</ul>
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="pointsHisList">
+						</ul>
+					</div>
+				</div>
+				<div id="prepayDiv" role="tabpanel" class="tab-pane active">
+					<ul class="list-group">
+						<li class="list-group-item">当前你有余额<strong id="prepay">200</strong>元<span
+							class="pull-right"><a>余额能干什么?</a></span></li>
+						<li class="list-group-item"><a role="button"
+							class="btn btn-success" onclick="topup('prepay')">充值</a> <a
+							role="button" class="btn btn-info" onclick="toCash('prepay')">提取</a>
+						</li>
+					</ul>
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="prepayHisList">
+						</ul>
+					</div>
+				</div>
+				<div id="depositDiv" role="tabpanel" class="tab-pane">
+					<ul class="list-group">
+						<li class="list-group-item">当前你有保证金<strong id="deposit">2000</strong>元<span
+							class="pull-right"><a>保证金是什么?</a></span></li>
+						<li class="list-group-item"><a role="button"
+							class="btn btn-success" onclick="topup('deposit')">增加保证金</a> <a
+							role="button" class="btn btn-success" onclick="toCash('deposit')">提取保证金</a>
+						</li>
+					</ul>
+					<div class="swipe">
+						<div class="pullDownFresh">
+							<div class="pullDownFreshText">下拉刷新</div>
+						</div>
+						<div class="pullNoData">没有数据!你可以下拉刷新!</div>
+						<ul class="list-group" id="depositHisList">
+						</ul>
+					</div>
 				</div>
 			</div>
-			<div id="prepayDiv" role="tabpanel" class="tab-pane active">
-				<ul class="list-group">
-					<li data-role="list-divider">当前你有余额<strong id="prepay">200</strong>元<span
-						class="ui-li-count"><a>余额能干什么?</a></span></li>
-					<li class="list-group-item">
-						<fieldset class="ui-grid-a ui-mini">
-							<div class="ui-block-a">
-								<a role="button"  data-icon=""
-									onclick="topup('prepay')">充值</a>
-							</div>
-							<div class="ui-block-b">
-								<a role="button"  data-icon=""
-									onclick="toCash('prepay')">提取</a>
-							</div>
-						</fieldset>
-					</li>
-				</ul>
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
-					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="prepayHisList">
-					</ul>
-				</div>
-			</div>
-			<div id="depositDiv" role="tabpanel" class="tab-pane">
-				<ul class="list-group">
-					<li data-role="list-divider">当前你有保证金<strong id="deposit">2000</strong>元<span
-						class="ui-li-count"><a>保证金是什么?</a></span></li>
-					<li class="list-group-item">
-						<fieldset class="ui-grid-a  ui-mini">
-							<div class="ui-block-a">
-								<a role="button"  data-icon=""
-									onclick="topup('deposit')">增加保证金</a>
-							</div>
-							<div class="ui-block-b">
-								<a role="button"  data-icon=""
-									onclick="toCash('deposit')">提取保证金</a>
-							</div>
-						</fieldset>
-					</li>
-				</ul>
-				<div class="swipe">
-					<div class="pullDownFresh">
-						<div class="pullDownFreshText">下拉刷新</div>
-					</div>
-					<div class="pullNoData">没有数据!你可以下拉刷新!</div>
-					<ul class="list-group" id="depositHisList">
-					</ul>
-				</div>
-			</div>
-		</div>
 		</div>
 	</div>
 </body>
@@ -119,10 +105,10 @@
 		//绑定控件滑动事件
 		bindSwipeEvent();
 		pageInit();
-		$('[role="tablist"] a').click(function (e) {
-			  e.preventDefault()
-			  $(this).tab('show')
-			});
+		$('[role="tablist"] a').click(function(e) {
+			e.preventDefault()
+			$(this).tab('show')
+		});
 	});
 	function swipeRight() {
 		closeSubPage();
@@ -195,8 +181,8 @@
 		if (listData != null && listData.length > 0) {
 			$('#' + listId)
 					.append(
-							'<li data-role="list-divider">明细<span class="ui-li-count"><a>更多明细...</a></span></li>');
-			var litemp = '<li class="list-group-item"><a><h3>-value-</h3><p>-optype-</p><p class="ui-li-aside"><strong>-time-</strong></p></a></li>';
+							'<li class="list-group-item">明细<span class="pull-right"><a>更多明细...</a></span></li>');
+			var litemp = '<li class="list-group-item"><h4>-value-</h4><p>-optype-</p><p class="ui-li-aside"><strong>-time-</strong></p></li>';
 
 			for (var i = 0; listData.length > i; i++) {
 				var params = {};

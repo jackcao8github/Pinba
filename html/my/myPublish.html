@@ -17,6 +17,9 @@
 	<div class="page" id="myPubPage">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
+				<a class="navbar-brand pull-right" href="#"
+					onclick="localStorage.changePageParams='';changeSubPage('work', 'myPubPage')"><i
+					class="fa fa-plus fa-lg"></i></a>
 				<a class="navbar-brand" href="#"
 					onclick="closeSubPage();return false;"><i
 					class="fa fa-close fa-lg"></i></a> <a class="navbar-brand">我的招聘</a>
@@ -36,8 +39,6 @@
 			<ul class="list-group" id="workListUL" data-split-icon="gear">
 			</ul>
 			</div>
-			<a role="button"  data-icon="plus" class="btn btn-success btn-lg btn-block"
-                    onclick="localStorage.changePageParams='';changeSubPage('work', 'myPubPage')">发布招聘信息</a>
 		</div>
 	</div>
 </body>
@@ -94,7 +95,7 @@
 								nextPageFlag = false;
 							}
 							var lihtmls = '';
-							var litemplate = '<li class="list-group-item"><a onclick="openWorkDetail(this)" workId="+workId+"><h3>+workName+</h3><p>+workType+</p><p>发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p>关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p></a>';
+							var litemplate = '<li class="list-group-item" onclick="openWorkDetail(this)" workId="+workId+"><h4 class="list-group-item-heading">+workName+</h4><p class="list-group-item-text">+workType+</p><p class="list-group-item-text">发布时间:+effDate+&nbsp;|&nbsp;失效时间:+expDate+</p><p class="list-group-item-text">关注数:+focusNumber+&nbsp;|&nbsp;查看数:+lookNumber+&nbsp;|&nbsp;收到简历数:+resumeNumber+</p>';
 							litemplate += '<a href="#" onclick="openResumeInWork(this)" workId="+workId+">查看收到的简历</a></li>';
 							for ( var i = 0; data.length > i; i++) {
 								var workObj = data[i];
