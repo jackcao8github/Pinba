@@ -28,11 +28,11 @@
 
 			<ul class="list-group">
 				<li class="list-group-item" id="myHomePage" onclick="toMyHomePage()">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i>我的主页
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的主页</span>
 					<i class="fa fa-angle-right pull-right"></i>
 				</li>
 				<li class="list-group-item" id="feelingList" onclick="changePage(this)">
-					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i>我的状态
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的状态</span>
 					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint" id="feeling"></span>
 				</li>
@@ -42,7 +42,11 @@
 					<i class="fa fa-angle-right pull-right"></i> <span
 						class="fr hint">简历/求职记录/工作记录</span>
 				</li>
-				
+				<li class="list-group-item" id="myResume" onclick="toMyResume()" style="display:none;">
+					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的简历</span>
+					<i class="fa fa-angle-right pull-right"></i> <span
+						class="fr hint"></span>
+				</li>
 				<li class="list-group-item" id="myPublish" onclick="changePage(this)">
 					<i class="fa fa-tag fa-lg fa-fw" style="color: #f63"></i> <span>我的招聘</span>
 					<i class="fa fa-angle-right pull-right"></i> <span
@@ -132,6 +136,10 @@
 			if (cachedUserInfo.userId==1){
 				$('#batchPayWithAlipay').show();
 			}
+			
+			if (cachedUserInfo.userType=='company'){
+				$('#myResume').show();
+			}
 		} else {
 			$('#image').attr('src', createImageUrl(1));//默认头像id
 			$('#userName').html('点击头像登陆');
@@ -188,5 +196,32 @@
 		}
 	}
 	
+	//打开简历
+	
+	function toMyResume() {
+		//如果未登陆过，则进入登陆页面
+		//userId为用户ID
+		var userInfo = getLoginUserInfo();
+		if (userInfo != null) {
+			//进入用户信息页面
+				var resumeInfo = {};
+				resumeInfo.userId = userInfo.userId;
+				resumeInfo.userToken = userInfo.userToken;
+				resumeInfo.page = '1';
+
+				ajaxReq('resumeAction', {
+					method : 'getResumeList',
+					resumeInfo : json2Str(resumeInfo)
+				}, function(data) {
+					if (data.length > 0) {
+						var resumeobj = data[0];
+						changeSubPage('resumeDetail', 'wodePage', 'resumeId='
+								+ resumeobj.resumeId);
+					} else {
+						showTipDialog(data.msg);
+					}
+				});
+		}
+	}
 </script>
 </html>

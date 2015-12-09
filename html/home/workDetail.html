@@ -242,13 +242,6 @@
 				<ul class="list-group" id="workListUL">
 				</ul>
 			</div>
-
-			<!-- 简历选择框 -->
-			<!-- <div data-role="popup" id="popupMenu">
-				<ul class="list-group" style="min-width: 210px;" id="resumeList">
-					<li class="list-group-item"><h3>选择简历</h3></li>
-				</ul>
-			</div> -->
 		</div>
 
 		<div class="pagefooter">
@@ -294,106 +287,21 @@
 						} else {
 							$('#modBtn').remove();
 						}
-						//为关注钮增加响应事件
-						/*  $('#addFocusBtn').bind('click',function() {
-															var cachedUserInfo = getLoginUserInfo();
-															if (cachedUserInfo != null) {
-																var focusInfo = {};
-																focusInfo.userToken = cachedUserInfo.userToken;
-																focusInfo.userId = cachedUserInfo.userId;
-																focusInfo.workId = workId;
-
-																ajaxReq(
-																		'workAction',
-																		{
-																			method : 'addFocus',
-																			focusInfo : json2Str(focusInfo)
-																		},
-																		function(data) {
-																			if (data.flag == 'success') {
-																				$(
-																						'#addFocusBtn')
-																						.html(
-																								data.focusNumber);
-																			} else {
-																				showTipDialog(data.msg);
-																			}
-																		});
-															}
-														}); */
 						//为投简历按钮增加响应事件
-						$('#sendResumeBtn')
-								.bind(
-										'click',
-										function() {
-											//列出用户已有的简历
-											$('#resumeList').html('');
-											var resumeInfo = {};
-											var cachedUserInfo = getLoginUserInfo();
-											if (cachedUserInfo != null) {
-												resumeInfo.userId = cachedUserInfo.userId;
-												resumeInfo.userToken = cachedUserInfo.userToken;
-												resumeInfo.page = '1';
-
-												ajaxReq(
-														'resumeAction',
-														{
-															method : 'getResumeList',
-															resumeInfo : json2Str(resumeInfo)
-														},
-														function(data) {
-															if (data.flag != 'fail') {
-																if (data.length == 0) {
-																	showConfirmDialog(
-																			"你还没有简历，需要先增加一个简历!",
-																			toAddResume);
-																} else {
-																	var lihtmls = '<li class="list-group-item">选择一个简历</li>';
-
-																	for (var i = 0; data.length > i; i++) {
-																		var resumeobj = data[i];
-																		var lihtml = '<li><a onclick="sendResume(this)" resumeId="'
-																				+ resumeobj.resumeId
-																				+ '">'
-																				+ resumeobj.resumeName
-																				+ '</a></li>';
-																		lihtmls += lihtml;
-																	}
-																	$(
-																			'#resumeList')
-																			.append(
-																					lihtmls);
-
-																	//打开简历选择框
-																	$(
-																			'#popupMenu')
-																			.popup();
-																	$(
-																			'#popupMenu')
-																			.popup(
-																					'open');
-																}
-
-															} else {
-																showTipDialog(data.msg);
-															}
-														});
-											}
-										});
+						$('#sendResumeBtn').bind('click',function() {
+							sendResume();
+						});
 						workId = getQueryString('workId');
 						pageInit();
 					});
 
-	function toAddResume() {
-		changeSubPage('resume', 'workdetailPage');
-	}
-	function sendResume(obj) {
-		var resumeId = $(obj).attr('resumeId');
+	//投递简历
+	function sendResume() {
 		var cachedUserInfo = getLoginUserInfo();
 		if (cachedUserInfo != null) {
 			var sendResumeInfo = {};
 			sendResumeInfo.userToken = cachedUserInfo.userToken;
-			sendResumeInfo.resumeId = resumeId;
+			sendResumeInfo.userId = cachedUserInfo.userId;
 			sendResumeInfo.workId = workId;
 
 			ajaxReq('resumeAction', {
@@ -402,8 +310,6 @@
 			}, function(data) {
 				if (data.flag == 'success') {
 					showTipDialog(data.msg);
-
-					$('#popupMenu').popup("close");
 				} else {
 					showTipDialog(data.msg);
 				}

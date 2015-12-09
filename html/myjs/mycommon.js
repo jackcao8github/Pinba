@@ -452,13 +452,14 @@ function showTipDialog(tipMsg, seconds) {
 		$('#tipMsgDialog').remove();
 	}
 
-	$('<div id="tipMsgDialog" class="alert alert-info" role="alert">'
+	$('<div id="tipMsgDialog" class="alert alert-info alert-dismissible fade in" role="alert">'
 					+ tipMsg + '</div>').appendTo('body');
+	$('#tipMsgDialog').alert();
 	if (seconds == null) {
 		seconds = 2000;
 	}
 	setTimeout(function() {
-		$('#tipMsgDialog').hide();
+		$('#tipMsgDialog').alert('close');
 	}, seconds);
 }
 

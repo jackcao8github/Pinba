@@ -24,12 +24,22 @@
 					onclick="getNewResumeList()">未录用</a></li>
 				<li role="presentation"><a href="#reservedResumeList"
 					id="messageTabLi" onclick="getReserveResumeList()">已预约</a></li>
-				<li role="presentation"><a href="#hiredResumeList"
-					onclick="getHiredResumeList()">已录用</a></li>
-				<li role="presentation"><a href="#checkInList"
-					onclick="getCheckInList()">已签到</a></li>
 				<li role="presentation"><a href="#checkOutList"
 					onclick="getCheckOutList()">已签退</a></li>
+
+				<li role="presentation" class="dropdown"><a href="#"
+					id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown"
+					aria-controls="myTabDrop1-contents">其它<span
+						class="caret"></span></a>
+					<ul class="dropdown-menu" aria-labelledby="myTabDrop1"
+						id="myTabDrop1-contents">
+						<li><a href="#hiredResumeList" role="tab" id="dropdown1-tab"
+							data-toggle="tab" aria-controls="dropdown1"
+							onclick="getHiredResumeList()">已录用</a></li>
+						<li><a href="#checkInList" role="tab" id="dropdown2-tab"
+							data-toggle="tab" aria-controls="dropdown2"
+							onclick="getCheckInList()">已签到</a></li>
+					</ul></li>
 			</ul>
 			<div id="tabs" class="tab-content">
 				<div id="newResumeList" role="tabpanel" class="tab-pane active">
@@ -45,13 +55,6 @@
 					</div>
 				</div>
 
-				<!-- 简历选择框 -->
-				<div data-role="popup" id="popupMenu">
-					<ul class="list-group" style="min-width: 210px;" id="resumeList">
-						<li onclick="gotoInterviewPage()">预约面试</li>
-						<li onclick="gotoHiredPage()">直接录用</li>
-					</ul>
-				</div>
 				<div id="reservedResumeList" role="tabpanel" class="tab-pane">
 					<div class="swipe">
 						<div class="pullDownFresh">
@@ -200,7 +203,9 @@
 							}
 							var lihtmls = '';
 							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
-							litemplate += '<a href="#" resumeId="-resumeId-" onclick="popupInterviewOrHired(this)">预约</a></li>';
+							litemplate += '<a href="#" role="button" class="btn btn-default" resumeId="-resumeId-" onclick="gotoInterviewPage(this)">预约</a>';
+							litemplate += '<a href="#" role="button" class="btn btn-default" resumeId="-resumeId-" onclick="gotoHiredPage(this)">录用</a>';
+							litemplate += '</li>';
 
 							for (var i = 0; data.length > i; i++) {
 								var resumeobj = data[i];
@@ -252,7 +257,7 @@
 							var litemplate = '<li class="list-group-item" onclick="openResumeDetail(this)" resumeId="-resumeId-"><h4 class="list-group-item-heading">员工名称:-realName-</h4><p class="list-group-item-text">员工手机:-cellphone-</p>';
 							litemplate += '<p class="list-group-item-text">预约时间:-interviewTime-&nbsp;|&nbsp;预约地点:-interviewAddress-</p>';
 
-							litemplate += '<a href="#" resumeId="-resumeId-" onclick="gotoHiredPage(this)">录用</a></li>';
+							litemplate += '<a href="#" role="button" class="btn btn-default" resumeId="-resumeId-" onclick="gotoHiredPage(this)">录用</a></li>';
 							for (var i = 0; data.length > i; i++) {
 
 								var resumeobj = data[i];
@@ -328,32 +333,17 @@
 					});
 		}
 	}
-	var selectedResumeId = 0;
-	//弹出预约面试或录用菜单
-	function popupInterviewOrHired(obj) {
-		selectedResumeId = $(obj).attr('resumeId');
-		//打开简历选择框
-		$('#popupMenu').popup();
-		$('#popupMenu').popup('open');
-	}
 	//进入预约面试安排页面
-	function gotoInterviewPage() {
-		$('#popupMenu').popup('close');
+	function gotoInterviewPage(obj) {
+		var resumeId = $(obj).attr('resumeId');
 		changeSubPage('bookInterview', 'myWorkResumePage', 'resumeId='
-				+ selectedResumeId + '&workId=' + workId);
+				+ resumeId + '&workId=' + workId);
 	}
 	//进入员工录用页面
 	function gotoHiredPage(obj) {
-		if (obj != null) {
-			var curResumeId = $(obj).attr('resumeId');
+			var resumeId = $(obj).attr('resumeId');
 			changeSubPage('hiredStaff', 'myWorkResumePage', 'resumeId='
 					+ curResumeId + '&workId=' + workId);
-		} else {
-			$('#popupMenu').popup('close');
-			changeSubPage('hiredStaff', 'myWorkResumePage', 'resumeId='
-					+ selectedResumeId + '&workId=' + workId);
-		}
-
 	}
 
 	function queryAddStaff() {
@@ -458,7 +448,7 @@
 								} else {
 									litemplate += '<p class="list-group-item-text">支付方式:线下支付</p>';
 								}
-								litemplate += '<a href="#" onclick="toModifyChecInOut(\'-userWorkId-\',\'-checkInTime-\',\'-checkOutTime-\',\'-batchNo-\',\'-chageType-\')"></a></li>';
+								litemplate += '<a href="#" role="button" class="btn btn-default" onclick="toModifyChecInOut(\'-userWorkId-\',\'-checkInTime-\',\'-checkOutTime-\',\'-batchNo-\',\'-chageType-\')">修改签到签退时间</a></li>';
 
 								var replaceArr = {};
 								replaceArr['-resumeId-'] = resumeobj.resumeId;
