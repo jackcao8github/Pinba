@@ -2,10 +2,12 @@
 <html manifest="../pinba.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1, user-scalable=no" />
 
 <script src="../js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="../css/font-awesome.min.css" /><link rel="stylesheet" href="../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../css/font-awesome.min.css" />
+<link rel="stylesheet" href="../css/bootstrap.min.css" />
 <script type="text/javascript" src="../myjs/mycommon.js"></script>
 <script type="text/javascript" src="../myjs/myswipe.js"></script>
 <style>
@@ -15,68 +17,70 @@
 	var workId = 0;
 	var workType = 'partTime';
 	var postCode = '';
-	$(document).on("pageinit",function(){pageInit()});
-			function pageInit() {
-				//加载验证码
-                loadVerifyImage('verifyImg');
+	$(document).ready(function() {
+		pageInit()
+	});
+	function pageInit() {
+		//加载验证码
+		loadVerifyImage('verifyImg');
 
-				//初始化下拉框控件
-				$('select').each(function(index, item) {
-					if (item.id == "workArea") {
-						fillOptions(item.id, localStorage.city);
+		//初始化下拉框控件
+		$('select').each(function(index, item) {
+			if (item.id == "workArea") {
+				fillOptions(item.id, localStorage.city);
+			} else {
+				fillOptions(item.id);
+			}
+		});
+		workType = getQueryString('workType');
+		if (workType == null) {
+			workType = 'partTime';
+		}
+		workId = getQueryString('workId');
+		if (workId == null) {
+			workId = 0;
+		}
+		postCode = getQueryString('postCode');
+		if (postCode == null) {
+			postCode = '';
+		}
+
+		if (workId > 0) {
+			$('#title').html('修改工作');
+			var workInfo = {};
+			if (workId > 0) {
+				workInfo.workId = workId;
+			}
+			var cachedUserInfo = getLoginUserInfo();
+			if (cachedUserInfo != null) {
+				workInfo.userToken = cachedUserInfo.userToken;
+				workInfo.readUserId = cachedUserInfo.userId;
+				ajaxReq('workAction', {
+					method : 'getWorkInfo',
+					workInfo : json2Str(workInfo)
+				}, function(data) {
+					if (data.flag == 'success') {
+						bindData(data);
 					} else {
-						fillOptions(item.id);
+						showTipDialog(data.msg);
+						return false;
 					}
-				});
-				workType = getQueryString('workType');
-				if (workType == null) {
-					workType = 'partTime';
-				}
-				workId = getQueryString('workId');
-				if (workId == null) {
-					workId = 0;
-				}
-				postCode = getQueryString('postCode');
-				if (postCode == null) {
-					postCode = '';
-				}
-
-				if (workId > 0) {
-					$('#title').html('修改工作');
-					var workInfo = {};
-					if (workId > 0) {
-						workInfo.workId = workId;
-					}
-					var cachedUserInfo = getLoginUserInfo();
-					if (cachedUserInfo != null) {
-						workInfo.userToken = cachedUserInfo.userToken;
-						workInfo.readUserId = cachedUserInfo.userId;
-						ajaxReq('workAction', {
-							method : 'getWorkInfo',
-							workInfo : json2Str(workInfo)
-						}, function(data) {
-							if (data.flag == 'success') {
-								bindData(data);
-							} else {
-								showTipDialog(data.msg);
-								return false;
-							}
-						});
-					}
-				} else {
-					if (postCode != '') {
-						//如果postCode不为空，则默认选中
-						selectOptions('post', postCode);
-					}
-				}
-
-				$('#hour').bind("click", function(event) {
-					showHourSallary();
-				});
-				$('#day').bind("click", function(event) {
-					showDaySallary();
 				});
 			}
+		} else {
+			if (postCode != '') {
+				//如果postCode不为空，则默认选中
+				selectOptions('post', postCode);
+			}
+		}
+
+		$('#hour').bind("click", function(event) {
+			showHourSallary();
+		});
+		$('#day').bind("click", function(event) {
+			showDaySallary();
+		});
+	}
 	function swipeRight() {
 		closeSubPage();
 	}
@@ -118,7 +122,7 @@
 		if (checkFormNullable('form') == false) {
 			return;
 		}
-		$('#pubBtn').attr('disabled',true);
+		$('#pubBtn').attr('disabled', true);
 		var workInfo = {};
 		var method = 'newWork';
 		if (workId > 0) {
@@ -154,7 +158,8 @@
 				workInfo : json2Str(workInfo)
 			}, function(data) {
 				if (data.flag == 'success') {
-					showConfirmDialog(data.msg+'是否继续发布工作?',initPage,closeSubPage);
+					showConfirmDialog(data.msg + '是否继续发布工作?', initPage,
+							closeSubPage);
 				} else {
 					showTipDialog(data.msg);
 					$('#pubBtn').removeAttr("disabled");
@@ -164,15 +169,15 @@
 		}
 		return false;
 	}
-	
+
 	//清空控件内容
-	function initPage(){
+	function initPage() {
 		$('#pubBtn').removeAttr("disabled");
 		$('#workName').val('');
 		$('#content').val('');
 		$('#verifyCode').val('');
 		//刷新验证码
-        loadVerifyImage('verifyImg');
+		loadVerifyImage('verifyImg');
 	}
 
 	function showHourSallary() {
@@ -200,59 +205,58 @@
 		<div data-role="content" class="ui-mini">
 			<div id="form">
 				<div class="form-group">
-					<label for="workName">标题:</label> <input type="text" class="form-control"
-						name="workName" id="workName" value="" required
-						placeholder="工作简介">
+					<label for="workName">标题:</label> <input type="text"
+						class="form-control" name="workName" id="workName" value=""
+						required placeholder="工作简介">
 				</div>
 				<div class="form-group">
 					<label for="content">工作内容:</label>
-					<textarea class="form-control"cols="40" rows="8" name="content" id="content"
-						 required placeholder="工作详细内容">工作内容</textarea>
+					<textarea class="form-control" cols="40" rows="8" name="content"
+						id="content" required placeholder="工作详细内容">工作内容</textarea>
 				</div>
 				<div class="form-group">
-					<label for="numberOfRecruit">人数:</label> <input type="text" class="form-control"
-						name="numberOfRecruit" id="numberOfRecruit" value="10"
-						required placeholder="招聘人数" pattern="[0-9]{1,3}"
+					<label for="numberOfRecruit">人数:</label> <input type="text"
+						class="form-control" name="numberOfRecruit" id="numberOfRecruit"
+						value="10" required placeholder="招聘人数" pattern="[0-9]{1,3}"
 						title="必须是整数">
 				</div>
 
 				<div class="form-group">
-					<label for="post" class="select">职位:</label> <select class="form-control" name="post"
-						id="post" >
+					<label for="post" class="select">职位:</label> <select
+						class="form-control" name="post" id="post">
 
 					</select>
 				</div>
 
 
 				<div class="form-group">
-					<label for="workArea" class="select">区域:</label> <select class="form-control"
-						name="workArea" id="workArea"
-						required>
+					<label for="workArea" class="select">区域:</label> <select
+						class="form-control" name="workArea" id="workArea" required>
 
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="address">详细地址:</label> <input type="text" class="form-control"
-						name="address" id="address" value="" required>
+					<label for="address">详细地址:</label> <input type="text"
+						class="form-control" name="address" id="address" value="" required>
 				</div>
 
 
 				<div class="form-group">
-					<label for="expectDegree" class="select">学历要求:</label> <select class="form-control"
-						name="expectDegree" id="expectDegree" >
+					<label for="expectDegree" class="select">学历要求:</label> <select
+						class="form-control" name="expectDegree" id="expectDegree">
 
 					</select>
 				</div>
 
 				<div class="form-group">
-					<label for="expectExperience" class="select">工作经验要求:</label> <select class="form-control"
-						name="expectExperience" id="expectExperience">
+					<label for="expectExperience" class="select">工作经验要求:</label> <select
+						class="form-control" name="expectExperience" id="expectExperience">
 
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="expectAge" class="select">年龄要求:</label> <select class="form-control"
-						name="expectAge" id="expectAge" >
+					<label for="expectAge" class="select">年龄要求:</label> <select
+						class="form-control" name="expectAge" id="expectAge">
 
 					</select>
 				</div>
@@ -269,52 +273,50 @@
 				</div>
 
 				<div class="form-group">
-					<label for="sallaryPeriod">工资结算周期:</label> <select class="form-control" name="sallaryPeriod"
-						id="sallaryPeriod"  >
+					<label for="sallaryPeriod">工资结算周期:</label> <select
+						class="form-control" name="sallaryPeriod" id="sallaryPeriod">
 					</select>
 				</div>
 
 				<div class="form-group">
-					<label for="sallaryChargeType">工资结算方式:</label> <select class="form-control" name="sallaryChargeType"
-						id="sallaryChargeType"  >
+					<label for="sallaryChargeType">工资结算方式:</label> <select
+						class="form-control" name="sallaryChargeType"
+						id="sallaryChargeType">
 					</select>
 				</div>
 
 				<div class="form-group">
 					<label for="food">提供饮食:</label><select class="form-control"
-						name="food" id="food" 
-						>
+						name="food" id="food">
 					</select>
 				</div>
 				<div class="form-group">
 					<label for="lodging">提供住宿:</label><select class="form-control"
-						name="lodging" id="lodging" 
-						>
+						name="lodging" id="lodging">
 					</select>
 				</div>
 				<div class="form-group">
 					<label for="effDate">生效时间:</label> <input type="date"
-						name="effDate" id="effDate" value="" required
+						class="form-control" name="effDate" id="effDate" value="" required
 						placeholder="别人在此时间后才能看到你的求职">
 				</div>
 				<div class="form-group">
 					<label for="expDate">失效时间:</label> <input type="date"
-						name="expDate" id="expDate" value="" required
+						class="form-control" name="expDate" id="expDate" value="" required
 						placeholder="别人在此时间后将不再能看不到你的求职">
 				</div>
 				<div class="form-group">
 					<label for="verifyCode">验证码:</label>
-					<div style="display: inline-flex; width: 100%">
-						<div style="width: 70%; height: 100%;">
-							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required>
-						</div>
-						<a  href="#"
-							style="width: 30%; height: 100%; margin-top: 8px;"><img
-							src="" id="verifyImg"></img></a>
+					<div class="input-group">
+						<input type="text" class="form-control" class="form-control"
+							aria-label="验证码" name="verifyCode" id="verifyCode" value=""
+							placeholder="验证码" required> <span
+							class="input-group-addon"><img id="verifyImg" src=""></img></span>
 					</div>
+
 				</div>
-				<a role="button" class="btn btn-success btn-lg btn-block" onclick="publish()"   id="pubBtn">发布</a>
+				<a role="button" class="btn btn-success btn-lg btn-block"
+					onclick="publish()" id="pubBtn">发布</a>
 			</div>
 		</div>
 	</div>

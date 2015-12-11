@@ -15,7 +15,7 @@
 	var workId = 0;
 	var workType = 'reqPartTime';
 	var postCode = '';
-	$(document).on('pageinit', function() {
+	$(document).ready( function() {
 		pageInit()
 
 	});
@@ -216,23 +216,20 @@
 				</div>
 
 				<div class="form-group">
-					<label for="effDate">生效时间:</label> <input type="date"
+					<label for="effDate">生效时间:</label> <input type="date" class="form-control"
 						name="effDate" id="effDate" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="expDate">失效时间:</label> <input type="date"
+					<label for="expDate">失效时间:</label> <input type="date" class="form-control"
 						name="expDate" id="expDate" value="" required>
 				</div>
 				<div class="form-group">
 					<label for="verifyCode">验证码:</label>
-					<div style="display: inline-flex; width: 100%">
-						<div style="width: 70%; height: 100%;">
-							<input type="text" class="form-control" name="verifyCode" id="verifyCode" value=""
-								placeholder="验证码" required>
-						</div>
-						<a  href="#"
-							style="width: 30%; height: 100%; margin-top: 8px;"><img
-							src="" id="verifyImg"></img></a>
+					<div class="input-group">
+						<input type="text" class="form-control" class="form-control"
+							aria-label="验证码" name="verifyCode" id="verifyCode" value=""
+							placeholder="验证码" required> <span
+							class="input-group-addon"><img id="verifyImg" src=""></img></span>
 					</div>
 				</div>
 				<a role="button" class="btn btn-success btn-lg btn-block" id="pubBtn" onclick="publish()"  >发布</a>
